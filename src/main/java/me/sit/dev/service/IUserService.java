@@ -1,19 +1,19 @@
-package me.sit.dev.repository;
+package me.sit.dev.service;
 
 import me.sit.dev.entity.impl.user.User;
 
 import java.util.Collection;
-public interface IUserRepository {
 
+public interface IUserService {
     Collection<User> findAll();
 
     User findById(Long id);
 
-    User findByEmail(String email);
+    User register(String name, String email, String password, boolean isAdmin);
 
-    User save(User user);
+    void login(String email, String password);
 
-    User update(User user);
+    void save(User user);
 
     void delete(User user);
 
@@ -23,6 +23,6 @@ public interface IUserRepository {
 
     boolean existsById(Long id);
 
-    boolean existsByEmail(String email);
+    User findByEmail(String email);
 
 }
