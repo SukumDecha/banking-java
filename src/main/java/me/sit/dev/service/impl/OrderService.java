@@ -19,7 +19,6 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-
     public void confirmOrder(User user, Restaurant restaurant) {
         Order order = new Order(user, restaurant);
         order.confirmOrder();

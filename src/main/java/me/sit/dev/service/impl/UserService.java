@@ -51,8 +51,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void save(User user) {
-        userRepository.save(user);
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User update(User user) {
+        return userRepository.update(user);
     }
 
     @Override
@@ -75,5 +80,8 @@ public class UserService implements IUserService {
         return userRepository.existsById(id);
     }
 
-
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
 }
