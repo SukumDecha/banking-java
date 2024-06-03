@@ -1,19 +1,17 @@
 package me.sit.dev.service.impl;
 
-import me.sit.dev.entity.impl.Product;
 import me.sit.dev.entity.impl.Restaurant;
-import me.sit.dev.repository.IRestaurantRepository;
+import me.sit.dev.repository.IRestaurantRepo;
 import me.sit.dev.service.IRestaurantService;
 
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.List;
 
 public class RestaurantService implements IRestaurantService {
 
-    private final IRestaurantRepository restaurantRepository;
+    private final IRestaurantRepo restaurantRepository;
 
-    public RestaurantService(IRestaurantRepository restaurantRepository) {
+    public RestaurantService(IRestaurantRepo restaurantRepository) {
         this.restaurantRepository = restaurantRepository;
     }
 

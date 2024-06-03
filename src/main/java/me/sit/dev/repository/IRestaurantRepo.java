@@ -4,7 +4,7 @@ import me.sit.dev.entity.impl.Restaurant;
 
 import java.util.Collection;
 
-public interface IRestaurantRepository {
+public interface IRestaurantRepo {
 
     Restaurant addRestaurant(String ownerId, String restaurantName);
 
