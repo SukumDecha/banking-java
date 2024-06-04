@@ -1,4 +1,4 @@
-package me.sit.dev.main;
+package me.sit.dev;
 
 import me.sit.dev.service.UtilityService;
 
