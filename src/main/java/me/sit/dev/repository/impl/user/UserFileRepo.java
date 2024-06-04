@@ -1,11 +1,11 @@
 package me.sit.dev.repository.impl.user;
 
 import me.sit.dev.entity.impl.user.User;
-import me.sit.dev.repository.IUserRepository;
+import me.sit.dev.repository.IUserRepo;
 
 import java.util.Collection;
 
-public class UserFileRepo implements IUserRepository {
+public class UserFileRepo implements IUserRepo {
     @Override
     public Collection<User> findAll() {
         return null;

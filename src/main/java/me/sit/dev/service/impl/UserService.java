@@ -3,16 +3,16 @@ package me.sit.dev.service.impl;
 import me.sit.dev.entity.impl.Session;
 import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.entity.impl.user.UserRole;
-import me.sit.dev.repository.IUserRepository;
+import me.sit.dev.repository.IUserRepo;
 import me.sit.dev.service.IUserService;
 import me.sit.dev.service.UtilityService;
 
 import java.util.Collection;
 
 public class UserService implements IUserService {
-    private final IUserRepository userRepository;
+    private final IUserRepo userRepository;
 
-    public UserService(IUserRepository userRepository) {
+    public UserService(IUserRepo userRepository) {
         this.userRepository = userRepository;
     }
 

@@ -1,11 +1,9 @@
 package me.sit.dev.service;
 
 import me.sit.dev.entity.impl.user.User;
-import me.sit.dev.repository.IUserRepository;
+import me.sit.dev.repository.IUserRepo;
 
-import java.util.Collection;
-
-public interface IUserService extends IUserRepository
+public interface IUserService extends IUserRepo
 {
     User register(String name, String email, String password, boolean isAdmin);
 
