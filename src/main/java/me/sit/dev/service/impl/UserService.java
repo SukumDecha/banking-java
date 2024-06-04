@@ -22,7 +22,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User findById(Long id) {
+    public User findById(String id) {
         return userRepository.findById(id);
     }
 
@@ -66,7 +66,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         userRepository.deleteById(id);
     }
 
@@ -76,7 +76,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean existsById(Long id) {
+    public boolean existsById(String id) {
         return userRepository.existsById(id);
     }
 

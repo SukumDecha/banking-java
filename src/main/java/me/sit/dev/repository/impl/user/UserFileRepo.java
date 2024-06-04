@@ -12,7 +12,7 @@ public class UserFileRepo implements IUserRepository {
     }
 
     @Override
-    public User findById(Long id) {
+    public User findById(String id) {
         return null;
     }
 
@@ -37,7 +37,7 @@ public class UserFileRepo implements IUserRepository {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
 
     }
 
@@ -47,7 +47,7 @@ public class UserFileRepo implements IUserRepository {
     }
 
     @Override
-    public boolean existsById(Long id) {
+    public boolean existsById(String id) {
         return false;
     }
 

@@ -7,7 +7,7 @@ public interface IUserRepository {
 
     Collection<User> findAll();
 
-    User findById(Long id);
+    User findById(String id);
 
     User findByEmail(String email);
 
@@ -17,11 +17,11 @@ public interface IUserRepository {
 
     void delete(User user);
 
-    void deleteById(Long id);
+    void deleteById(String id);
 
     void deleteAll();
 
-    boolean existsById(Long id);
+    boolean existsById(String id);
 
     boolean existsByEmail(String email);
 
