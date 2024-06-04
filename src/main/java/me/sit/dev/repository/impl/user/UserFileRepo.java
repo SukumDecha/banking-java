@@ -1,11 +1,16 @@
 package me.sit.dev.repository.impl.user;
 
 import me.sit.dev.entity.impl.user.User;
+import me.sit.dev.exceptions.NullInputException;
 import me.sit.dev.repository.IUserRepo;
 
+import java.io.*;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserFileRepo implements IUserRepo {
+    private final Map<String,User> userMap = new HashMap<>();
     @Override
     public Collection<User> findAll() {
         return null;
@@ -13,18 +18,29 @@ public class UserFileRepo implements IUserRepo {
 
     @Override
     public User findById(String id) {
-        for ()
-        return null;
+        if (id == null || id.isBlank()) {
+            throw new NullInputException();
+        }
+        return userMap.get(id);
     }
 
     @Override
     public User findByEmail(String email) {
-        return null;
+        if (email == null || email.isBlank()) {
+            throw new NullInputException();
+        }
+        return userMap.values().stream().filter(user -> user.getEmail().equals(email)).findFirst().orElse(null);
     }
 
+    //
     @Override
     public User save(User user) {
-        return null;
+        try (ObjectOutputStream writer = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("src/main/resources/test.txt")))) {
+                writer.writeObject(userMap);
+        } catch (Exception e) {
+            System.err.println("Error writing to file: " + e.getMessage());
+        }
+        return user;
     }
 
     @Override

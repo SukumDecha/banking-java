@@ -3,10 +3,14 @@ package me.sit.dev.service.impl;
 import me.sit.dev.entity.impl.Session;
 import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.entity.impl.user.UserRole;
+import me.sit.dev.exceptions.InvalidParamsException;
 import me.sit.dev.exceptions.InvalidPasswordException;
 import me.sit.dev.exceptions.user.UserExistException;
 import me.sit.dev.exceptions.user.UserNotFoundException;
 import me.sit.dev.repository.IUserRepo;
+import me.sit.dev.repository.impl.user.UserFileRepo;
+import me.sit.dev.repository.impl.user.UserMemoRepo;
+import me.sit.dev.repository.impl.user.UserSQLRepo;
 import me.sit.dev.service.IUserService;
 import me.sit.dev.service.UtilityService;
 
@@ -67,7 +71,17 @@ public class UserService implements IUserService {
 
     @Override
     public User register(String name, String email, String password, boolean isAdmin) {
-        return null;
+        if (name == null || name.isBlank()){
+            throw  new InvalidParamsException("Username cannot be blank");
+        }
+        if (email == null || email.isBlank()){
+            throw  new InvalidParamsException("email cannot be blank");
+        }
+        if (password == null || password.isBlank()){
+            throw  new InvalidParamsException("password cannot be blank");
+        }
+        User user = new User("id",name,email,password,UserRole.USER);
+        return userRepository.save(user);
     }
 
     @Override
