@@ -3,6 +3,9 @@ package me.sit.dev.service.impl;
 import me.sit.dev.entity.impl.Session;
 import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.entity.impl.user.UserRole;
+import me.sit.dev.exceptions.InvalidPasswordException;
+import me.sit.dev.exceptions.user.UserExistException;
+import me.sit.dev.exceptions.user.UserNotFoundException;
 import me.sit.dev.repository.IUserRepo;
 import me.sit.dev.service.IUserService;
 import me.sit.dev.service.UtilityService;
@@ -16,72 +19,64 @@ public class UserService implements IUserService {
         this.userRepository = userRepository;
     }
 
+
     @Override
     public Collection<User> findAll() {
-        return userRepository.findAll();
+        return null;
     }
 
     @Override
     public User findById(String id) {
-        return userRepository.findById(id);
+        return null;
     }
 
     @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-
-    @Override
-    public User register(String name, String email, String password, boolean isAdmin) {
-        User user = new User(UtilityService.generateId(), name, email, password,
-                isAdmin ? UserRole.SYSTEM_ADMIN : UserRole.USER);
-        login(email, password);
-        return userRepository.save(user);
-    }
-
-    @Override
-    public void login(String email, String password) {
-        User user = userRepository.findByEmail(email);
-        if (user == null) return;
-
-        if (user.getPassword().equals(password)) {
-            Session.createSession(user);
-        }
-
+        return null;
     }
 
     @Override
     public User save(User user) {
-        return userRepository.save(user);
+        return null;
     }
 
     @Override
     public User update(User user) {
-        return userRepository.update(user);
-    }
-
-    @Override
-    public void delete(User user) {
-        userRepository.delete(user);
+        return null;
     }
 
     @Override
     public void deleteById(String id) {
-        userRepository.deleteById(id);
+
     }
 
     @Override
     public void deleteAll() {
-        userRepository.deleteAll();
+
     }
 
     @Override
     public boolean existsById(String id) {
-        return userRepository.existsById(id);
+        return false;
     }
 
     @Override
     public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
+        return false;
+    }
+
+    @Override
+    public User register(String name, String email, String password, boolean isAdmin) {
+        return null;
+    }
+
+    @Override
+    public void login(String email, String password) {
+
+    }
+
+    @Override
+    public void delete(User user) {
+
     }
 }

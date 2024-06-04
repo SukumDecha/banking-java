@@ -17,66 +17,56 @@ public class RestaurantService implements IRestaurantService {
 
     @Override
     public Restaurant addRestaurant(String ownerId, String restaurantName) {
-        if(restaurantRepository.findByName(restaurantName) != null) {
-            return null;
-        }
-        return restaurantRepository.addRestaurant(ownerId, restaurantName);
+        return null;
     }
 
     @Override
     public Restaurant updateRestaurant(String id, Restaurant restaurant) {
-        return restaurantRepository.updateRestaurant(id, restaurant);
+        return null;
     }
 
     @Override
     public Restaurant deleteRestaurant(String id) {
-        return restaurantRepository.deleteRestaurant(id);
+        return null;
     }
 
     @Override
     public Restaurant findById(String id) {
-        return restaurantRepository.findById(id);
+        return null;
     }
 
     @Override
     public Restaurant findByName(String name) {
-        return restaurantRepository.findByName(name);
+        return null;
     }
 
     @Override
     public Restaurant findByOwnerId(String ownerId) {
-        return restaurantRepository.findByOwnerId(ownerId);
+        return null;
     }
 
     @Override
     public Restaurant findByProduct(String productId) {
-        return restaurantRepository.findByProduct(productId);
+        return null;
     }
 
     @Override
     public Collection<Restaurant> findAll() {
-        return restaurantRepository.findAll();
+        return null;
     }
 
     @Override
     public Collection<Restaurant> findByRating(int rating) {
-        return restaurantRepository.findByRating(rating);
+        return null;
+    }
+
+    @Override
+    public boolean existsById(String id) {
+        return false;
     }
 
     @Override
     public Collection<Restaurant> findTopRestaurants(int limit) {
-        return findAll().stream().sorted(new Comparator<Restaurant>() {
-            @Override
-            public int compare(Restaurant o1, Restaurant o2) {
-                return (int) (o2.getRating() - o1.getRating());
-            }
-        }).limit(limit).toList();
+        return null;
     }
-
-
-    @Override
-    public boolean existsById(String id) {
-        return restaurantRepository.existsById(id);
-    }
-
 }
