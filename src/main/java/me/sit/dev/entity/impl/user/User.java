@@ -5,7 +5,6 @@ import me.sit.dev.entity.impl.Cart;
 import me.sit.dev.entity.impl.order.Order;
 import me.sit.dev.entity.impl.Restaurant;
 import me.sit.dev.entity.impl.order.OrderStatus;
-import me.sit.dev.service.UtilityService;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -5,7 +5,7 @@ import me.sit.dev.repository.IUserRepo;
 
 import java.util.Collection;
 
-public class UserSQLRepo implements IUserRepo {
+public class UserDatabaseRepo implements IUserRepo {
     @Override
     public Collection<User> findAll() {
         return null;

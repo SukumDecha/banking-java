@@ -2,7 +2,7 @@ package me.sit.dev.entity.impl;
 
 import me.sit.dev.entity.BaseEntity;
 import me.sit.dev.entity.impl.order.Order;
-import me.sit.dev.service.UtilityService;
+import me.sit.dev.service.standalone.UtilityService;
 
 import java.util.ArrayList;
 import java.util.List;

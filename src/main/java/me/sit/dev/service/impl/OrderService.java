@@ -19,7 +19,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void confirmOrder(User user, Restaurant restaurant) {
+    public Order createOrder(User user, Restaurant restaurant) {
         Order order = new Order(user, restaurant);
         order.confirmOrder();
 
@@ -35,6 +35,7 @@ public class OrderService implements IOrderService {
         // Add order to user and restaurant
         user.getOrders().add(order);
         restaurant.getOrders().add(order);
+        return order;
     }
 
     @Override

@@ -4,7 +4,7 @@ import me.sit.dev.entity.BaseEntity;
 import me.sit.dev.entity.impl.Cart;
 import me.sit.dev.entity.impl.Restaurant;
 import me.sit.dev.entity.impl.user.User;
-import me.sit.dev.service.UtilityService;
+import me.sit.dev.service.standalone.UtilityService;
 
 public class Order extends BaseEntity {
 

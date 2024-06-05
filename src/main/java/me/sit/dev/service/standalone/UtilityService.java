@@ -1,4 +1,4 @@
-package me.sit.dev.service;
+package me.sit.dev.service.standalone;
 
 import java.util.UUID;
 
