@@ -9,6 +9,8 @@ public class UtilityService {
     }
 
     public static String generateId(String prefix) {
-        return prefix + UUID.randomUUID().toString();
+        return prefix + UUID.randomUUID();
     }
+
+
 }

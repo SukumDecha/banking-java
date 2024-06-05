@@ -44,4 +44,6 @@ public class Restaurant extends BaseEntity {
         this.totalRating = totalRating;
     }
 
+
+
 }

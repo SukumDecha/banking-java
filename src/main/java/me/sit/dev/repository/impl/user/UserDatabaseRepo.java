@@ -6,6 +6,8 @@ import me.sit.dev.repository.IUserRepo;
 import java.util.Collection;
 
 public class UserDatabaseRepo implements IUserRepo {
+
+
     @Override
     public Collection<User> findAll() {
         return null;
@@ -27,7 +29,7 @@ public class UserDatabaseRepo implements IUserRepo {
     }
 
     @Override
-    public User update(User user) {
+    public User update(String userId, User user) {
         return null;
     }
 

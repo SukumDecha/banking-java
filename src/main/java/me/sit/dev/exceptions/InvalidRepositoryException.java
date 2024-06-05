@@ -1,4 +1,4 @@
-package me.sit.dev.exceptions.ui;
+package me.sit.dev.exceptions;
 
 public class InvalidRepositoryException extends RuntimeException {
 
@@ -8,6 +8,5 @@ public class InvalidRepositoryException extends RuntimeException {
 
     public InvalidRepositoryException(String message) {
         super(message);
-
     }
 }

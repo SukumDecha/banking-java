@@ -1,5 +1,6 @@
 package me.sit.dev.service.impl;
 
+import me.sit.dev.entity.impl.Session;
 import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.entity.impl.user.UserRole;
 import me.sit.dev.exceptions.InvalidParamsException;
@@ -37,10 +38,15 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User update(User user) {
+    public User update(String userId, User user) {
         return null;
     }
 
+    @Override
+    public void delete(User user) {
+
+    }
+    
     @Override
     public void deleteById(String id) {
 
@@ -72,19 +78,17 @@ public class UserService implements IUserService {
         if (password == null || password.isBlank()){
             throw  new InvalidParamsException("password cannot be blank");
         }
+
         User user = new User("id",name,email,password,UserRole.USER);
         userRepository.save(user);
-
         return true;
     }
 
     @Override
     public boolean login(String email, String password) {
+
+
+        // set session
         return false;
-    }
-
-    @Override
-    public void delete(User user) {
-
     }
 }

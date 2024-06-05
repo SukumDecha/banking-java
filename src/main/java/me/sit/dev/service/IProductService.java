@@ -17,6 +17,8 @@ public interface IProductService {
 
     List<Product> findAll();
 
+    void showAllProducts();
+
     boolean existsById(String productId);
 
     boolean existsByName(String productName);

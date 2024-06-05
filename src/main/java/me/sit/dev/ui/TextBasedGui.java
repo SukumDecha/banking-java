@@ -80,8 +80,6 @@ public class TextBasedGui {
                     break;
             }
         }
-
-
     }
 
     public static void UserInterface_Restaurant_Side() {

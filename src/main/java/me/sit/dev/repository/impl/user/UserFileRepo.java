@@ -1,7 +1,7 @@
 package me.sit.dev.repository.impl.user;
 
 import me.sit.dev.entity.impl.user.User;
-import me.sit.dev.exceptions.NullInputException;
+import me.sit.dev.exceptions.InvalidInputException;
 import me.sit.dev.repository.IUserRepo;
 
 import java.io.*;
@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class UserFileRepo implements IUserRepo {
     private final Map<String,User> userMap = new HashMap<>();
+
     @Override
     public Collection<User> findAll() {
         return null;
@@ -19,7 +20,7 @@ public class UserFileRepo implements IUserRepo {
     @Override
     public User findById(String id) {
         if (id == null || id.isBlank()) {
-            throw new NullInputException();
+            throw new InvalidInputException();
         }
         return userMap.get(id);
     }
@@ -27,7 +28,7 @@ public class UserFileRepo implements IUserRepo {
     @Override
     public User findByEmail(String email) {
         if (email == null || email.isBlank()) {
-            throw new NullInputException();
+            throw new InvalidInputException();
         }
         return userMap.values().stream().filter(user -> user.getEmail().equals(email)).findFirst().orElse(null);
     }
@@ -44,7 +45,7 @@ public class UserFileRepo implements IUserRepo {
     }
 
     @Override
-    public User update(User user) {
+    public User update(String userId, User user) {
         return null;
     }
 

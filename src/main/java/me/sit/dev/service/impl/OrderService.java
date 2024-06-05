@@ -8,20 +8,28 @@ import me.sit.dev.service.IOrderService;
 public class OrderService implements IOrderService {
 
     @Override
-    public void showOrderDetails(Order order) {
+    public void showOrderDetails(Order order, boolean showStatus) {
         System.out.println("[S] --- Order Details ---");
         System.out.println("[S] Order ID: " + order.getId());
         System.out.println("[S] Restaurant Name: " + order.getRestaurant().getName() + " (" + order.getRestaurant().getId() + ")");
         System.out.println();
+        System.out.println("[S] Products:");
+        order.getCart().getProducts().forEach((product, quantity) -> {
+            System.out.println("[S] - " + product.getName() + " x" + quantity);
+        });
         System.out.println("[S] Total Price: " + order.getTotalPrice());
-        System.out.println("[S] Order Status: " + order.getStatus());
+        if(showStatus) {
+            System.out.println("[S] Status: " + order.getStatus());
+        }
         System.out.println("[S] ----------------------");
     }
 
     @Override
-    public Order createOrder(User user, Restaurant restaurant) {
-        Order order = new Order(user, restaurant);
+    public Order createOrder(User user) {
+        Order order = new Order(user);
         order.confirmOrder();
+
+        Restaurant restaurant = order.getRestaurant();
 
         // TODO: Make waiting time
         // Send email to restaurant
@@ -33,8 +41,8 @@ public class OrderService implements IOrderService {
         System.out.println("[S] ----------------------");
 
         // Add order to user and restaurant
-        user.getOrders().add(order);
         restaurant.getOrders().add(order);
+        user.getOrders().add(order);
         return order;
     }
 
@@ -50,9 +58,6 @@ public class OrderService implements IOrderService {
         System.out.println();
         System.out.println("[S] Total Price: " + order.getTotalPrice());
         System.out.println("[S] ----------------------");
-
-        user.getOrders().remove(order);
-        order.getRestaurant().getOrders().remove(order);
     }
 
     @Override
@@ -68,7 +73,6 @@ public class OrderService implements IOrderService {
         System.out.println("[S] Estimated Delivery Time: 30 minutes");
         System.out.println("[S] Total Price: " + order.getTotalPrice());
         System.out.println("[S] ----------------------");
-        user.getOrders().remove(order);
     }
 
 

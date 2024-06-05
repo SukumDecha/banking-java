@@ -1,6 +1,9 @@
 package me.sit.dev.service.impl;
 
 import me.sit.dev.entity.impl.Product;
+import me.sit.dev.entity.impl.Restaurant;
+import me.sit.dev.entity.impl.Session;
+import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.service.IProductService;
 
 import java.util.List;
@@ -9,6 +12,9 @@ public class ProductService implements IProductService {
 
     @Override
     public boolean addProduct(String productName, double price, int quantity) {
+        Product product = new Product(productName, price, quantity);
+
+        findAll().add(product);
         return false;
     }
 
@@ -34,7 +40,14 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> findAll() {
-        return null;
+        User user = Session.getCurrentSession().getUser();
+
+        return user.getRestaurant().getProducts();
+    }
+
+    @Override
+    public void showAllProducts() {
+
     }
 
     @Override

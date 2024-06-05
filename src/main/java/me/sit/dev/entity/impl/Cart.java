@@ -14,6 +14,14 @@ public class Cart extends BaseEntity {
         super(UtilityService.generateId());
     }
 
+    public Cart clone() {
+        Cart cart = new Cart();
+        cart.products.putAll(products);
+        cart.restaurant = restaurant;
+
+        return cart;
+    }
+
     public void addProduct(Product product, int quantity) {
         products.put(product, quantity);
     }

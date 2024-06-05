@@ -4,7 +4,6 @@ import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.entity.impl.user.UserRole;
 
 public class SystemAdmin {
-
     private static User SYSTEM_ADMIN;
 
     public static User getSystemAdmin() {
@@ -13,4 +12,6 @@ public class SystemAdmin {
                         "admin123@gmail.com"
                         , "admin123", UserRole.SYSTEM_ADMIN) : SYSTEM_ADMIN;
     }
+
+
 }

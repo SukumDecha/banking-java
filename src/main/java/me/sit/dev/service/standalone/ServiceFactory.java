@@ -1,6 +1,6 @@
 package me.sit.dev.service.standalone;
 
-import me.sit.dev.exceptions.ui.InvalidRepositoryException;
+import me.sit.dev.exceptions.InvalidRepositoryException;
 import me.sit.dev.repository.type.RepositoryType;
 import me.sit.dev.repository.impl.restaurant.RestaurantDatabaseRepo;
 import me.sit.dev.repository.impl.restaurant.RestaurantFileRepo;

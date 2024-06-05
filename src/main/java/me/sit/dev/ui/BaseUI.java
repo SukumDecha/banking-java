@@ -5,12 +5,12 @@ import me.sit.dev.service.*;
 import me.sit.dev.service.impl.*;
 
 public abstract class BaseUI {
-
     private final String uiName;
     private final String description;
 
     protected final IUserService userService;
     protected final IRestaurantService restaurantService;
+
     protected final IProductService productService;
     protected final IOrderService orderService;
     protected final ICartService cartService;
@@ -21,11 +21,12 @@ public abstract class BaseUI {
 
         this.userService = serviceFactory.createUserService();
         this.restaurantService = serviceFactory.createRestaurantService();
+
         this.productService = new ProductService();
         this.orderService = new OrderService();
         this.cartService = new CartService();
 
-        System.out.println("Services registered.");
+        System.out.println("Services registered for UI: " + uiName);
     }
 
     public abstract void show();

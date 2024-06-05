@@ -5,12 +5,13 @@ import me.sit.dev.ui.BaseUI;
 
 public class RestaurantUI extends BaseUI {
 
-        public RestaurantUI(ServiceFactory serviceFactory) {
-            super("Restaurant UI", "This UI only shows the restaurant's view.", serviceFactory);
-        }
 
-        @Override
-        public void show() {
+    public RestaurantUI(ServiceFactory serviceFactory) {
+        super("Restaurant UI", "This UI only shows the restaurant's view.", serviceFactory);
+    }
 
-        }
+    @Override
+    public void show() {
+        System.out.println("Restaurant UI");
+    }
 }

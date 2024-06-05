@@ -7,21 +7,21 @@ import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.service.standalone.UtilityService;
 
 public class Order extends BaseEntity {
-
     private final String ownerId;
     private final Cart cart;
     private final Restaurant restaurant;
     private OrderStatus status;
-
     private final long orderAt = System.currentTimeMillis();
 
-    public Order(User user, Restaurant restaurant) {
+    public Order(User user) {
         super(UtilityService.generateId("O-"));
-        this.restaurant = restaurant;
         this.ownerId = user.getId();
-        this.cart = user.getCart();
-        this.status = OrderStatus.CONFIRMED;
+        this.cart = user.getCart().clone();
+        this.restaurant = cart.getRestaurant();
+
+        confirmOrder();
     }
+
 
     public String getOwnerId() {
         return ownerId;
@@ -50,14 +50,10 @@ public class Order extends BaseEntity {
     }
 
     public void deliverOrder() {
-        cart.clearCart();
-
         status = OrderStatus.DELIVERED;
     }
 
     public void cancelOrder() {
-        cart.clearCart();
-
         status = OrderStatus.CANCELLED;
     }
 

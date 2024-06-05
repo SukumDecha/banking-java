@@ -7,11 +7,11 @@ public class ClientUI extends BaseUI {
 
     public ClientUI(ServiceFactory serviceFactory) {
         super("Client UI", "This UI only shows the client's view.", serviceFactory);
-    }
 
+    }
 
     @Override
     public void show() {
-
+        System.out.println("Client UI");
     }
 }

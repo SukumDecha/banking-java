@@ -9,5 +9,4 @@ public interface IUserService extends IUserRepo
 
     boolean login(String email, String password);
 
-    void delete(User user);
 }
