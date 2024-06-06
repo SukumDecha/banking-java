@@ -1,5 +1,7 @@
 package me.sit.dev.repository;
 
+import me.sit.dev.entity.impl.user.User;
+
 import java.util.Collection;
 public interface IUserRepo {
 

@@ -1,5 +1,6 @@
 package me.sit.dev.service.impl;
 
+import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.entity.impl.user.UserRole;
 import me.sit.dev.exceptions.InvalidParamsException;
 import me.sit.dev.repository.IUserRepo;
@@ -44,7 +45,7 @@ public class UserService implements IUserService {
     public void delete(User user) {
 
     }
-    
+
     @Override
     public void deleteById(String id) {
 

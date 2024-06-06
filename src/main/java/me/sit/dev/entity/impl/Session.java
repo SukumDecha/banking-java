@@ -1,6 +1,7 @@
 package me.sit.dev.entity.impl;
 
 import me.sit.dev.entity.BaseEntity;
+import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.service.standalone.UtilityService;
 
 public class Session extends BaseEntity {
