@@ -1,6 +1,5 @@
 package me.sit.dev.service;
 
-import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.repository.IUserRepo;
 
 public interface IUserService extends IUserRepo

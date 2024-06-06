@@ -56,7 +56,7 @@ public class User extends BaseEntity {
 
     public List<Order> getOrderHistory() {
         return orders.stream().filter(order -> order.getStatus() == OrderStatus.DELIVERED
-        || order.getStatus() == OrderStatus.CANCELLED).toList();
+                || order.getStatus() == OrderStatus.CANCELLED).toList();
     }
 
 }

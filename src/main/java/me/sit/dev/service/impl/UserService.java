@@ -1,7 +1,5 @@
 package me.sit.dev.service.impl;
 
-import me.sit.dev.entity.impl.Session;
-import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.entity.impl.user.UserRole;
 import me.sit.dev.exceptions.InvalidParamsException;
 import me.sit.dev.repository.IUserRepo;

@@ -1,24 +1,36 @@
 package me.sit.dev.repository.impl.restaurant;
 
 import me.sit.dev.entity.impl.Restaurant;
+import me.sit.dev.exceptions.restaurant.RestaurantNotFoundException;
 import me.sit.dev.repository.IRestaurantRepo;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RestaurantMemoRepo implements IRestaurantRepo {
+    private final Map<String,Restaurant> restaurantMap = new HashMap<>();
     @Override
     public Restaurant addRestaurant(String ownerId, String restaurantName) {
+
         return null;
     }
 
     @Override
     public Restaurant updateRestaurant(String id, Restaurant restaurant) {
-        return null;
+        if (!restaurantMap.containsKey(id)) {
+            throw new RestaurantNotFoundException();
+        }
+        restaurantMap.put(id, restaurant);
+        return restaurant;
     }
 
     @Override
     public Restaurant deleteRestaurant(String id) {
-        return null;
+        if (!restaurantMap.containsKey(id)) {
+            throw new RestaurantNotFoundException();
+        }
+        return restaurantMap.remove(id);
     }
 
     @Override
