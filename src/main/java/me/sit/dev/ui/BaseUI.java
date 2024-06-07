@@ -18,7 +18,6 @@ public abstract class BaseUI {
     public BaseUI(String uiName, String description, ServiceFactory serviceFactory) {
         this.uiName = uiName;
         this.description = description;
-
         this.userService = serviceFactory.createUserService();
         this.restaurantService = serviceFactory.createRestaurantService();
 

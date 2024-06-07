@@ -11,10 +11,18 @@ import java.util.Map;
 
 public class UserFileRepo implements IUserRepo {
     private final Map<String,User> userMap = new HashMap<>();
+    private final String path = "src/main/resources/";
 
+//    public UserFileRepo(){
+//        try (FileInputStream inputStream = new FileInputStream(new BufferedInputStream(new FileInputStream()))){
+//
+//        }catch (Exception e){
+//
+//        }
+//    }
     @Override
     public Collection<User> findAll() {
-        return null;
+        return userMap.values();
     }
 
     @Override
@@ -36,8 +44,10 @@ public class UserFileRepo implements IUserRepo {
     //
     @Override
     public User save(User user) {
-        try (ObjectOutputStream writer = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("src/main/resources/test.txt")))) {
-                writer.writeObject(userMap);
+        String finalPath = path + user.getName() + "-" + user.getId() + ".txt";
+        try (ObjectOutputStream writer = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(finalPath)))) {
+                writer.writeObject(user);
+                writer.flush();
         } catch (Exception e) {
             System.err.println("Error writing to file: " + e.getMessage());
         }
@@ -46,31 +56,45 @@ public class UserFileRepo implements IUserRepo {
 
     @Override
     public User update(String userId, User user) {
-        return null;
+        if (userId == null || userId.isBlank()){
+            throw new NullPointerException("User ID is blank.");
+        }
+        if (!userMap.containsKey(userId)){
+            return save(user);
+        }
+        return userMap.put(userId,user);
     }
 
     @Override
     public void delete(User user) {
-
+        if (user == null) throw new NullPointerException("User is null.");
+        userMap.remove(user.getId(),user);
     }
 
     @Override
     public void deleteById(String id) {
-
+        if (id == null || id.isBlank()){
+            throw new InvalidInputException();
+        }
+        userMap.remove(id);
     }
 
     @Override
     public void deleteAll() {
-
+        userMap.clear();
     }
 
     @Override
     public boolean existsById(String id) {
-        return false;
+        if (id == null || id.isBlank()){
+            throw new InvalidInputException();
+        }
+        return userMap.containsKey(id);
     }
 
     @Override
     public boolean existsByEmail(String email) {
-        return false;
+        return userMap.values().stream()
+                .anyMatch(user -> user.getEmail().equals(email));
     }
 }

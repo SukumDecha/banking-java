@@ -16,55 +16,19 @@ public class UserService implements IUserService {
         this.userRepository = userRepository;
     }
 
-
     @Override
     public Collection<User> findAll() {
-        return null;
+        return userRepository.findAll();
     }
 
     @Override
     public User findById(String id) {
-        return null;
+        return userRepository.findById(id);
     }
 
     @Override
     public User findByEmail(String email) {
-        return null;
-    }
-
-    @Override
-    public User save(User user) {
-        return null;
-    }
-
-    @Override
-    public User update(String userId, User user) {
-        return null;
-    }
-
-    @Override
-    public void delete(User user) {
-
-    }
-    
-    @Override
-    public void deleteById(String id) {
-
-    }
-
-    @Override
-    public void deleteAll() {
-
-    }
-
-    @Override
-    public boolean existsById(String id) {
-        return false;
-    }
-
-    @Override
-    public boolean existsByEmail(String email) {
-        return false;
+        return userRepository.findByEmail(email);
     }
 
     @Override
@@ -78,7 +42,6 @@ public class UserService implements IUserService {
         if (password == null || password.isBlank()){
             throw  new InvalidParamsException("password cannot be blank");
         }
-
         User user = new User("id",name,email,password,UserRole.USER);
         userRepository.save(user);
         return true;
@@ -86,9 +49,48 @@ public class UserService implements IUserService {
 
     @Override
     public boolean login(String email, String password) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) return false;
+
+        if (user.getPassword().equals(password)) {
+            Session.createSession(user);
+        }
+        return true;
+    }
+
+    @Override
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User update(String userId, User user) {
+        return null;
+    }
 
 
-        // set session
-        return false;
+    @Override
+    public void delete(User user) {
+        userRepository.delete(user);
+    }
+
+    @Override
+    public void deleteById(String id) {
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteAll() {
+        userRepository.deleteAll();
+    }
+
+    @Override
+    public boolean existsById(String id) {
+        return userRepository.existsById(id);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }
