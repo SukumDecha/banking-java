@@ -1,15 +1,14 @@
 package me.sit.dev.entity.impl;
 
 import me.sit.dev.entity.BaseEntity;
-import me.sit.dev.service.standalone.UtilityService;
 
 public class Product extends BaseEntity {
     private String name;
     private double price;
     private int quantity;
 
-    public Product(String name, double price, int quantity) {
-        super(UtilityService.generateId("P-"));
+    public Product(int id, String name, double price, int quantity) {
+        super("P-" + id);
         this.name = name;
         this.price = price;
         this.quantity = quantity;

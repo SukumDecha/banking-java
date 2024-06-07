@@ -4,7 +4,6 @@ import me.sit.dev.entity.BaseEntity;
 import me.sit.dev.entity.impl.Cart;
 import me.sit.dev.entity.impl.Restaurant;
 import me.sit.dev.entity.impl.user.User;
-import me.sit.dev.service.standalone.UtilityService;
 
 public class Order extends BaseEntity {
     private final String ownerId;
@@ -14,7 +13,7 @@ public class Order extends BaseEntity {
     private final long orderAt = System.currentTimeMillis();
 
     public Order(User user) {
-        super(UtilityService.generateId("O-"));
+        super("order-" + user.getId() + "-" + user.getOrders().size());
         this.ownerId = user.getId();
         this.cart = user.getCart().clone();
         this.restaurant = cart.getRestaurant();

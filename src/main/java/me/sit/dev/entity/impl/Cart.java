@@ -1,17 +1,17 @@
 package me.sit.dev.entity.impl;
 
 import me.sit.dev.entity.BaseEntity;
-import me.sit.dev.service.standalone.UtilityService;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class Cart extends BaseEntity {
     private final Map<Product, Integer> products = new HashMap<>();
     private Restaurant restaurant = null;
 
     public Cart() {
-        super(UtilityService.generateId());
+        super("C-" + UUID.randomUUID());
     }
 
     public Cart clone() {

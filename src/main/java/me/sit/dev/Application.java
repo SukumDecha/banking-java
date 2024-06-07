@@ -1,8 +1,9 @@
-package me.sit.dev.main;
+package me.sit.dev;
 
 import me.sit.dev.repository.type.RepositoryType;
-import me.sit.dev.service.standalone.ServiceFactory;
+import me.sit.dev.service.ServiceFactory;
 import me.sit.dev.ui.impl.ClientUI;
+import me.sit.dev.ui.impl.LoginUI;
 import me.sit.dev.ui.impl.RestaurantUI;
 
 public class Application {
@@ -13,10 +14,8 @@ public class Application {
         ClientUI clientUI = new ClientUI(serviceFactory);
         RestaurantUI restaurantUI = new RestaurantUI(serviceFactory);
 
-        clientUI.show();
-        restaurantUI.show();
+        LoginUI loginUI = new LoginUI(clientUI, restaurantUI, serviceFactory);
 
-
-
+        loginUI.show();
     }
 }

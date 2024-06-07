@@ -74,7 +74,6 @@ public class RestaurantMemoRepo implements IRestaurantRepo {
 
     @Override
     public Restaurant findByProduct(String productId) {
-        // Assuming restaurants have products with IDs
         return restaurantMap.values().stream()
                 .filter(restaurant -> restaurant.getProducts().contains(productId)) // Assuming getProducts method
                 .findFirst()

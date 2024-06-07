@@ -1,76 +1,76 @@
 package me.sit.dev.repository.impl.user;
 
 import me.sit.dev.entity.impl.user.User;
-import me.sit.dev.exceptions.InvalidInputException;
 import me.sit.dev.repository.IUserRepo;
 
 import java.io.*;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserFileRepo implements IUserRepo {
+public class UserFileRepo extends UserMemoRepo implements IUserRepo {
     private final Map<String, User> userMap = new HashMap<>();
+    private final String path = "src/main/resources/users/";
 
-    @Override
-    public Collection<User> findAll() {
-        return null;
-    }
-
-    @Override
-    public User findById(String id) {
-        if (id == null || id.isBlank()) {
-            throw new InvalidInputException();
+    public UserFileRepo() {
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdirs();
         }
-        return userMap.get(id);
-    }
 
-    @Override
-    public User findByEmail(String email) {
-        if (email == null || email.isBlank()) {
-            throw new InvalidInputException();
+        File[] files = file.listFiles();
+        if (files != null) {
+            for (File f : files) {
+                try (ObjectInputStream reader = new ObjectInputStream(new BufferedInputStream(new FileInputStream(f)))) {
+                    User user = (User) reader.readObject();
+                    userMap.put(user.getId(), user);
+                } catch (Exception e) {
+                    System.err.println("Error reading from file: " + e.getMessage());
+                }
+            }
         }
-        return userMap.values().stream().filter(user -> user.getEmail().equals(email)).findFirst().orElse(null);
     }
 
-    //
     @Override
     public User save(User user) {
-        try (ObjectOutputStream writer = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("src/main/resources/test.txt")))) {
-                writer.writeObject(userMap);
+        super.save(user);
+
+        String finalPath = path + user.getName() + "-" + user.getId() + ".txt";
+        try (ObjectOutputStream writer = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(finalPath)))) {
+            writer.writeObject(user);
+            writer.flush();
         } catch (Exception e) {
             System.err.println("Error writing to file: " + e.getMessage());
         }
+
         return user;
     }
 
     @Override
     public User update(String userId, User user) {
-        return null;
+        super.update(userId, user);
+
+        save(user);
+        return user;
     }
+
 
     @Override
     public void delete(User user) {
+        super.delete(user);
 
+        String finalPath = path + user.getName() + "-" + user.getId() + ".txt";
+        File file = new File(finalPath);
+
+        if (file.exists()) {
+            file.delete();
+        }
     }
 
     @Override
     public void deleteById(String id) {
+        User user = findById(id);
 
+        delete(user);
     }
 
-    @Override
-    public void deleteAll() {
-
-    }
-
-    @Override
-    public boolean existsById(String id) {
-        return false;
-    }
-
-    @Override
-    public boolean existsByEmail(String email) {
-        return false;
-    }
 }

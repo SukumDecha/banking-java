@@ -45,8 +45,6 @@ public class User extends BaseEntity {
         return cart;
     }
 
-
-
     public Restaurant getRestaurant() {
         return restaurant;
     }
@@ -58,5 +56,4 @@ public class User extends BaseEntity {
         return orders.stream().filter(order -> order.getStatus() == OrderStatus.DELIVERED
                 || order.getStatus() == OrderStatus.CANCELLED).toList();
     }
-
 }

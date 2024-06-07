@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserMemoRepo implements IUserRepo {
-    private final Map<String, User> userMap = new HashMap<>();
+    protected final Map<String, User> userMap = new HashMap<>();
 
     @Override
     public Collection<User> findAll() {
@@ -21,36 +21,44 @@ public class UserMemoRepo implements IUserRepo {
     @Override
     public User findById(String id) {
         if (id == null || id.isBlank()) {
-            throw new InvalidInputException();
+            throw new InvalidInputException("Id cannot be null or blank");
         }
         return userMap.get(id);
     }
 
     @Override
     public User findByEmail(String email) {
-        if (email == null | email.isBlank()) {
-            throw new InvalidInputException();
+        if (email == null || email.isBlank()) {
+            throw new InvalidInputException("Email cannot be blank");
         }
-        return userMap.get(email);
+
+        return userMap.values().stream().filter(user -> user.getEmail().equals(email)).findFirst().orElse(null);
     }
 
     @Override
     public User save(User user) {
         if (user == null) {
-            throw new InvalidInputException();
+            throw new InvalidInputException("User cannot be null");
         }
+
         userMap.put(user.getId(), user);
         return user;
     }
 
     @Override
     public User update(String userId, User user) {
-        if (user == null || userId == null || userId.isBlank()) {
-            throw new InvalidInputException();
+        if (user == null) {
+            throw new InvalidInputException("User cannot be null");
         }
-        if (!userMap.containsKey(user.getId())) {
+
+        if(userId == null || userId.isBlank()) {
+            throw new InvalidInputException("Id cannot be null or blank");
+        }
+
+        if(findById(user.getId()) == null) {
             throw new UserNotFoundException();
         }
+
         userMap.put(user.getId(), user);
         return user;
     }
@@ -58,22 +66,26 @@ public class UserMemoRepo implements IUserRepo {
     @Override
     public void delete(User user) {
         if (user == null) {
-            throw new InvalidInputException();
+            throw new InvalidInputException("User cannot be null");
         }
-        if (!userMap.containsKey(user.getId())) {
+
+        if(findById(user.getId()) == null) {
             throw new UserNotFoundException();
         }
+
         userMap.remove(user.getId());
     }
 
     @Override
     public void deleteById(String id) {
         if (id == null) {
-            throw new InvalidInputException();
+            throw new InvalidInputException("Id cannot be null or blank");
         }
-        if (!userMap.containsKey(id)) {
+
+        if(findById(id) == null) {
             throw new UserNotFoundException();
         }
+
         userMap.remove(id);
     }
 

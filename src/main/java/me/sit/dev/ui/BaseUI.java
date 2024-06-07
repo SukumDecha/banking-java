@@ -1,6 +1,9 @@
 package me.sit.dev.ui;
 
-import me.sit.dev.service.standalone.ServiceFactory;
+import me.sit.dev.entity.impl.Product;
+import me.sit.dev.entity.impl.Restaurant;
+import me.sit.dev.entity.impl.user.User;
+import me.sit.dev.service.ServiceFactory;
 import me.sit.dev.service.*;
 import me.sit.dev.service.impl.*;
 
@@ -15,9 +18,14 @@ public abstract class BaseUI {
     protected final IOrderService orderService;
     protected final ICartService cartService;
 
+    protected User user;
+    protected Product product;
+    protected Restaurant restaurant;
+
     public BaseUI(String uiName, String description, ServiceFactory serviceFactory) {
         this.uiName = uiName;
         this.description = description;
+
         this.userService = serviceFactory.createUserService();
         this.restaurantService = serviceFactory.createRestaurantService();
 

@@ -2,16 +2,18 @@ package me.sit.dev.entity.impl;
 
 import me.sit.dev.entity.BaseEntity;
 import me.sit.dev.entity.impl.user.User;
-import me.sit.dev.service.standalone.UtilityService;
 
 public class Session extends BaseEntity {
     private final User user;
     private final long loginTime;
     private long logoutTime;
+
+    private Product selectingProduct;
+
     private static Session currentSession;
 
     public Session(User user) {
-        super(UtilityService.generateId("session-"));
+        super("session-" + user.getId());
         this.user = user;
         this.loginTime = System.currentTimeMillis();
     }
@@ -40,8 +42,16 @@ public class Session extends BaseEntity {
         return logoutTime - loginTime;
     }
 
+    public Product getSelectingProduct() {
+        return selectingProduct;
+    }
+
+
     public void setLogoutTime(long logoutTime) {
         this.logoutTime = logoutTime;
     }
 
+    public void selectProduct(Product product) {
+        selectingProduct = product;
+    }
 }

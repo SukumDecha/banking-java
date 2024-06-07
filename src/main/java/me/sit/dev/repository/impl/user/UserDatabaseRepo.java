@@ -5,56 +5,7 @@ import me.sit.dev.repository.IUserRepo;
 
 import java.util.Collection;
 
-public class UserDatabaseRepo implements IUserRepo {
+public class UserDatabaseRepo extends UserMemoRepo implements IUserRepo {
 
 
-    @Override
-    public Collection<User> findAll() {
-        return null;
-    }
-
-    @Override
-    public User findById(String id) {
-        return null;
-    }
-
-    @Override
-    public User findByEmail(String email) {
-        return null;
-    }
-
-    @Override
-    public User save(User user) {
-        return null;
-    }
-
-    @Override
-    public User update(String userId, User user) {
-        return null;
-    }
-
-    @Override
-    public void delete(User user) {
-
-    }
-
-    @Override
-    public void deleteById(String id) {
-
-    }
-
-    @Override
-    public void deleteAll() {
-
-    }
-
-    @Override
-    public boolean existsById(String id) {
-        return false;
-    }
-
-    @Override
-    public boolean existsByEmail(String email) {
-        return false;
-    }
 }

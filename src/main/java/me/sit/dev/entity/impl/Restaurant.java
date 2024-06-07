@@ -2,7 +2,6 @@ package me.sit.dev.entity.impl;
 
 import me.sit.dev.entity.BaseEntity;
 import me.sit.dev.entity.impl.order.Order;
-import me.sit.dev.service.standalone.UtilityService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,7 @@ public class Restaurant extends BaseEntity {
     private final List<Product> products = new ArrayList<>();
     private final List<Order> orders = new ArrayList<>();
     public Restaurant(String ownerId, String restaurantName, int totalRating) {
-        super(UtilityService.generateId("R-"));
+        super("R-" + ownerId);
         this.ownerId = ownerId;
         this.name = restaurantName;
         this.totalRating = totalRating;

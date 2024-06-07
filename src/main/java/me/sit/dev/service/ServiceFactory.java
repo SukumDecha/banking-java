@@ -1,4 +1,4 @@
-package me.sit.dev.service.standalone;
+package me.sit.dev.service;
 
 import me.sit.dev.exceptions.InvalidRepositoryException;
 import me.sit.dev.repository.type.RepositoryType;

@@ -13,5 +13,4 @@ public class SystemAdmin {
                         , "admin123", UserRole.SYSTEM_ADMIN) : SYSTEM_ADMIN;
     }
 
-
 }
