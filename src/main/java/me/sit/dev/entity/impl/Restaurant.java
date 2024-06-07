@@ -20,6 +20,9 @@ public class Restaurant extends BaseEntity {
         this.totalRating = totalRating;
     }
 
+    public String getOwnerId(){
+        return ownerId;
+    }
     public String getName() {
         return name;
     }

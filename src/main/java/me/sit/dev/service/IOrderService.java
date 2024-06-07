@@ -1,6 +1,5 @@
 package me.sit.dev.service;
 
-import me.sit.dev.entity.impl.Restaurant;
 import me.sit.dev.entity.impl.order.Order;
 import me.sit.dev.entity.impl.user.User;
 

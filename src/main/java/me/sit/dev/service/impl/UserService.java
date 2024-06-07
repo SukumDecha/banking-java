@@ -1,6 +1,5 @@
 package me.sit.dev.service.impl;
 
-import me.sit.dev.entity.impl.Session;
 import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.entity.impl.user.UserRole;
 import me.sit.dev.exceptions.InvalidParamsException;
@@ -16,19 +15,55 @@ public class UserService implements IUserService {
         this.userRepository = userRepository;
     }
 
+
     @Override
     public Collection<User> findAll() {
-        return userRepository.findAll();
+        return null;
     }
 
     @Override
     public User findById(String id) {
-        return userRepository.findById(id);
+        return null;
     }
 
     @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return null;
+    }
+
+    @Override
+    public User save(User user) {
+        return null;
+    }
+
+    @Override
+    public User update(String userId, User user) {
+        return null;
+    }
+
+    @Override
+    public void delete(User user) {
+
+    }
+
+    @Override
+    public void deleteById(String id) {
+
+    }
+
+    @Override
+    public void deleteAll() {
+
+    }
+
+    @Override
+    public boolean existsById(String id) {
+        return false;
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return false;
     }
 
     @Override
@@ -42,6 +77,7 @@ public class UserService implements IUserService {
         if (password == null || password.isBlank()){
             throw  new InvalidParamsException("password cannot be blank");
         }
+
         User user = new User("id",name,email,password,UserRole.USER);
         userRepository.save(user);
         return true;
@@ -49,48 +85,9 @@ public class UserService implements IUserService {
 
     @Override
     public boolean login(String email, String password) {
-        User user = userRepository.findByEmail(email);
-        if (user == null) return false;
-
-        if (user.getPassword().equals(password)) {
-            Session.createSession(user);
-        }
-        return true;
-    }
-
-    @Override
-    public User save(User user) {
-        return userRepository.save(user);
-    }
-
-    @Override
-    public User update(String userId, User user) {
-        return null;
-    }
 
 
-    @Override
-    public void delete(User user) {
-        userRepository.delete(user);
-    }
-
-    @Override
-    public void deleteById(String id) {
-        userRepository.deleteById(id);
-    }
-
-    @Override
-    public void deleteAll() {
-        userRepository.deleteAll();
-    }
-
-    @Override
-    public boolean existsById(String id) {
-        return userRepository.existsById(id);
-    }
-
-    @Override
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
+        // set session
+        return false;
     }
 }
