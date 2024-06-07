@@ -18,10 +18,6 @@ public abstract class BaseUI {
     protected final IOrderService orderService;
     protected final ICartService cartService;
 
-    protected User user;
-    protected Product product;
-    protected Restaurant restaurant;
-
     public BaseUI(String uiName, String description, ServiceFactory serviceFactory) {
         this.uiName = uiName;
         this.description = description;

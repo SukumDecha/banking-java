@@ -10,7 +10,6 @@ public class LoginUI extends BaseUI {
     private final ClientUI clientUI;
     private final RestaurantUI restaurantUI;
     private final String login_Prompt = """
-                    
             -------------- LOGIN MENU --------------
                            1. Login
                           2. register         
@@ -30,7 +29,7 @@ public class LoginUI extends BaseUI {
         System.out.println("Login UI");
         System.out.println(login_Prompt);
         System.out.println("please Enter 1/2/3");
-        Scanner sc=new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         while (!sc.hasNext("[1|2|3]")) {
             System.out.println("please try again");
             sc.next();
@@ -60,9 +59,9 @@ public class LoginUI extends BaseUI {
                     System.out.println("please enter yes or no");
                     sc.next();
                 }
-                String isadmin = sc.next();
+                String input = sc.next();
                 boolean isAdmin = false;
-                if (isadmin.equals("yes")) {
+                if (input.equals("yes")) {
                     isAdmin = true;
                 }
                 userService.register(name, saveEmail, savePassword, isAdmin);
