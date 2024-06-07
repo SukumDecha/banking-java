@@ -5,7 +5,6 @@ import me.sit.dev.entity.impl.Cart;
 import me.sit.dev.entity.impl.order.Order;
 import me.sit.dev.entity.impl.Restaurant;
 import me.sit.dev.entity.impl.order.OrderStatus;
-import me.sit.dev.service.UtilityService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +22,7 @@ public class User extends BaseEntity {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.cart = new Cart();
     }
 
     public String getName() {
@@ -42,8 +42,10 @@ public class User extends BaseEntity {
     }
 
     public Cart getCart() {
-        return cart == null ? cart = new Cart() : cart;
+        return cart;
     }
+
+
 
     public Restaurant getRestaurant() {
         return restaurant;
@@ -53,7 +55,8 @@ public class User extends BaseEntity {
     }
 
     public List<Order> getOrderHistory() {
-        return orders.stream().filter(order -> order.getStatus() == OrderStatus.DELIVERED).toList();
+        return orders.stream().filter(order -> order.getStatus() == OrderStatus.DELIVERED
+        || order.getStatus() == OrderStatus.CANCELLED).toList();
     }
 
 }

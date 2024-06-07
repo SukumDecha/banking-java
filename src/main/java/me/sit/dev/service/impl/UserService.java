@@ -4,15 +4,8 @@ import me.sit.dev.entity.impl.Session;
 import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.entity.impl.user.UserRole;
 import me.sit.dev.exceptions.InvalidParamsException;
-import me.sit.dev.exceptions.InvalidPasswordException;
-import me.sit.dev.exceptions.user.UserExistException;
-import me.sit.dev.exceptions.user.UserNotFoundException;
 import me.sit.dev.repository.IUserRepo;
-import me.sit.dev.repository.impl.user.UserFileRepo;
-import me.sit.dev.repository.impl.user.UserMemoRepo;
-import me.sit.dev.repository.impl.user.UserSQLRepo;
 import me.sit.dev.service.IUserService;
-import me.sit.dev.service.UtilityService;
 
 import java.util.Collection;
 
@@ -23,54 +16,23 @@ public class UserService implements IUserService {
         this.userRepository = userRepository;
     }
 
-
     @Override
     public Collection<User> findAll() {
-        return null;
+        return userRepository.findAll();
     }
 
     @Override
     public User findById(String id) {
-        return null;
+        return userRepository.findById(id);
     }
 
     @Override
     public User findByEmail(String email) {
-        return null;
+        return userRepository.findByEmail(email);
     }
 
     @Override
-    public User save(User user) {
-        return null;
-    }
-
-    @Override
-    public User update(User user) {
-        return null;
-    }
-
-    @Override
-    public void deleteById(String id) {
-
-    }
-
-    @Override
-    public void deleteAll() {
-
-    }
-
-    @Override
-    public boolean existsById(String id) {
-        return false;
-    }
-
-    @Override
-    public boolean existsByEmail(String email) {
-        return false;
-    }
-
-    @Override
-    public User register(String name, String email, String password, boolean isAdmin) {
+    public boolean register(String name, String email, String password, boolean isAdmin) {
         if (name == null || name.isBlank()){
             throw  new InvalidParamsException("Username cannot be blank");
         }
@@ -81,16 +43,54 @@ public class UserService implements IUserService {
             throw  new InvalidParamsException("password cannot be blank");
         }
         User user = new User("id",name,email,password,UserRole.USER);
+        userRepository.save(user);
+        return true;
+    }
+
+    @Override
+    public boolean login(String email, String password) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) return false;
+
+        if (user.getPassword().equals(password)) {
+            Session.createSession(user);
+        }
+        return true;
+    }
+
+    @Override
+    public User save(User user) {
         return userRepository.save(user);
     }
 
     @Override
-    public void login(String email, String password) {
-
+    public User update(String userId, User user) {
+        return null;
     }
+
 
     @Override
     public void delete(User user) {
+        userRepository.delete(user);
+    }
 
+    @Override
+    public void deleteById(String id) {
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteAll() {
+        userRepository.deleteAll();
+    }
+
+    @Override
+    public boolean existsById(String id) {
+        return userRepository.existsById(id);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }

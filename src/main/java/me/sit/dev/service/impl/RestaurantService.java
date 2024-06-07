@@ -17,7 +17,7 @@ public class RestaurantService implements IRestaurantService {
 
     @Override
     public Restaurant addRestaurant(String ownerId, String restaurantName) {
-        return null;
+        return restaurantRepository.addRestaurant(ownerId, restaurantName);
     }
 
     @Override

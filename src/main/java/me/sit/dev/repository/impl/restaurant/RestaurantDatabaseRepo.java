@@ -5,7 +5,7 @@ import me.sit.dev.repository.IRestaurantRepo;
 
 import java.util.Collection;
 
-public class RestaurantSQLRepo implements IRestaurantRepo {
+public class RestaurantDatabaseRepo implements IRestaurantRepo {
     @Override
     public Restaurant addRestaurant(String ownerId, String restaurantName) {
         return null;

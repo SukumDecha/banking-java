@@ -2,13 +2,13 @@ package me.sit.dev.entity.impl;
 
 import me.sit.dev.entity.BaseEntity;
 import me.sit.dev.entity.impl.user.User;
-import me.sit.dev.service.UtilityService;
+import me.sit.dev.service.standalone.UtilityService;
 
 public class Session extends BaseEntity {
     private final User user;
     private final long loginTime;
     private long logoutTime;
-    public static Session currentSession;
+    private static Session currentSession;
 
     public Session(User user) {
         super(UtilityService.generateId("session-"));
@@ -17,7 +17,7 @@ public class Session extends BaseEntity {
     }
 
     public static Session createSession(User user) {
-        return new Session(user);
+        return currentSession = new Session(user);
     }
 
     public static Session getCurrentSession() {
@@ -43,6 +43,5 @@ public class Session extends BaseEntity {
     public void setLogoutTime(long logoutTime) {
         this.logoutTime = logoutTime;
     }
-
 
 }

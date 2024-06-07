@@ -1,7 +1,7 @@
 package me.sit.dev.entity.impl;
 
 import me.sit.dev.entity.BaseEntity;
-import me.sit.dev.service.UtilityService;
+import me.sit.dev.service.standalone.UtilityService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +12,14 @@ public class Cart extends BaseEntity {
 
     public Cart() {
         super(UtilityService.generateId());
+    }
+
+    public Cart clone() {
+        Cart cart = new Cart();
+        cart.products.putAll(products);
+        cart.restaurant = restaurant;
+
+        return cart;
     }
 
     public void addProduct(Product product, int quantity) {
