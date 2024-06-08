@@ -31,7 +31,7 @@ public class RestaurantUI extends BaseUI {
         System.out.println("Restaurant UI");
         System.out.println(Program_prompt);
         System.out.print("Choose your program : ");
-        while (!sc.hasNext("[1|2|3|4|5]")) {
+        while (!sc.hasNext("[1|2|3|4|5|6]")) {
             System.out.print("please try again [select 1,2,3,4,5] : ");
             sc.next();
         }
@@ -42,8 +42,8 @@ public class RestaurantUI extends BaseUI {
             if (count != 1) {
                 System.out.println(Program_prompt);
                 System.out.print("Choose next program : ");
-                while (!sc.hasNext("[1|2|3|4|5]")) {
-                    System.out.print("please try again [select 1,2,3,4,5] : ");
+                while (!sc.hasNext("[1|2|3|4|5|6]")) {
+                    System.out.print("please try again [select 1,2,3,4,5,6] : ");
                     sc.next();
                 }
             }
@@ -89,6 +89,26 @@ public class RestaurantUI extends BaseUI {
         String restaurantId = Session.getCurrentSession().getRestaurantId();
 
         restaurantService.showAllProducts(restaurantId);
+    }
+
+    private void showHistory(){
+        System.out.println("Show all product and amount that is ordered");
+        String restaurantId = Session.getCurrentSession().getRestaurantId();
+        Restaurant restaurant = restaurantService.findById(restaurantId);
+
+        if (restaurant != null) {
+            int maxPage = productService.findAll(restaurantId).size() / 5;
+            System.out.println("Enter page number to view (max page = " + maxPage + "): ");
+            while (!sc.hasNextInt()) {
+                System.out.println("Please enter a valid page number");
+                sc.next();
+            }
+            int page = sc.nextInt();
+
+            restaurantService.showOrderPagination(restaurantId, page, 5);;
+        } else {
+            System.out.println("Restaurant not found!");
+        }
     }
 
     private void deleteRestaurant() {
