@@ -16,7 +16,7 @@ public class UserDatabaseRepo extends UserMemoRepo implements IUserRepo {
     @Override
     public Collection<User> findAll() {
         String sql = "SELECT * FROM User";
-        Collection<User> users = new ArrayList<>();
+        Collection<User> users = new ArrayList<>();2
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
