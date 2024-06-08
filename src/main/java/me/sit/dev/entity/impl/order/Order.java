@@ -22,17 +22,16 @@ public class Order extends BaseEntity {
         this.restaurantId = restaurantId;
         this.restaurantName = restaurantName;
         this.products = cart.getProducts();
-
-        confirmOrder();
     }
 
-    public Order(String id, String ownerId, String restaurantId, String restaurantName, String productMap, String status) {
+    public Order(String id, String ownerId, String restaurantId, String restaurantName, Map<Product, Integer> productMap, String status) {
         super(id);
         this.ownerId = ownerId;
         this.restaurantId = restaurantId;
         this.restaurantName = restaurantName;
         this.status = OrderStatus.valueOf(status);
 
+        this.products = productMap;
     }
 
     public String getOwnerId() {
@@ -48,7 +47,6 @@ public class Order extends BaseEntity {
     }
 
     public void confirmOrder() {
-
         status = OrderStatus.CONFIRMED;
     }
 

@@ -25,8 +25,8 @@ public abstract class BaseUI {
         this.userService = serviceFactory.createUserService();
         this.restaurantService = serviceFactory.createRestaurantService();
 
-        this.productService = new ProductService();
-        this.orderService = new OrderService();
+        this.productService = serviceFactory.createProductService();
+        this.orderService = serviceFactory.createOrderService(productService);
         this.cartService = new CartService();
 
         System.out.println("Services registered for UI: " + uiName);

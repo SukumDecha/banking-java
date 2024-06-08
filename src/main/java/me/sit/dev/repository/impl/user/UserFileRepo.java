@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserFileRepo extends UserMemoRepo implements IUserRepo {
-    protected final Map<String, User> userMap = new HashMap<>();
     private final String path = "src/main/resources/users/";
 
     public UserFileRepo() {

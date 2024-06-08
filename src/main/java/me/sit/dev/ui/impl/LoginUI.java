@@ -1,5 +1,6 @@
 package me.sit.dev.ui.impl;
 
+import me.sit.dev.exceptions.InvalidPasswordException;
 import me.sit.dev.service.ServiceFactory;
 import me.sit.dev.ui.BaseUI;
 
@@ -45,6 +46,8 @@ public class LoginUI extends BaseUI {
                 String password = sc.next();
                 if (userService.login(email, password)) {
                     System.out.println("Success login");
+                } else {
+                    throw new InvalidPasswordException();
                 }
                 break;
             case 2: // register

@@ -9,7 +9,7 @@ import me.sit.dev.ui.impl.RestaurantUI;
 public class Application {
 
     public static void main(String[] args) {
-        ServiceFactory serviceFactory = new ServiceFactory(RepositoryType.DATABASE);
+        ServiceFactory serviceFactory = new ServiceFactory(RepositoryType.FILE);
 
         ClientUI clientUI = new ClientUI(serviceFactory);
         RestaurantUI restaurantUI = new RestaurantUI(serviceFactory);

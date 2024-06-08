@@ -101,7 +101,6 @@ public class CartService implements ICartService {
      *
      * @param user the user whose cart details will be displayed
      */
-
     @Override
     public void showCartDetails(User user) {
         if (user == null) {

@@ -13,28 +13,10 @@ import java.util.stream.Collectors;
 
 public class OrderService implements IOrderService {
 
-    private final List<Order> orders = new ArrayList<>();
     private final IOrderRepo orderRepo;
 
     public OrderService(IOrderRepo orderRepo) {
         this.orderRepo = orderRepo;
-    }
-
-    @Override
-    public void showOrderDetails(Order order, boolean showStatus) {
-        System.out.println("[S] --- Order Details ---");
-        System.out.println("[S] Order ID: " + order.getId());
-        System.out.println("[S] Restaurant Name: " + order.getRestaurantName() + " (" + order.getRestaurantId() + ")");
-        System.out.println();
-        System.out.println("[S] Products:");
-        order.getProducts().forEach((product, quantity) -> {
-            System.out.println("[S] - " + product.getName() + " x" + quantity);
-        });
-        System.out.println("[S] Total Price: " + order.getTotalPrice());
-        if (showStatus) {
-            System.out.println("[S] Status: " + order.getStatus());
-        }
-        System.out.println("[S] ----------------------");
     }
 
     @Override
@@ -56,6 +38,7 @@ public class OrderService implements IOrderService {
         user.getOrders().add(order);
         return order;
     }
+
 
     @Override
     public Order updateOrder(String orderId, Order order) {
@@ -104,5 +87,21 @@ public class OrderService implements IOrderService {
         System.out.println("[S] ----------------------");
     }
 
+    @Override
+    public void showOrderDetails(Order order, boolean showStatus) {
+        System.out.println("[S] --- Order Details ---");
+        System.out.println("[S] Order ID: " + order.getId());
+        System.out.println("[S] Restaurant Name: " + order.getRestaurantName() + " (" + order.getRestaurantId() + ")");
+        System.out.println();
+        System.out.println("[S] Products:");
+        order.getProducts().forEach((product, quantity) -> {
+            System.out.println("[S] - " + product.getName() + " x" + quantity);
+        });
+        System.out.println("[S] Total Price: " + order.getTotalPrice());
+        if (showStatus) {
+            System.out.println("[S] Status: " + order.getStatus());
+        }
+        System.out.println("[S] ----------------------");
+    }
 
 }

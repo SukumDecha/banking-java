@@ -9,7 +9,7 @@ import java.util.List;
 public interface IProductRepo {
     Product addProduct(String restaurantId, String productName, double price, int quantity);
 
-    Product updateProduct(String restaurantId, String productId, Product product);
+    Product updateProduct(String restaurantId, String productId, Product updatedProduct);
 
     Product deleteProduct(String restaurantId, String productId);
 
@@ -19,7 +19,7 @@ public interface IProductRepo {
 
     List<Product> findAll(String restaurantId);
 
-    boolean existsById(String restaurantId, String productId);
+    boolean existsById(String productId);
 
     boolean existsByName(String restaurantId, String productName);
 }

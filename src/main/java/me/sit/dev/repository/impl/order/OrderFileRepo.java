@@ -6,13 +6,14 @@ import me.sit.dev.entity.impl.user.User;
 
 public class OrderFileRepo extends OrderMemoRepo {
 
-    public OrderFileRepo() {}
+    public OrderFileRepo() {
+
+    }
 
 
     @Override
     public Order createOrder(User user, Restaurant restaurant) {
         Order order = super.createOrder(user, restaurant);
-
 
         return order;
     }

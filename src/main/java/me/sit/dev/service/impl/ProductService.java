@@ -37,26 +37,22 @@ public class ProductService implements IProductService {
 
     @Override
     public Product findByName(String restaurantId, String productName) {
-        return null;
+        return productRepo.findByName(restaurantId, productName);
     }
 
     @Override
     public List<Product> findAll(String restaurantId) {
-        return null;
+        return productRepo.findAll(restaurantId);
     }
 
     @Override
-    public boolean existsById(String restaurantId, String productId) {
-        return false;
+    public boolean existsById(String productId) {
+        return productRepo.existsById(productId);
     }
 
     @Override
     public boolean existsByName(String restaurantId, String productName) {
-        return false;
+        return productRepo.existsByName(restaurantId, productName);
     }
 
-    @Override
-    public void showAllProducts(Restaurant restaurant) {
-
-    }
 }

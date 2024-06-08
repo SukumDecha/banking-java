@@ -4,7 +4,7 @@ import me.sit.dev.entity.impl.Product;
 import me.sit.dev.entity.impl.Restaurant;
 import me.sit.dev.exceptions.InvalidInputException;
 import me.sit.dev.exceptions.InvalidParamsException;
-import me.sit.dev.exceptions.restaurant.RestaurantExistException;
+import me.sit.dev.exceptions.restaurant.RestaurantAlreadyExistException;
 import me.sit.dev.exceptions.restaurant.RestaurantNotFoundException;
 import me.sit.dev.repository.IRestaurantRepo;
 
@@ -15,12 +15,11 @@ import java.util.stream.Collectors;
 
 public class RestaurantMemoRepo implements IRestaurantRepo {
     protected final Map<String, Restaurant> restaurantMap = new HashMap<>();
-
     @Override
     public Restaurant addRestaurant(String ownerId, String restaurantName) {
         Restaurant restaurant = findByName(restaurantName);
         if (restaurant != null){
-            throw new RestaurantExistException();
+            throw new RestaurantAlreadyExistException();
         }
         if (ownerId == null || ownerId.isBlank()){
             throw new NullPointerException();

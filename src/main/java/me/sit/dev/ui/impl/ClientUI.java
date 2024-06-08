@@ -1,14 +1,21 @@
 package me.sit.dev.ui.impl;
 
+import me.sit.dev.entity.impl.Product;
+import me.sit.dev.entity.impl.Restaurant;
+import me.sit.dev.entity.impl.Session;
 import me.sit.dev.entity.impl.order.Order;
-import me.sit.dev.repository.impl.restaurant.RestaurantFileRepo;
-import me.sit.dev.service.impl.RestaurantService;
+import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.service.ServiceFactory;
 import me.sit.dev.ui.BaseUI;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Scanner;
 
 public class ClientUI extends BaseUI {
+
+    private Scanner sc = new Scanner(System.in);
+
     private String programPrompt = """
                                 
             -------------- MAIN MENU --------------
@@ -36,7 +43,6 @@ public class ClientUI extends BaseUI {
             ----------------------------------------------       
             """;
 
-    Scanner sc = new Scanner(System.in);
     public ClientUI(ServiceFactory serviceFactory) {
         super("Client UI", "This UI only shows the client's view.", serviceFactory);
     }
@@ -44,6 +50,49 @@ public class ClientUI extends BaseUI {
     @Override
     public void show() {
         System.out.println("Client UI");
+        showAllRestaurants();
+        selectRestaurant();
+        showMainMenu();
+    }
+
+    private boolean showAllRestaurants() {
+        Collection<Restaurant> restaurants = restaurantService.findAll();
+        if (restaurants.isEmpty()) {
+            System.out.println("No restaurants available.");
+            return  false;
+        }
+        System.out.println("Available restaurants:");
+        int count = 1;
+        for (Restaurant restaurant : restaurants) {
+            System.out.println(count + ". " + restaurant.getName());
+            count++;
+        }
+
+        return true;
+    }
+
+    private void selectRestaurant() {
+        List<Restaurant> restaurants = (List<Restaurant>) restaurantService.findAll();
+
+        System.out.print("Please select a restaurant by number: ");
+        while (true) {
+            while (!sc.hasNextInt()) {
+                System.out.print("Invalid selection. Please try again: ");
+                sc.next();
+            }
+
+            int restaurantIndex = sc.nextInt() - 1;
+
+            if (restaurantIndex >= 0 && restaurantIndex < restaurants.size()) {
+                String currentRestaurantId = restaurants.get(restaurantIndex).getId();
+                Session.getCurrentSession().setRestaurantId(currentRestaurantId);
+                break;
+            }
+            System.out.println("Invalid selection. Please try again.");
+        }
+    }
+
+    private void showMainMenu() {
         System.out.println(programPrompt);
         System.out.print("Choose your program : ");
         while (!sc.hasNext("[1|2|3]")) {
@@ -80,8 +129,8 @@ public class ClientUI extends BaseUI {
             }
         }
     }
+
     public void createRestaurant() {
-        RestaurantService restaurantService = new RestaurantService(new RestaurantFileRepo());
         System.out.println("Enter ownerId : ");
         String ownerId = sc.next();
         System.out.println("Enter restaurant name : ");
@@ -89,8 +138,15 @@ public class ClientUI extends BaseUI {
         restaurantService.addRestaurant(ownerId, restaurantName);
         System.out.println("success create Restaurant");
     }
+
     public void orderUI() {
-        productService.showAllProducts();
+        String currentRestaurantId = Session.getCurrentSession().getRestaurantId();
+
+        if(!showAllRestaurants()) {
+            return;
+        }
+        selectRestaurant();
+        restaurantService.showAllProducts(currentRestaurantId);
         System.out.println(orderUIPrompt);
         Scanner scOrder = new Scanner(System.in);
         System.out.print("Select your order : ");
@@ -134,35 +190,44 @@ public class ClientUI extends BaseUI {
     }
 
     public void orderfood() {
+        String currentRestaurantId = Session.getCurrentSession().getRestaurantId();
+        String currentProductId = Session.getCurrentSession().getSelectingProduct().getId();
+        User currentUser = Session.getCurrentSession().getUser();
+
         boolean statusSelectFood = true;
         while (statusSelectFood) {
-            System.out.println("ui order food");
+            System.out.println("UI order food");
             Scanner scFood = new Scanner(System.in);
             System.out.print("Select menu : ");
-            while (!productService.findAll().equals(scFood.hasNext())) {
+            while (!productService.findAll(currentRestaurantId).equals(scFood.hasNext())) {
                 System.out.println("you can enter 0 to end this process");
                 System.out.print("please try again (may be your text error): ");
                 scFood.next();
-                if (scFood.hasNext("0")){
-                    statusSelectFood=false;
+                if (scFood.hasNext("0")) {
+                    statusSelectFood = false;
                 }
             }
 
             System.out.println("Show all detail of that food");
-            orderService.showOrderDetails(new Order(user),false);
+            orderService.showOrderDetails(new Order(currentUser, currentUser.getCart(),
+                    currentRestaurantId, restaurantService.findById(currentProductId).getName()), false);
             addToCart();
         }
     }
 
     public void search_food() {
-        System.out.println("search : ");
-        String search=sc.next();
-        productService.findByName(search);
+        String currentRestaurantId = Session.getCurrentSession().getRestaurantId();
+
+        System.out.println("Search : ");
+        String query = sc.next();
+        productService.findByName(currentRestaurantId, query);
         orderfood();
     }
 
     public void inMyCart() {
-        cartService.showCartDetails(user);
+        User currentUser = Session.getCurrentSession().getUser();
+
+        cartService.showCartDetails(currentUser);
         Scanner scIncart = new Scanner(System.in);
         boolean statusCart = true;
         while (statusCart) {
@@ -195,8 +260,6 @@ public class ClientUI extends BaseUI {
         }
     }
 
-
-
     public void addToCart() {
         System.out.println("Did you want to add to cart");
         Scanner scAddToCart = new Scanner(System.in);
@@ -223,21 +286,28 @@ public class ClientUI extends BaseUI {
     }
 
     public void removeFromCart() {
-        System.out.println("What did you want to remove from cart");
-        String remove=sc.next();
+        String currentRestaurantId = Session.getCurrentSession().getRestaurantId();
+        String currentProductId = Session.getCurrentSession().getSelectingProduct().getId();
+        User currentUser = Session.getCurrentSession().getUser();
 
-        try{
-            product=productService.findByName(remove);
-        }catch (Exception e){
+        System.out.println("What did you want to remove from cart");
+        String remove = sc.next();
+
+        Product product = null;
+        try {
+            product = productService.findByName(currentRestaurantId, remove);
+        } catch (Exception e) {
             System.out.println("not have this food");
         }
 
-        while (!cartService.existsInCart(user,product)){
+        assert product != null;
+
+        while (!cartService.existsInCart(currentUser, product)) {
             System.out.println("please try again");
-            remove=sc.next();
-            try{
-                product=productService.findByName(remove);
-            }catch (Exception e){
+            remove = sc.next();
+            try {
+                product = productService.findByName(currentRestaurantId, remove);
+            } catch (Exception e) {
                 System.out.println("not have this food");
             }
         }
@@ -250,7 +320,7 @@ public class ClientUI extends BaseUI {
         }
         String addToCartSelected = sc.next();
         if (addToCartSelected.equalsIgnoreCase("Yes")) {
-            cartService.removeFromCart(user,product);
+            cartService.removeFromCart(currentUser, product);
             System.out.println("success remove");
         }
         if (addToCartSelected.equalsIgnoreCase("No")) {

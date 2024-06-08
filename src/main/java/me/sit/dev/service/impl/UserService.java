@@ -1,5 +1,6 @@
 package me.sit.dev.service.impl;
 
+import me.sit.dev.entity.impl.Session;
 import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.entity.impl.user.UserRole;
 import me.sit.dev.exceptions.InvalidParamsException;
@@ -33,41 +34,41 @@ public class UserService implements IUserService {
      */
     @Override
     public User findById(String id) {
-        return null;
+        return userRepository.findById(id);
     }
 
     /**
      * Finds a user by their email.
      *
      * @param email the email of the user to find
-     * @return null if the user was not found 
+     * @return null if the user was not found
      */
     @Override
     public User findByEmail(String email) {
-        return null;
+        return userRepository.findByEmail(email);
     }
 
     /**
      * Saves a new user to the repository.
      *
      * @param user the user to save
-     * @return null if the user was not successfully saved 
+     * @return null if the user was not successfully saved
      */
     @Override
     public User save(User user) {
-        return null;
+        return userRepository.save(user);
     }
 
     /**
      * Updates an existing user with the given ID using the provided user details.
      *
      * @param userId the ID of the user to update
-     * @param user the updated user object
-     * @return null if the user was not successfully updated 
+     * @param user   the updated user object
+     * @return null if the user was not successfully updated
      */
     @Override
     public User update(String userId, User user) {
-        return null;
+        return userRepository.update(userId, user);
     }
 
     /**
@@ -78,6 +79,7 @@ public class UserService implements IUserService {
     @Override
     public void delete(User user) {
         // Implementation needed for deleting the user
+        userRepository.delete(user);
     }
 
     /**
@@ -87,7 +89,7 @@ public class UserService implements IUserService {
      */
     @Override
     public void deleteById(String id) {
-        // Implementation needed for deleting the user by ID
+        userRepository.deleteById(id);
     }
 
     /**
@@ -95,38 +97,38 @@ public class UserService implements IUserService {
      */
     @Override
     public void deleteAll() {
-        // Implementation needed for deleting all users
+        userRepository.deleteAll();
     }
 
     /**
      * Checks if a user with the given ID exists.
      *
      * @param id the ID of the user to check
-     * @return false if the user does not exist 
+     * @return false if the user does not exist
      */
     @Override
     public boolean existsById(String id) {
-        return false;
+        return userRepository.existsById(id);
     }
 
     /**
      * Checks if a user with the given email exists.
      *
      * @param email the email of the user to check
-     * @return false if the user does not exist 
+     * @return false if the user does not exist
      */
     @Override
     public boolean existsByEmail(String email) {
-        return false;
+        return userRepository.existsByEmail(email);
     }
 
     /**
      * Registers a new user with the given name, email, password, and admin status.
      *
-     * @param name the name of the user
-     * @param email the email of the user
+     * @param name     the name of the user
+     * @param email    the email of the user
      * @param password the password of the user
-     * @param isAdmin the admin status of the user
+     * @param isAdmin  the admin status of the user
      * @return true if the user was successfully registered
      * @throws InvalidParamsException if any of the parameters are invalid
      */
@@ -138,11 +140,14 @@ public class UserService implements IUserService {
         if (email == null || email.isBlank()) {
             throw new InvalidParamsException("Email cannot be blank");
         }
+        if (existsByEmail(email)) {
+            throw new InvalidParamsException("This email has already been registered");
+        }
         if (password == null || password.isBlank()) {
             throw new InvalidParamsException("Password cannot be blank");
         }
 
-        User user = new User("U" + findAll().size(), name, email, password, UserRole.USER);
+        User user = new User("U" + findAll().size(), name, email, password, isAdmin ? UserRole.SYSTEM_ADMIN : UserRole.USER);
         userRepository.save(user);
         return true;
     }
@@ -150,13 +155,19 @@ public class UserService implements IUserService {
     /**
      * Logs in a user with the given email and password.
      *
-     * @param email the email of the user
+     * @param email    the email of the user
      * @param password the password of the user
-     * @return false if the user was not successfully logged in 
+     * @return false if the user was not successfully logged in
      */
     @Override
     public boolean login(String email, String password) {
-        // Set session (implementation needed)
-        return false;
+        User user = findByEmail(email);
+
+        if (user == null || !user.getPassword().equals(password)) {
+            return false;
+        }
+
+        Session.createSession(user);
+        return true;
     }
 }

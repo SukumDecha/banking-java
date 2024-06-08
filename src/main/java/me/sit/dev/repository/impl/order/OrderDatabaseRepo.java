@@ -43,7 +43,7 @@ public class OrderDatabaseRepo extends OrderMemoRepo {
                 String productMap = rs.getString("productMap");
                 String status = rs.getString("status");
 
-                Order order = new Order(id, userId, restaurantId, restaurantName, productMap, status);
+                Order order = new Order(id, userId, restaurantId, restaurantName, deserializeProduct(productMap), status);
                 orderMap.put(id, order);
             }
         } catch (SQLException e) {
@@ -63,7 +63,7 @@ public class OrderDatabaseRepo extends OrderMemoRepo {
             stmt.setString(2, user.getId());
             stmt.setString(3, restaurant.getName());
             stmt.setString(4, restaurant.getId());
-            stmt.setString(5, order.getProducts().toString());
+            stmt.setString(5, serializeProduct(order.getProducts()));
             stmt.setString(6, order.getStatus().name());
             int affectedRows = stmt.executeUpdate();
             if (affectedRows == 0) {
@@ -108,7 +108,6 @@ public class OrderDatabaseRepo extends OrderMemoRepo {
         // Remove curly braces and split the string by commas to get key-value pairs
         String[] keyValuePairs = hashMapAsString.substring(1, hashMapAsString.length() - 1).split(", ");
 
-        // Loop through each key-value pair and add it to the HashMap
         for (String pair : keyValuePairs) {
             String[] entry = pair.split("=");
             String[] productEntry = entry[0].split("&&");

@@ -9,6 +9,7 @@ public class Session extends BaseEntity {
     private long logoutTime;
 
     private Product selectingProduct;
+    private String restaurantId;
 
     private static Session currentSession;
 
@@ -46,6 +47,10 @@ public class Session extends BaseEntity {
         return selectingProduct;
     }
 
+    public String getRestaurantId() {
+        return restaurantId;
+    }
+
 
     public void setLogoutTime(long logoutTime) {
         this.logoutTime = logoutTime;
@@ -53,5 +58,9 @@ public class Session extends BaseEntity {
 
     public void selectProduct(Product product) {
         selectingProduct = product;
+    }
+
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
     }
 }

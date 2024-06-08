@@ -1,11 +1,14 @@
 package me.sit.dev.service.impl;
 
+import me.sit.dev.entity.impl.Product;
 import me.sit.dev.entity.impl.Restaurant;
+import me.sit.dev.exceptions.restaurant.RestaurantNotFoundException;
 import me.sit.dev.repository.IRestaurantRepo;
 import me.sit.dev.service.IRestaurantService;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class RestaurantService implements IRestaurantService {
@@ -141,5 +144,30 @@ public class RestaurantService implements IRestaurantService {
                 return (int) (o2.getRating() - o1.getRating());
             }
         }).limit(limit).collect(Collectors.toList());
+    }
+
+    @Override
+    public void showAllProducts(String restaurantId) {
+        if (restaurantId == null || restaurantId.isBlank()) {
+            throw new IllegalArgumentException("Restaurant ID cannot be null or empty");
+        }
+
+        Restaurant restaurant = findById(restaurantId);
+        if (restaurant == null) {
+           throw new RestaurantNotFoundException();
+        }
+
+        List<Product> products =  restaurant.getProducts();
+        if (products.isEmpty()) {
+            System.out.println("No products available for restaurant: " + restaurant.getName());
+        } else {
+            System.out.println("Products available for restaurant: " + restaurant.getName());
+            products.forEach(product -> {
+                System.out.println("Product ID: " + product.getId() +
+                        ", Name: " + product.getName() +
+                        ", Price: " + product.getPrice() +
+                        ", Quantity: " + product.getQuantity());
+            });
+        }
     }
 }

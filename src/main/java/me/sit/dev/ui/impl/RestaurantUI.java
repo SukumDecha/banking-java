@@ -1,11 +1,16 @@
 package me.sit.dev.ui.impl;
 
+import me.sit.dev.entity.impl.Session;
+import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.service.ServiceFactory;
 import me.sit.dev.ui.BaseUI;
 
 import java.util.Scanner;
 
 public class RestaurantUI extends BaseUI {
+
+    private Scanner sc = new Scanner(System.in);
+
     private static String Program_prompt = """
                                 
             -------------- MAIN MENU --------------
@@ -16,7 +21,7 @@ public class RestaurantUI extends BaseUI {
                        5. deleteRestaurant
             ---------------------------------------       
             """;
-    Scanner sc = new Scanner(System.in);
+
     public RestaurantUI(ServiceFactory serviceFactory) {
         super("Restaurant UI", "This UI only shows the restaurant's view.", serviceFactory);
     }
@@ -51,7 +56,7 @@ public class RestaurantUI extends BaseUI {
                 case 2:
                     System.out.println("edit food");
                     continue;
-                case 3 :
+                case 3:
                     System.out.println("show all food");
                     continue;
                 case 4:
@@ -65,30 +70,38 @@ public class RestaurantUI extends BaseUI {
             }
         }
     }
-    private void addFood(){
-        System.out.println("Enter new product name : ");
-        String name=sc.next();
-        System.out.println("Enter price (only number) : ");
-        int price=sc.nextInt();
-        productService.addProduct(name,price,0);
-    }
-    private void editFood(){
 
+    private void addFood() {
+        String restaurantId = Session.getCurrentSession().getRestaurantId();
+
+        System.out.println("Enter new product name : ");
+        String name = sc.next();
+        System.out.println("Enter price (only number) : ");
+        int price = sc.nextInt();
+        productService.addProduct(restaurantId, name, price, 0);
     }
-    private void showAllFood(){
-        productService.showAllProducts();
+
+    private void editFood() {
+        
     }
-    private void deleteRestaurant(){
+
+    private void showAllFood() {
+        String restaurantId = Session.getCurrentSession().getRestaurantId();
+
+        restaurantService.showAllProducts(restaurantId);
+    }
+
+    private void deleteRestaurant() {
         System.out.println("Are you sure to remove restaurant");
         sc.next();
-        while (!sc.hasNext("(?i)Yes|(?i)No|(?i)y|(?i)n")){
+        while (!sc.hasNext("(?i)Yes|(?i)No|(?i)y|(?i)n")) {
             System.out.println("please try again");
             sc.next();
         }
-        if (sc.hasNext("(?i)[y].*")){
+        if (sc.hasNext("(?i)[y].*")) {
             restaurantService.deleteRestaurant("0");
         }
-        if (sc.hasNext("(?i)[n].*")){
+        if (sc.hasNext("(?i)[n].*")) {
             System.out.println("Im not sure to remove");
         }
     }
