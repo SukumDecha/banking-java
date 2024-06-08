@@ -59,7 +59,7 @@ public class CartService implements ICartService {
      */
     @Override
     public boolean updateCart(User user, Product product, int quantity) {
-        if (user == null || product == null || quantity < 0) {
+        if (user == null || product == null || quantity <= 0) {
             throw new InvalidInputException();
         }
 

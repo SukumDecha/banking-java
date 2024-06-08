@@ -1,7 +1,8 @@
 package me.sit.dev.ui.impl;
 
+import me.sit.dev.entity.impl.Product;
+import me.sit.dev.entity.impl.Restaurant;
 import me.sit.dev.entity.impl.Session;
-import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.service.ServiceFactory;
 import me.sit.dev.ui.BaseUI;
 
@@ -14,11 +15,12 @@ public class RestaurantUI extends BaseUI {
     private static String Program_prompt = """
                                 
             -------------- MAIN MENU --------------
-                          1. add food         
-                          2. edit food
-                        3. show all food
-                           4. exit
-                       5. deleteRestaurant
+                          1. Add Food         
+                          2. Edit Food
+                        3. Show All Food
+                        4. Show history
+                           5. Exit
+                     6. Delete Restaurant
             ---------------------------------------       
             """;
 
@@ -51,21 +53,23 @@ public class RestaurantUI extends BaseUI {
             count++;
             switch (programSelected) {
                 case 1:
-                    System.out.println("add food");
-                    continue;
+                    addFood();
+                    break;
                 case 2:
-                    System.out.println("edit food");
-                    continue;
+                    editFood();
+                    break;
                 case 3:
-                    System.out.println("show all food");
-                    continue;
+                    showAllFood();
+                    break;
                 case 4:
-                    System.out.println("exit");
-                    program_status = false;
+                    showHistory();
                     break;
                 case 5:
-                    System.out.println("deleteRestaurant");
+                    System.out.println("Exit");
                     program_status = false;
+                    break;
+                case 6:
+                    deleteRestaurant();
                     break;
             }
         }
@@ -74,21 +78,83 @@ public class RestaurantUI extends BaseUI {
     private void addFood() {
         String restaurantId = Session.getCurrentSession().getRestaurantId();
 
-        System.out.println("Enter new product name : ");
-        String name = sc.next();
-        System.out.println("Enter price (only number) : ");
-        int price = sc.nextInt();
-        productService.addProduct(restaurantId, name, price, 0);
+        try {
+            System.out.println("Enter new product name : ");
+            String name = sc.next();
+            System.out.println("Enter price (only number) : ");
+            while (!sc.hasNextDouble()){
+                System.out.print("Please tyr again (input number) : ");
+                sc.next();
+            }
+            double price = sc.nextDouble();
+            System.out.println("Enter quantity : ");
+            while (!sc.hasNextInt()){
+                System.out.print("Please tyr again (input number) : ");
+                sc.next();
+            }
+            int quantity = sc.nextInt();
+            productService.addProduct(restaurantId, name, price, quantity);
+            System.out.println("Food added successfully!");
+        } catch (Exception e) {
+            System.err.println("Error adding food: " + e.getMessage());
+        }
     }
 
     private void editFood() {
-        
+        String restaurantId = Session.getCurrentSession().getRestaurantId();
+
+        try {
+            System.out.println("Enter the product ID you want to edit: ");
+            String productId = sc.next();
+            Product product = productService.findById(restaurantId, productId);
+
+            if (product != null) {
+                System.out.println("Current name: " + product.getName());
+                System.out.println("Enter new name (or press enter to keep current): ");
+                sc.nextLine();  // Consume newline left-over
+                String newName = sc.nextLine();
+                if (!newName.isBlank()) {
+                    product.setName(newName);
+                }
+
+                System.out.println("Current price: " + product.getPrice());
+                System.out.println("Enter new price (or press enter to keep current): ");
+                while (!sc.hasNextDouble()) {
+                    System.out.println("Please enter a valid number");
+                    sc.next();
+                }
+
+                double newPriceInput = sc.nextDouble();
+                product.setPrice(newPriceInput);
+
+                System.out.println("Current quantity: " + product.getQuantity());
+                System.out.println("Enter new quantity (or press enter to keep current): ");
+
+                while (!sc.hasNextInt()) {
+                    System.out.println("Please enter a valid quantity");
+                    sc.next();
+                }
+
+                int newQuantity = sc.nextInt();
+                product.setQuantity(newQuantity);
+
+                productService.updateProduct(restaurantId, productId, product);
+                System.out.println("Food updated successfully!");
+            } else {
+                System.out.println("Product not found!");
+            }
+        } catch (Exception e) {
+            System.err.println("Error editing food: " + e.getMessage());
+        }
     }
 
     private void showAllFood() {
         String restaurantId = Session.getCurrentSession().getRestaurantId();
-
-        restaurantService.showAllProducts(restaurantId);
+        try {
+            restaurantService.showAllProducts(restaurantId);
+        } catch (Exception e) {
+            System.err.println("Error showing all food: " + e.getMessage());
+        }
     }
 
     private void showHistory(){
@@ -112,18 +178,18 @@ public class RestaurantUI extends BaseUI {
     }
 
     private void deleteRestaurant() {
-        System.out.println("Are you sure to remove restaurant");
-        sc.next();
-        while (!sc.hasNext("(?i)Yes|(?i)No|(?i)y|(?i)n")) {
-            System.out.println("please try again");
-            sc.next();
-        }
-        if (sc.hasNext("(?i)[y].*")) {
-            restaurantService.deleteRestaurant("0");
-        }
-        if (sc.hasNext("(?i)[n].*")) {
-            System.out.println("Im not sure to remove");
+        System.out.println("Are you sure to remove restaurant? (Yes/No)");
+        String confirmation = sc.next();
+        if (confirmation.equalsIgnoreCase("Yes") || confirmation.equalsIgnoreCase("Y")) {
+            try {
+                String restaurantId = Session.getCurrentSession().getRestaurantId();
+                restaurantService.deleteRestaurant(restaurantId);
+                System.out.println("Restaurant removed successfully!");
+            } catch (Exception e) {
+                System.err.println("Error deleting restaurant: " + e.getMessage());
+            }
+        } else {
+            System.out.println("Restaurant removal cancelled.");
         }
     }
-
 }
