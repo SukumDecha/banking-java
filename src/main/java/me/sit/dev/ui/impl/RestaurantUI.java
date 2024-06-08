@@ -105,7 +105,7 @@ public class RestaurantUI extends BaseUI {
             }
             int quantity = sc.nextInt();
             Product product = productService.addProduct(restaurantId, name, price, quantity);
-            restaurant.getProducts().add(product);
+            restaurant.addProduct(product);
 
             restaurantService.updateRestaurant(restaurantId, restaurant);
             userService.update(restaurantId, currentUser);
@@ -128,36 +128,59 @@ public class RestaurantUI extends BaseUI {
             if (product != null) {
                 System.out.println("Current name: " + product.getName());
                 System.out.println("Enter new name (or press enter to keep current): ");
-                sc.nextLine();  // Consume newline left-over
-                String newName = sc.nextLine();
-                if (!newName.isBlank()) {
+                String newName = sc.next();
+                if (!newName.isEmpty()) {
                     product.setName(newName);
                 }
 
                 System.out.println("Current price: " + product.getPrice());
                 System.out.println("Enter new price (or press enter to keep current): ");
-                while (!sc.hasNextDouble()) {
-                    System.out.println("Please enter a valid number");
-                    sc.next();
+                String newPriceInput;
+                double newPrice = product.getPrice(); // Default to current price
+                while (true) {
+                    newPriceInput = sc.nextLine();
+                    if (newPriceInput.isBlank()) {
+                        break; // Keep current price
+                    }
+                    try {
+                        newPrice = Double.parseDouble(newPriceInput);
+                        if (newPrice <= 0) {
+                            System.out.println("Price must be greater than 0. Please enter a valid price.");
+                        } else {
+                            break;
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Please enter a valid number for the price.");
+                    }
                 }
-
-                double newPriceInput = sc.nextDouble();
-                product.setPrice(newPriceInput);
+                product.setPrice(newPrice);
 
                 System.out.println("Current quantity: " + product.getQuantity());
                 System.out.println("Enter new quantity (or press enter to keep current): ");
-
-                while (!sc.hasNextInt()) {
-                    System.out.println("Please enter a valid quantity");
-                    sc.next();
+                String newQuantityInput;
+                int newQuantity = product.getQuantity(); // Default to current quantity
+                while (true) {
+                    newQuantityInput = sc.nextLine();
+                    if (newQuantityInput.isBlank()) {
+                        break; // Keep current quantity
+                    }
+                    try {
+                        newQuantity = Integer.parseInt(newQuantityInput);
+                        if (newQuantity < 0) {
+                            System.out.println("Quantity must be a non-negative number. Please enter a valid quantity.");
+                        } else {
+                            break;
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Please enter a valid number for the quantity.");
+                    }
                 }
-
-                int newQuantity = sc.nextInt();
                 product.setQuantity(newQuantity);
 
                 productService.updateProduct(restaurantId, productId, product);
 
-                restaurant.getProducts().add(product);
+                restaurant.updateProduct(product);
+
                 restaurantService.updateRestaurant(restaurantId, restaurant);
                 userService.update(currentUser.getId(), currentUser);
                 System.out.println("Food updated successfully!");

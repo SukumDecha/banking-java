@@ -46,13 +46,26 @@ public class Restaurant extends BaseEntity {
     public List<Product> getProducts() {
         return products;
     }
-
     public List<Order> getOrders() {
         return orders;
     }
 
     public void setTotalRating(int totalRating) {
         this.totalRating = totalRating;
+    }
+
+
+    public void addProduct(Product product) {
+        products.add(product);
+    }
+
+    public void updateProduct(Product product) {
+        for (int i = 0; i < products.size(); i++) {
+            if (products.get(i).getId().equals(product.getId())) {
+                products.set(i, product);
+                break;
+            }
+        }
     }
 
 
