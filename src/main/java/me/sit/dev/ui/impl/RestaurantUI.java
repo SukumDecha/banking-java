@@ -101,7 +101,7 @@ public class RestaurantUI extends BaseUI {
             double price = sc.nextDouble();
             System.out.println("Enter quantity : ");
             while (!sc.hasNextInt()){
-                System.out.print("Please tyr again (input number) : ");
+                System.out.print("Please try again (input number) : ");
                 sc.next();
             }
             int quantity = sc.nextInt();
@@ -109,7 +109,7 @@ public class RestaurantUI extends BaseUI {
             restaurant.getProducts().add(product);
 
             restaurantService.updateRestaurant(restaurantId, restaurant);
-            userService.update(currentUser.getId(), currentUser);
+            userService.update(restaurantId, currentUser);
             System.out.println("Food added successfully!");
         } catch (Exception e) {
             System.err.println("Error adding food: " + e.getMessage());
