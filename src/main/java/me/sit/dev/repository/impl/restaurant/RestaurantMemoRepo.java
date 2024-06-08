@@ -2,6 +2,7 @@ package me.sit.dev.repository.impl.restaurant;
 
 import me.sit.dev.entity.impl.Restaurant;
 import me.sit.dev.exceptions.InvalidInputException;
+import me.sit.dev.exceptions.InvalidParamsException;
 import me.sit.dev.exceptions.restaurant.RestaurantExistException;
 import me.sit.dev.exceptions.restaurant.RestaurantNotFoundException;
 import me.sit.dev.repository.IRestaurantRepo;
@@ -17,8 +18,11 @@ public class RestaurantMemoRepo implements IRestaurantRepo {
     @Override
     public Restaurant addRestaurant(String ownerId, String restaurantName) {
         Restaurant restaurant = findByName(restaurantName);
-        if (restaurant != null) {
+        if (restaurant != null){
             throw new RestaurantExistException();
+        }
+        if (ownerId == null || ownerId.isBlank()){
+            throw new NullPointerException();
         }
         restaurant = new Restaurant(ownerId, restaurantName, 0);
         restaurantMap.put(restaurant.getId(), restaurant);
@@ -41,6 +45,9 @@ public class RestaurantMemoRepo implements IRestaurantRepo {
     public Restaurant deleteRestaurant(String id) {
         if (id == null || id.isBlank()) {
             throw new InvalidInputException();
+        }
+        if (!restaurantMap.containsKey(id)){
+            throw new InvalidParamsException();
         }
         return restaurantMap.remove(id);
     }

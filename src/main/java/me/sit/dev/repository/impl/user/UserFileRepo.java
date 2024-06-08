@@ -57,7 +57,6 @@ public class UserFileRepo extends UserMemoRepo implements IUserRepo {
     @Override
     public void delete(User user) {
         super.delete(user);
-
         String finalPath = path + user.getName() + "-" + user.getId() + ".txt";
         File file = new File(finalPath);
 
