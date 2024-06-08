@@ -37,26 +37,42 @@ public class ProductService implements IProductService {
 
     @Override
     public Product findByName(String restaurantId, String productName) {
-        return null;
+        return productRepo.findByName(restaurantId, productName);
     }
 
     @Override
     public List<Product> findAll(String restaurantId) {
-        return null;
+        return productRepo.findAll(restaurantId);
     }
 
     @Override
     public boolean existsById(String restaurantId, String productId) {
-        return false;
+        return productRepo.existsById(restaurantId, productId);
     }
 
     @Override
     public boolean existsByName(String restaurantId, String productName) {
-        return false;
+        return productRepo.existsByName(restaurantId, productName);
     }
 
     @Override
     public void showAllProducts(Restaurant restaurant) {
+        if (restaurant == null) {
+            System.out.println("Restaurant is null. Cannot display products.");
+            return;
+        }
 
+        List<Product> products = findAll(restaurant.getId());
+        if (products.isEmpty()) {
+            System.out.println("No products available for restaurant: " + restaurant.getName());
+        } else {
+            System.out.println("Products available for restaurant: " + restaurant.getName());
+            products.forEach(product -> {
+                System.out.println("Product ID: " + product.getId() +
+                        ", Name: " + product.getName() +
+                        ", Price: " + product.getPrice() +
+                        ", Quantity: " + product.getQuantity());
+            });
+        }
     }
 }
