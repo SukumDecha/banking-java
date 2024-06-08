@@ -106,6 +106,12 @@ public class LoginUI extends BaseUI {
                 break;
         }
 
+        semiMenu();
+    }
+
+    private void semiMenu() {
+        Scanner sc = new Scanner(System.in);
+
         System.out.println(service_Prompt);
         System.out.print("Enter your choice: ");
         while (!sc.hasNext("(?i)[R].*|(?i)[C].*|(?i)[O].*|1|2|3")) {
@@ -122,7 +128,9 @@ public class LoginUI extends BaseUI {
                 System.out.println("You are not a restaurant owner");
                 System.out.println("Going back to main menu");
                 System.out.println("Otherwise, create one to view this menu.");
-                show();
+                semiMenu();
+            } else {
+                restaurantUI.show();
             }
         } else {
             userService.logout();
