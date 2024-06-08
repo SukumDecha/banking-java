@@ -1,13 +1,21 @@
 package me.sit.dev.service.impl;
 
 import me.sit.dev.entity.impl.Product;
+import me.sit.dev.entity.impl.Restaurant;
 import me.sit.dev.entity.impl.Session;
 import me.sit.dev.entity.impl.user.User;
+import me.sit.dev.repository.IProductRepo;
 import me.sit.dev.service.IProductService;
 
 import java.util.List;
 
 public class ProductService implements IProductService {
+
+    private final IProductRepo productRepo;
+
+    public ProductService(IProductRepo productRepo) {
+        this.productRepo = productRepo;
+    }
 
     /**
      * Adds a new product with the given name, price, and quantity to the product list.
@@ -18,12 +26,12 @@ public class ProductService implements IProductService {
      * @return false if the product was not successfully added
      */
     @Override
-    public boolean addProduct(String productName, double price, int quantity) {
-        int currentId = findAll().size() + 1;
+    public boolean addProduct(Restaurant restaurant, String productName, double price, int quantity) {
+        int currentId = findAll(restaurant).size() + 1;
 
         Product product = new Product(currentId, productName, price, quantity);
 
-        findAll().add(product);
+        findAll(restaurant).add(product);
         return false;
     }
 
@@ -35,8 +43,8 @@ public class ProductService implements IProductService {
      * @return false if the product was not successfully updated
      */
     @Override
-    public boolean updateProduct(String productId, Product product) {
-        return false;
+    public boolean updateProduct(Restaurant restaurant, String productId, Product product) {
+        return productRepo.updateProduct(restaurant, productId, product);
     }
 
     /**
@@ -46,7 +54,14 @@ public class ProductService implements IProductService {
      * @return false indicating the product was not successfully deleted
      */
     @Override
-    public boolean deleteProduct(String productId) {
+    public boolean deleteProduct(Restaurant restaurant, String productId) {
+        List<Product> productList = findAll(restaurant);
+        for (Product product : productList) {
+            if (product.getId().equals(productId)) {
+                productList.remove(product);
+                return true;
+            }
+        }
         return false;
     }
 
@@ -57,7 +72,13 @@ public class ProductService implements IProductService {
      * @return the product with the given ID, or null if not found
      */
     @Override
-    public Product findById(String productId) {
+    public Product findById(Restaurant restaurant, String productId) {
+        List<Product> productList = findAll(restaurant);
+        for (Product product : productList) {
+            if (product.getId().equals(productId)) {
+                return product;
+            }
+        }
         return null;
     }
 
@@ -68,7 +89,13 @@ public class ProductService implements IProductService {
      * @return the product with the given name, or null if not found
      */
     @Override
-    public Product findByName(String productName) {
+    public Product findByName(Restaurant restaurant, String productName) {
+        List<Product> productList = findAll(restaurant);
+        for (Product product : productList) {
+            if (product.getName().equals(productName)) {
+                return product;
+            }
+        }
         return null;
     }
 
@@ -78,7 +105,7 @@ public class ProductService implements IProductService {
      * @return a list of all products
      */
     @Override
-    public List<Product> findAll() {
+    public List<Product> findAll(Restaurant restaurant) {
         User user = Session.getCurrentSession().getUser();
         return user.getRestaurant().getProducts();
     }
@@ -87,8 +114,12 @@ public class ProductService implements IProductService {
      * Displays all products in the restaurant.
      */
     @Override
-    public void showAllProducts() {
-        //Print all products in the restaurant; (use findAll() function)
+    public void showAllProducts(Restaurant restaurant) {
+        //Print all products in the restaurant; (use findAll(restaurant) function)
+        List<Product> productList = findAll(restaurant);
+        for (Product product : productList) {
+            System.out.println(product);
+        }
     }
 
     /**
@@ -98,8 +129,8 @@ public class ProductService implements IProductService {
      * @return false indicating the product does not exist
      */
     @Override
-    public boolean existsById(String productId) {
-        return false;
+    public boolean existsById(Restaurant restaurant, String productId) {
+        return findById(restaurant, productId) != null;
     }
 
     /**
@@ -109,7 +140,7 @@ public class ProductService implements IProductService {
      * @return false indicating the product does not exist
      */
     @Override
-    public boolean existsByName(String productName) {
-        return false;
+    public boolean existsByName(Restaurant restaurant, String productName) {
+        return findByName(restaurant, productName) != null;
     }
 }

@@ -1,4 +1,4 @@
-package me.sit.dev.repository.impl.connect;
+package me.sit.dev.repository;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,4 +12,6 @@ public class DatabaseConnection {
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(DB_URL, USER, PASS);
     }
+
+
 }

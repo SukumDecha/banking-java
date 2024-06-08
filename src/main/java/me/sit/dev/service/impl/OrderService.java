@@ -3,9 +3,22 @@ package me.sit.dev.service.impl;
 import me.sit.dev.entity.impl.Restaurant;
 import me.sit.dev.entity.impl.order.Order;
 import me.sit.dev.entity.impl.user.User;
+import me.sit.dev.repository.IOrderRepo;
 import me.sit.dev.service.IOrderService;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class OrderService implements IOrderService {
+
+    private final List<Order> orders = new ArrayList<>();
+    private final IOrderRepo orderRepo;
+
+    public OrderService(IOrderRepo orderRepo) {
+        this.orderRepo = orderRepo;
+    }
 
     @Override
     public void showOrderDetails(Order order, boolean showStatus) {
@@ -18,7 +31,7 @@ public class OrderService implements IOrderService {
             System.out.println("[S] - " + product.getName() + " x" + quantity);
         });
         System.out.println("[S] Total Price: " + order.getTotalPrice());
-        if(showStatus) {
+        if (showStatus) {
             System.out.println("[S] Status: " + order.getStatus());
         }
         System.out.println("[S] ----------------------");
@@ -47,7 +60,21 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    public Order findById(String id) {
+        return orders.stream().filter(o -> o.getId().equals(id)).findFirst().orElse(null);
+    }
 
+    @Override
+    public Collection<Order> findByUserId(String userId) {
+        return orders.stream().filter(o -> o.getOwnerId().equals(userId)).collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<Order> findAll() {
+        return orders;
+    }
+
+    @Override
     public void cancelOrder(User user, Order order) {
         order.cancelOrder();
 
@@ -61,7 +88,6 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-
     public void deliverOrder(User user, Order order) {
         order.deliverOrder();
 
