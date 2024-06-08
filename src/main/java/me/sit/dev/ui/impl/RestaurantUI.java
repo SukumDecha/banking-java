@@ -36,9 +36,8 @@ public class RestaurantUI extends BaseUI {
     @Override
     public void show() {
         User currentUser = Session.getCurrentSession().getUser();
-        String restaurantId = currentUser.getRestaurant().getId();
+        Restaurant restaurant = currentUser.getRestaurant();
 
-        Session.getCurrentSession().setRestaurantId(restaurantId);
         System.out.println("Restaurant UI");
         System.out.println(Program_prompt);
         System.out.print("Choose your program : ");
@@ -171,7 +170,8 @@ public class RestaurantUI extends BaseUI {
     }
 
     private void showAllFood() {
-        String restaurantId = Session.getCurrentSession().getRestaurantId();
+        User currentUser = Session.getCurrentSession().getUser();
+        String restaurantId = currentUser.getRestaurant().getId();
 
         try {
             restaurantService.showAllProducts(restaurantId);
@@ -182,22 +182,19 @@ public class RestaurantUI extends BaseUI {
 
     private void showHistory(){
         System.out.println("Show all product and amount that is ordered");
-        String restaurantId = Session.getCurrentSession().getRestaurantId();
-        Restaurant restaurant = restaurantService.findById(restaurantId);
+        User currentUser = Session.getCurrentSession().getUser();
+        Restaurant restaurant = currentUser.getRestaurant();
+        String restaurantId = restaurant.getId();
 
-        if (restaurant != null) {
-            int maxPage = productService.findAll(restaurantId).size() / 5;
-            System.out.println("Enter page number to view (max page = " + maxPage + "): ");
-            while (!sc.hasNextInt()) {
-                System.out.println("Please enter a valid page number");
-                sc.next();
-            }
-            int page = sc.nextInt();
-
-            restaurantService.showOrderPagination(restaurantId, page, 5);;
-        } else {
-            System.out.println("Restaurant not found!");
+        int maxPage = productService.findAll(restaurantId).size() / 5;
+        System.out.println("Enter page number to view (max page = " + maxPage + "): ");
+        while (!sc.hasNextInt()) {
+            System.out.println("Please enter a valid page number");
+            sc.next();
         }
+        int page = sc.nextInt();
+
+        restaurantService.showOrderPagination(restaurantId, page, 5);;
     }
 
     private void deleteRestaurant() {
