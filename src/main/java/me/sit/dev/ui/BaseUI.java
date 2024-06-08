@@ -1,11 +1,12 @@
 package me.sit.dev.ui;
 
-import me.sit.dev.entity.impl.Product;
-import me.sit.dev.entity.impl.Restaurant;
-import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.service.ServiceFactory;
-import me.sit.dev.service.*;
-import me.sit.dev.service.impl.*;
+import me.sit.dev.service.IUserService;
+import me.sit.dev.service.IRestaurantService;
+import me.sit.dev.service.IProductService;
+import me.sit.dev.service.IOrderService;
+import me.sit.dev.service.ICartService;
+import me.sit.dev.service.impl.CartService;
 
 public abstract class BaseUI {
     private final String uiName;
@@ -13,7 +14,6 @@ public abstract class BaseUI {
 
     protected final IUserService userService;
     protected final IRestaurantService restaurantService;
-
     protected final IProductService productService;
     protected final IOrderService orderService;
     protected final ICartService cartService;
@@ -24,7 +24,6 @@ public abstract class BaseUI {
 
         this.userService = serviceFactory.createUserService();
         this.restaurantService = serviceFactory.createRestaurantService();
-
         this.productService = serviceFactory.createProductService();
         this.orderService = serviceFactory.createOrderService(productService);
         this.cartService = new CartService();
@@ -41,5 +40,4 @@ public abstract class BaseUI {
     public String getDescription() {
         return description;
     }
-
 }
