@@ -14,6 +14,8 @@ public interface ICartService {
 
     boolean existsInCart(User user, Product product);
 
+    int getProductQuantity(User user, Product product);
+
     void clearCart(User user);
 
     void showCartDetails(User user);

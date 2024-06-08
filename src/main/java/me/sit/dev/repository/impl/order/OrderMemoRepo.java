@@ -45,7 +45,10 @@ public class OrderMemoRepo implements IOrderRepo {
         if (id == null || id.isBlank()) {
             throw new InvalidInputException("Id is not valid");
         }
-        return findAll().stream().filter(o -> o.getId().equals(id)).findFirst().orElse(null);
+        return findAll().stream()
+                .filter(o -> o.getId().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
@@ -53,7 +56,9 @@ public class OrderMemoRepo implements IOrderRepo {
         if (userId == null || userId.isBlank()) {
             throw new InvalidInputException("userId is not valid");
         }
-        return findAll().stream().filter(o -> o.getOwnerId().equals(userId)).collect(Collectors.toList());
+        return findAll().stream()
+                .filter(o -> o.getOwnerId().equals(userId))
+                .collect(Collectors.toList());
     }
 
     @Override

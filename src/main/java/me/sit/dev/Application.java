@@ -16,6 +16,9 @@ public class Application {
 
         LoginUI loginUI = new LoginUI(clientUI, restaurantUI, serviceFactory);
 
+        clientUI.setLoginUI(loginUI);
+        restaurantUI.setLoginUI(loginUI);
+
         loginUI.show();
     }
 }

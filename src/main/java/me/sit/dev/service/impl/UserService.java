@@ -4,6 +4,8 @@ import me.sit.dev.entity.impl.Session;
 import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.entity.impl.user.UserRole;
 import me.sit.dev.exceptions.InvalidParamsException;
+import me.sit.dev.exceptions.InvalidPasswordException;
+import me.sit.dev.exceptions.user.UserNotFoundException;
 import me.sit.dev.repository.IUserRepo;
 import me.sit.dev.service.IUserService;
 
@@ -149,6 +151,8 @@ public class UserService implements IUserService {
 
         User user = new User("U" + findAll().size(), name, email, password, isAdmin ? UserRole.SYSTEM_ADMIN : UserRole.USER);
         userRepository.save(user);
+
+        login(email, password);
         return true;
     }
 
@@ -163,11 +167,26 @@ public class UserService implements IUserService {
     public boolean login(String email, String password) {
         User user = findByEmail(email);
 
-        if (user == null || !user.getPassword().equals(password)) {
-            return false;
+        if (user == null) {
+            throw new UserNotFoundException();
+        }
+
+        if (!user.getPassword().equals(password)) {
+            throw new InvalidPasswordException();
         }
 
         Session.createSession(user);
+        return true;
+    }
+
+    /**
+     * Logs out the current user.
+     *
+     * @return false if the user was not successfully logged out
+     */
+    @Override
+    public boolean logout() {
+        Session.destroySession();
         return true;
     }
 }

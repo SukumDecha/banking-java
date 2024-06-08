@@ -3,6 +3,7 @@ package me.sit.dev.ui.impl;
 import me.sit.dev.entity.impl.Product;
 import me.sit.dev.entity.impl.Restaurant;
 import me.sit.dev.entity.impl.Session;
+import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.service.ServiceFactory;
 import me.sit.dev.ui.BaseUI;
 
@@ -11,6 +12,7 @@ import java.util.Scanner;
 public class RestaurantUI extends BaseUI {
 
     private Scanner sc = new Scanner(System.in);
+    private LoginUI loginUI;
 
     private static String Program_prompt = """
                                 
@@ -19,8 +21,8 @@ public class RestaurantUI extends BaseUI {
                           2. Edit Food
                         3. Show All Food
                         4. Show history
-                           5. Exit
-                     6. Delete Restaurant
+                     5. Delete Restaurant
+                        6. Go back
             ---------------------------------------       
             """;
 
@@ -28,6 +30,9 @@ public class RestaurantUI extends BaseUI {
         super("Restaurant UI", "This UI only shows the restaurant's view.", serviceFactory);
     }
 
+    public void setLoginUI(LoginUI loginUI) {
+        this.loginUI = loginUI;
+    }
     @Override
     public void show() {
         System.out.println("Restaurant UI");
@@ -65,18 +70,20 @@ public class RestaurantUI extends BaseUI {
                     showHistory();
                     break;
                 case 5:
-                    System.out.println("Exit");
-                    program_status = false;
+                    deleteRestaurant();
+
                     break;
                 case 6:
-                    deleteRestaurant();
+                    System.out.println("Going back to main menu");
+                    loginUI.show();
                     break;
             }
         }
     }
 
     private void addFood() {
-        String restaurantId = Session.getCurrentSession().getRestaurantId();
+        User currentUser = Session.getCurrentSession().getUser();
+        String restaurantId = currentUser.getRestaurant().getId();
 
         try {
             System.out.println("Enter new product name : ");
@@ -94,6 +101,7 @@ public class RestaurantUI extends BaseUI {
             }
             int quantity = sc.nextInt();
             productService.addProduct(restaurantId, name, price, quantity);
+            userService.update(currentUser.getId(), currentUser);
             System.out.println("Food added successfully!");
         } catch (Exception e) {
             System.err.println("Error adding food: " + e.getMessage());
@@ -101,7 +109,9 @@ public class RestaurantUI extends BaseUI {
     }
 
     private void editFood() {
-        String restaurantId = Session.getCurrentSession().getRestaurantId();
+        User currentUser = Session.getCurrentSession().getUser();
+        Restaurant restaurant = currentUser.getRestaurant();
+        String restaurantId = currentUser.getRestaurant().getId();
 
         try {
             System.out.println("Enter the product ID you want to edit: ");
@@ -139,6 +149,8 @@ public class RestaurantUI extends BaseUI {
                 product.setQuantity(newQuantity);
 
                 productService.updateProduct(restaurantId, productId, product);
+                restaurantService.updateRestaurant(restaurantId, restaurant);
+                userService.update(currentUser.getId(), currentUser);
                 System.out.println("Food updated successfully!");
             } else {
                 System.out.println("Product not found!");
@@ -178,12 +190,17 @@ public class RestaurantUI extends BaseUI {
     }
 
     private void deleteRestaurant() {
+        User currentUser = Session.getCurrentSession().getUser();
+        String restaurantId = currentUser.getRestaurant().getId();
+
         System.out.println("Are you sure to remove restaurant? (Yes/No)");
         String confirmation = sc.next();
         if (confirmation.equalsIgnoreCase("Yes") || confirmation.equalsIgnoreCase("Y")) {
             try {
-                String restaurantId = Session.getCurrentSession().getRestaurantId();
                 restaurantService.deleteRestaurant(restaurantId);
+
+                currentUser.setRestaurant(null);
+                userService.update(currentUser.getId(), currentUser);
                 System.out.println("Restaurant removed successfully!");
             } catch (Exception e) {
                 System.err.println("Error deleting restaurant: " + e.getMessage());

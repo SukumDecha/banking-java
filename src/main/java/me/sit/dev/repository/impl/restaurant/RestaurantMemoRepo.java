@@ -24,6 +24,7 @@ public class RestaurantMemoRepo implements IRestaurantRepo {
         if (ownerId == null || ownerId.isBlank()){
             throw new NullPointerException();
         }
+
         restaurant = new Restaurant(ownerId, restaurantName, 0);
         restaurantMap.put(restaurant.getId(), restaurant);
         return restaurant;
@@ -68,7 +69,7 @@ public class RestaurantMemoRepo implements IRestaurantRepo {
         return restaurantMap.values().stream()
                 .filter(restaurant -> restaurant.getName().equals(name))
                 .findFirst()
-                .orElseThrow(RestaurantNotFoundException::new);
+                .orElse(null);
     }
 
 
@@ -77,7 +78,7 @@ public class RestaurantMemoRepo implements IRestaurantRepo {
         return restaurantMap.values().stream()
                 .filter(restaurant -> restaurant.getOwnerId().equals(ownerId))
                 .findFirst()
-                .orElseThrow(RestaurantNotFoundException::new);
+                .orElse(null);
     }
 
     @Override
@@ -91,7 +92,7 @@ public class RestaurantMemoRepo implements IRestaurantRepo {
                     return product.getId().equals(productId);
                 })
                 .findFirst()
-                .orElseThrow(RestaurantNotFoundException::new);
+                .orElse(null);
     }
 
     @Override

@@ -56,4 +56,8 @@ public class User extends BaseEntity {
         return orders.stream().filter(order -> order.getStatus() == OrderStatus.DELIVERED
                 || order.getStatus() == OrderStatus.CANCELLED).toList();
     }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
+    }
 }

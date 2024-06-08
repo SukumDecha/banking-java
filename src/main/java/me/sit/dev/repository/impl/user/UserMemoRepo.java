@@ -32,7 +32,10 @@ public class UserMemoRepo implements IUserRepo {
             throw new InvalidInputException("Email cannot be blank");
         }
 
-        return userMap.values().stream().filter(user -> user.getEmail().equals(email)).findFirst().orElse(null);
+        return userMap.values().stream()
+                .filter(user -> user.getEmail().equals(email))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override

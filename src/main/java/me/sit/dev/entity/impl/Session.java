@@ -23,6 +23,10 @@ public class Session extends BaseEntity {
         return currentSession = new Session(user);
     }
 
+    public static void destroySession() {
+        currentSession = null;
+    }
+
     public static Session getCurrentSession() {
         return currentSession;
     }
@@ -56,7 +60,7 @@ public class Session extends BaseEntity {
         this.logoutTime = logoutTime;
     }
 
-    public void selectProduct(Product product) {
+    public void setSelectingProduct(Product product) {
         selectingProduct = product;
     }
 

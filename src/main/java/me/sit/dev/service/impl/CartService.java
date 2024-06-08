@@ -3,6 +3,7 @@ package me.sit.dev.service.impl;
 import me.sit.dev.entity.impl.Cart;
 import me.sit.dev.entity.impl.Product;
 import me.sit.dev.entity.impl.Restaurant;
+import me.sit.dev.entity.impl.Session;
 import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.exceptions.InvalidInputException;
 import me.sit.dev.service.ICartService;
@@ -29,6 +30,8 @@ public class CartService implements ICartService {
         Cart cart = user.getCart();
         cart.setRestaurant(restaurant);
         cart.addProduct(product, quantity);
+
+        Session.getCurrentSession().setRestaurantId(restaurant.getId());
         return true;
     }
 
@@ -83,6 +86,15 @@ public class CartService implements ICartService {
 
         return user.getCart().getProducts().get(product) != null;
 
+    }
+
+    public int getProductQuantity(User user, Product product) {
+        if (user == null || product == null) {
+            throw new InvalidInputException();
+        }
+
+        Map<Product, Integer> products = user.getCart().getProducts();
+        return products.getOrDefault(product, 0);
     }
 
     /**

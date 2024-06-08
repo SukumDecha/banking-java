@@ -1,6 +1,9 @@
 package me.sit.dev.ui.impl;
 
+import me.sit.dev.entity.impl.Session;
+import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.exceptions.InvalidPasswordException;
+import me.sit.dev.exceptions.user.UserNotFoundException;
 import me.sit.dev.service.ServiceFactory;
 import me.sit.dev.ui.BaseUI;
 
@@ -39,14 +42,25 @@ public class LoginUI extends BaseUI {
         switch (loginSelected) {
             case 1: // login
                 System.out.println("Login method");
-                System.out.print("Enter your email : ");
-                String email = sc.next();
-                System.out.print("Enter your password : ");
-                String password = sc.next();
-                if (userService.login(email, password)) {
-                    System.out.println("Success login");
-                } else {
-                    throw new InvalidPasswordException();
+                while (true) {
+                    try {
+                        System.out.print("Enter your email : ");
+                        String email = sc.next();
+                        System.out.print("Enter your password : ");
+                        String password = sc.next();
+                        if (userService.login(email, password)) {
+                            System.out.println("Login successful");
+                            sc.nextLine();
+                            break;
+                        }
+                    } catch (InvalidPasswordException | UserNotFoundException e) {
+                        System.out.println("Error: " + e.getMessage());
+                        System.out.println("You can enter 0 to end this process. Otherwise, press any key to try again.");
+                        if (sc.next().equals("0")) {
+                            System.out.println("Exiting from program");
+                            System.exit(0);
+                        }
+                    }
                 }
                 break;
             case 2: // register
