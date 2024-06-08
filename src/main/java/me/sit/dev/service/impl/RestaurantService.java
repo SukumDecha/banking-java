@@ -2,12 +2,14 @@ package me.sit.dev.service.impl;
 
 import me.sit.dev.entity.impl.Product;
 import me.sit.dev.entity.impl.Restaurant;
+import me.sit.dev.entity.impl.order.Order;
 import me.sit.dev.exceptions.restaurant.RestaurantNotFoundException;
 import me.sit.dev.repository.IRestaurantRepo;
 import me.sit.dev.service.IRestaurantService;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -154,10 +156,10 @@ public class RestaurantService implements IRestaurantService {
 
         Restaurant restaurant = findById(restaurantId);
         if (restaurant == null) {
-           throw new RestaurantNotFoundException();
+            throw new RestaurantNotFoundException();
         }
 
-        List<Product> products =  restaurant.getProducts();
+        List<Product> products = restaurant.getProducts();
         if (products.isEmpty()) {
             System.out.println("No products available for restaurant: " + restaurant.getName());
         } else {
@@ -169,5 +171,36 @@ public class RestaurantService implements IRestaurantService {
                         ", Quantity: " + product.getQuantity());
             });
         }
+    }
+
+    @Override
+    public int showOrderPagination(String restaurantId, int page, int size) {
+        if (restaurantId == null || restaurantId.isBlank()) {
+            throw new IllegalArgumentException("Restaurant ID cannot be null or empty");
+        }
+
+        Restaurant restaurant = findById(restaurantId);
+        if (restaurant == null) {
+            throw new RestaurantNotFoundException();
+        }
+
+        Collection<Order> orders = restaurant.getOrders().stream().sorted()
+                .skip((page - 1) * size)
+                .limit(size)
+                .collect(Collectors.toList());
+
+        orders.forEach(order -> {
+            System.out.println("-------------------------");
+            System.out.println("Order ID: " + order.getId());
+            System.out.println("Owner ID: " + order.getOwnerId());
+            System.out.println("Restaurant ID: " + order.getRestaurantId());
+            System.out.println("Restaurant Name: " + order.getRestaurantName());
+            System.out.println("Order Status: " + order.getStatus());
+            System.out.println("Order Total Price: " + order.getTotalPrice());
+            System.out.println("Order Time: " + new Date(order.getOrderAt()));
+            System.out.println("-------------------------");
+        });
+
+        return orders.size() / size + 1;
     }
 }

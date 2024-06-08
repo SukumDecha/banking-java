@@ -36,7 +36,6 @@ public class LoginUI extends BaseUI {
             sc.next();
         }
         int loginSelected = sc.nextInt();
-        boolean login_status = true;
         switch (loginSelected) {
             case 1: // login
                 System.out.println("Login method");
@@ -51,39 +50,51 @@ public class LoginUI extends BaseUI {
                 }
                 break;
             case 2: // register
-                System.out.println("Enter your Name");
+                System.out.println("Enter your name:");
                 String name = sc.next();
-                System.out.println("Enter your Email");
-                String saveEmail = sc.next();
-                System.out.println("Enter your Password");
-                String savePassword = sc.next();
-                System.out.println("Are you admin");
-                while (!sc.hasNext("(?i)Yes|(?i)No")) {
-                    System.out.println("please enter yes or no");
-                    sc.next();
+
+                while (true) {
+                    try {
+                        System.out.println("Enter your email:");
+                        String saveEmail = sc.next();
+                        if (userService.existsByEmail(saveEmail)) {
+                            System.out.println("Error: This email already exists");
+                            continue;
+                        }
+                        System.out.println("Enter your password:");
+                        String savePassword = sc.next();
+                        System.out.println("Are you admin: (yes/no)");
+                        while (!sc.hasNext("(?i)Yes|(?i)No")) {
+                            sc.next();
+                        }
+
+                        String input = sc.next();
+                        boolean isAdmin = false;
+                        if (input.equals("yes")) {
+                            isAdmin = true;
+                        }
+                        userService.register(name, saveEmail, savePassword, isAdmin);
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("Error: " + e.getMessage());
+                    }
                 }
-                String input = sc.next();
-                boolean isAdmin = false;
-                if (input.equals("yes")) {
-                    isAdmin = true;
-                }
-                userService.register(name, saveEmail, savePassword, isAdmin);
                 break;
             case 3:
+                System.exit(0);
                 break;
         }
-
-        boolean isClient;
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Are you a client? (y/n)");
         String answer = scanner.nextLine();
-        isClient = answer.equals("y");
+        boolean isClient = answer.equals("y");
 
         if (isClient) {
             clientUI.show();
         } else {
             restaurantUI.show();
         }
+
     }
 }

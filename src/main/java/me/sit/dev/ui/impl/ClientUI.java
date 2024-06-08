@@ -29,7 +29,7 @@ public class ClientUI extends BaseUI {
             -------------- Order UI --------------
                        1. order food     
                        2. search food   
-                         3. see cart     
+                       3. see cart     
                     4. Back to main menu
             ---------------------------------------       
             """;
@@ -50,8 +50,6 @@ public class ClientUI extends BaseUI {
     @Override
     public void show() {
         System.out.println("Client UI");
-        showAllRestaurants();
-        selectRestaurant();
         showMainMenu();
     }
 
@@ -131,8 +129,8 @@ public class ClientUI extends BaseUI {
     }
 
     public void createRestaurant() {
-        System.out.println("Enter ownerId : ");
-        String ownerId = sc.next();
+        String ownerId = Session.getCurrentSession().getUser().getId();
+
         System.out.println("Enter restaurant name : ");
         String restaurantName = sc.next();
         restaurantService.addRestaurant(ownerId, restaurantName);
@@ -287,7 +285,6 @@ public class ClientUI extends BaseUI {
 
     public void removeFromCart() {
         String currentRestaurantId = Session.getCurrentSession().getRestaurantId();
-        String currentProductId = Session.getCurrentSession().getSelectingProduct().getId();
         User currentUser = Session.getCurrentSession().getUser();
 
         System.out.println("What did you want to remove from cart");
