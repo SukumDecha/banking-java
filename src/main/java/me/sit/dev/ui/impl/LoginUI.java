@@ -109,7 +109,7 @@ public class LoginUI extends BaseUI {
         semiMenu();
     }
 
-    private void semiMenu() {
+    public void semiMenu() {
         Scanner sc = new Scanner(System.in);
 
         System.out.println(service_Prompt);

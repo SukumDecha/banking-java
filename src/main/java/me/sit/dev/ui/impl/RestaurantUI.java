@@ -35,6 +35,10 @@ public class RestaurantUI extends BaseUI {
     }
     @Override
     public void show() {
+        User currentUser = Session.getCurrentSession().getUser();
+        String restaurantId = currentUser.getRestaurant().getId();
+
+        Session.getCurrentSession().setRestaurantId(restaurantId);
         System.out.println("Restaurant UI");
         System.out.println(Program_prompt);
         System.out.print("Choose your program : ");
@@ -75,7 +79,7 @@ public class RestaurantUI extends BaseUI {
                     break;
                 case 6:
                     System.out.println("Going back to main menu");
-                    loginUI.show();
+                    loginUI.semiMenu();
                     break;
             }
         }
@@ -83,7 +87,8 @@ public class RestaurantUI extends BaseUI {
 
     private void addFood() {
         User currentUser = Session.getCurrentSession().getUser();
-        String restaurantId = currentUser.getRestaurant().getId();
+        Restaurant restaurant = currentUser.getRestaurant();
+        String restaurantId = restaurant.getId();
 
         try {
             System.out.println("Enter new product name : ");
@@ -100,7 +105,10 @@ public class RestaurantUI extends BaseUI {
                 sc.next();
             }
             int quantity = sc.nextInt();
-            productService.addProduct(restaurantId, name, price, quantity);
+            Product product = productService.addProduct(restaurantId, name, price, quantity);
+            restaurant.getProducts().add(product);
+
+            restaurantService.updateRestaurant(restaurantId, restaurant);
             userService.update(currentUser.getId(), currentUser);
             System.out.println("Food added successfully!");
         } catch (Exception e) {
@@ -111,7 +119,7 @@ public class RestaurantUI extends BaseUI {
     private void editFood() {
         User currentUser = Session.getCurrentSession().getUser();
         Restaurant restaurant = currentUser.getRestaurant();
-        String restaurantId = currentUser.getRestaurant().getId();
+        String restaurantId = restaurant.getId();
 
         try {
             System.out.println("Enter the product ID you want to edit: ");
@@ -149,6 +157,8 @@ public class RestaurantUI extends BaseUI {
                 product.setQuantity(newQuantity);
 
                 productService.updateProduct(restaurantId, productId, product);
+
+                restaurant.getProducts().add(product);
                 restaurantService.updateRestaurant(restaurantId, restaurant);
                 userService.update(currentUser.getId(), currentUser);
                 System.out.println("Food updated successfully!");
@@ -162,6 +172,7 @@ public class RestaurantUI extends BaseUI {
 
     private void showAllFood() {
         String restaurantId = Session.getCurrentSession().getRestaurantId();
+
         try {
             restaurantService.showAllProducts(restaurantId);
         } catch (Exception e) {
@@ -197,9 +208,13 @@ public class RestaurantUI extends BaseUI {
         String confirmation = sc.next();
         if (confirmation.equalsIgnoreCase("Yes") || confirmation.equalsIgnoreCase("Y")) {
             try {
-                restaurantService.deleteRestaurant(restaurantId);
-
                 currentUser.setRestaurant(null);
+
+                for(Product product : productService.findAll(restaurantId)){
+                    productService.deleteProduct(restaurantId, product.getId());
+                }
+
+                restaurantService.deleteRestaurant(restaurantId);
                 userService.update(currentUser.getId(), currentUser);
                 System.out.println("Restaurant removed successfully!");
             } catch (Exception e) {

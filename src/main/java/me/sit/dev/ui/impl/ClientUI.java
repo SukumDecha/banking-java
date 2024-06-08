@@ -162,7 +162,7 @@ public class ClientUI extends BaseUI {
                         orderUI();
                         continue;
                     case 3:
-                        loginUI.show();
+                        loginUI.semiMenu();
                         break;
                 }
             }

@@ -1,6 +1,7 @@
 package me.sit.dev.repository.impl.product;
 
 import me.sit.dev.entity.impl.Product;
+import me.sit.dev.entity.impl.Restaurant;
 import me.sit.dev.exceptions.InvalidInputException;
 import me.sit.dev.exceptions.product.ProductAlreadyExistException;
 import me.sit.dev.repository.IProductRepo;
