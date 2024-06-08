@@ -19,6 +19,13 @@ public class Restaurant extends BaseEntity {
         this.totalRating = totalRating;
     }
 
+    public Restaurant(String id, String ownerId, String restaurantName, int totalRating) {
+        super(id);
+        this.ownerId = ownerId;
+        this.name = restaurantName;
+        this.totalRating = totalRating;
+    }
+
     public String getOwnerId(){
         return ownerId;
     }
