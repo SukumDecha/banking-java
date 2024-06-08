@@ -1,7 +1,6 @@
 package me.sit.dev.repository.impl.product;
 
 import me.sit.dev.entity.impl.Product;
-import me.sit.dev.entity.impl.Restaurant;
 
 import java.util.List;
 

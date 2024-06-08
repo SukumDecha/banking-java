@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CartService implements ICartService {
-    private final Map<User, Map<Product, Integer>> cartStorage = new HashMap<>();
-
     /**
      * Adds a specified quantity of a product to the user's cart for a specific restaurant.
      *
@@ -43,7 +41,7 @@ public class CartService implements ICartService {
      */
     @Override
     public boolean removeFromCart(User user, Product product) {
-        if (user == null || product == null || !cartStorage.containsKey(user)) {
+        if (user == null || product == null) {
             throw new InvalidInputException();
         }
 
@@ -106,13 +104,14 @@ public class CartService implements ICartService {
 
     @Override
     public void showCartDetails(User user) {
-        if (user == null || !cartStorage.containsKey(user)) {
+        if (user == null) {
             System.out.println("Cart is empty or user does not exist.");
             return;
         }
-        Map<Product, Integer> userCart = cartStorage.get(user);
+
+        Cart userCart = user.getCart();
         System.out.println("Cart details for user: " + user.getName());
-        userCart.forEach((product, quantity) -> {
+        userCart.getProducts().forEach((product, quantity) -> {
             System.out.println("Product: " + product.getName() + ", Quantity: " + quantity);
         });
     }

@@ -2,8 +2,6 @@ package me.sit.dev.service.impl;
 
 import me.sit.dev.entity.impl.Product;
 import me.sit.dev.entity.impl.Restaurant;
-import me.sit.dev.entity.impl.Session;
-import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.repository.IProductRepo;
 import me.sit.dev.service.IProductService;
 
@@ -19,22 +17,22 @@ public class ProductService implements IProductService {
 
     @Override
     public Product addProduct(String restaurantId, String productName, double price, int quantity) {
-        return null;
+        return productRepo.addProduct(restaurantId, productName, price, quantity);
     }
 
     @Override
     public Product updateProduct(String restaurantId, String productId, Product product) {
-        return null;
+        return productRepo.updateProduct(restaurantId, productId, product);
     }
 
     @Override
     public Product deleteProduct(String restaurantId, String productId) {
-        return null;
+        return productRepo.deleteProduct(restaurantId, productId);
     }
 
     @Override
     public Product findById(String restaurantId, String productId) {
-        return null;
+        return productRepo.findById(restaurantId, productId);
     }
 
     @Override

@@ -6,6 +6,7 @@ import me.sit.dev.service.IRestaurantService;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.stream.Collectors;
 
 public class RestaurantService implements IRestaurantService {
 
@@ -18,7 +19,7 @@ public class RestaurantService implements IRestaurantService {
     /**
      * Adds a new restaurant with the given owner ID and restaurant name.
      *
-     * @param ownerId the ID of the restaurant owner
+     * @param ownerId        the ID of the restaurant owner
      * @param restaurantName the name of the restaurant
      * @return the added Restaurant object
      */
@@ -30,13 +31,13 @@ public class RestaurantService implements IRestaurantService {
     /**
      * Updates an existing restaurant with the given ID using the provided restaurant details.
      *
-     * @param id the ID of the restaurant to update
+     * @param id         the ID of the restaurant to update
      * @param restaurant the updated Restaurant object
      * @return null if the restaurant was not successfully updated)
      */
     @Override
     public Restaurant updateRestaurant(String id, Restaurant restaurant) {
-        return null;
+        return restaurantRepository.updateRestaurant(id, restaurant);
     }
 
     /**
@@ -47,7 +48,7 @@ public class RestaurantService implements IRestaurantService {
      */
     @Override
     public Restaurant deleteRestaurant(String id) {
-        return null;
+        return restaurantRepository.deleteRestaurant(id);
     }
 
     /**
@@ -58,7 +59,7 @@ public class RestaurantService implements IRestaurantService {
      */
     @Override
     public Restaurant findById(String id) {
-        return null;
+        return restaurantRepository.findById(id);
     }
 
     /**
@@ -69,7 +70,7 @@ public class RestaurantService implements IRestaurantService {
      */
     @Override
     public Restaurant findByName(String name) {
-        return null;
+        return restaurantRepository.findByName(name);
     }
 
     /**
@@ -80,7 +81,7 @@ public class RestaurantService implements IRestaurantService {
      */
     @Override
     public Restaurant findByOwnerId(String ownerId) {
-        return null;
+        return restaurantRepository.findByOwnerId(ownerId);
     }
 
     /**
@@ -91,7 +92,7 @@ public class RestaurantService implements IRestaurantService {
      */
     @Override
     public Restaurant findByProduct(String productId) {
-        return null;
+        return restaurantRepository.findByProduct(productId);
     }
 
     /**
@@ -101,7 +102,7 @@ public class RestaurantService implements IRestaurantService {
      */
     @Override
     public Collection<Restaurant> findAll() {
-        return null;
+        return restaurantRepository.findAll();
     }
 
     /**
@@ -112,7 +113,7 @@ public class RestaurantService implements IRestaurantService {
      */
     @Override
     public Collection<Restaurant> findByRating(int rating) {
-        return null;
+        return restaurantRepository.findByRating(rating);
     }
 
     /**
@@ -123,7 +124,7 @@ public class RestaurantService implements IRestaurantService {
      */
     @Override
     public boolean existsById(String id) {
-        return false;
+        return restaurantRepository.existsById(id);
     }
 
     /**
@@ -134,6 +135,11 @@ public class RestaurantService implements IRestaurantService {
      */
     @Override
     public Collection<Restaurant> findTopRestaurants(int limit) {
-        return null;
+        return findAll().stream().sorted(new Comparator<Restaurant>() {
+            @Override
+            public int compare(Restaurant o1, Restaurant o2) {
+                return (int) (o2.getRating() - o1.getRating());
+            }
+        }).limit(limit).collect(Collectors.toList());
     }
 }
