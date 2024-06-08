@@ -20,6 +20,13 @@ public class LoginUI extends BaseUI {
                       3. Exit from program
             ----------------------------------------       
             """;
+    private final String service_Prompt = """
+            -------------- MENU --------------
+                        1. Client
+                        2. Restaurant       
+                        3. Logout 
+            -----------------------------------      
+            """;
 
     public LoginUI(ClientUI clientUI, RestaurantUI restaurantUI, ServiceFactory serviceFactory) {
         super("Login UI", "This UI only shows the login view.", serviceFactory);
@@ -84,7 +91,7 @@ public class LoginUI extends BaseUI {
 
                         String input = sc.next();
                         boolean isAdmin = false;
-                        if (input.equals("yes")) {
+                        if (input.equalsIgnoreCase("yes")) {
                             isAdmin = true;
                         }
                         userService.register(name, saveEmail, savePassword, isAdmin);
@@ -98,17 +105,29 @@ public class LoginUI extends BaseUI {
                 System.exit(0);
                 break;
         }
-        Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Are you a client? (y/n)");
-        String answer = scanner.nextLine();
-        boolean isClient = answer.equals("y");
-
-        if (isClient) {
-            clientUI.show();
-        } else {
-            restaurantUI.show();
+        System.out.println(service_Prompt);
+        System.out.print("Enter your choice: ");
+        while (!sc.hasNext("(?i)[R].*|(?i)[C].*|(?i)[O].*|1|2|3")) {
+            System.out.println("Please try again");
+            sc.nextLine();
         }
 
+        String answer = sc.next();
+        if (answer.equalsIgnoreCase("1") || answer.contains("C")) {
+            clientUI.show();
+        } else if (answer.equalsIgnoreCase("2") || answer.contains("R")) {
+            User currentUser = Session.getCurrentSession().getUser();
+            if(currentUser.getRestaurant() == null) {
+                System.out.println("You are not a restaurant owner");
+                System.out.println("Going back to main menu");
+                System.out.println("Otherwise, create one to view this menu.");
+                show();
+            }
+        } else {
+            userService.logout();
+            System.out.println("Logout successful");
+            show();
+        }
     }
 }
