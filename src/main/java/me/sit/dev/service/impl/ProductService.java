@@ -29,7 +29,7 @@ public class ProductService implements IProductService {
     public boolean addProduct(Restaurant restaurant, String productName, double price, int quantity) {
         int currentId = findAll(restaurant).size() + 1;
 
-        Product product = new Product(currentId, productName, price, quantity);
+        Product product = new Product(currentId, restaurant.getId(), productName, price, quantity);
 
         findAll(restaurant).add(product);
         return false;

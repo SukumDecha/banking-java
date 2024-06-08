@@ -3,19 +3,34 @@ package me.sit.dev.entity.impl;
 import me.sit.dev.entity.BaseEntity;
 
 public class Product extends BaseEntity {
+    private String restaurantId;
     private String name;
     private double price;
     private int quantity;
 
-    public Product(int id, String name, double price, int quantity) {
+    public Product(int id, String restaurantId, String name, double price, int quantity) {
         super("P-" + id);
+        this.restaurantId = restaurantId;
         this.name = name;
         this.price = price;
         this.quantity = quantity;
     }
 
+    public Product(String id, String restaurantId, String name, double price, int quantity) {
+        super(id);
+        this.restaurantId = restaurantId;
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+
     public String getName() {
         return name;
+    }
+
+    public String getRestaurantId() {
+        return restaurantId;
     }
 
     public double getPrice() {

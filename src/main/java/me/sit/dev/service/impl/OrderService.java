@@ -24,10 +24,10 @@ public class OrderService implements IOrderService {
     public void showOrderDetails(Order order, boolean showStatus) {
         System.out.println("[S] --- Order Details ---");
         System.out.println("[S] Order ID: " + order.getId());
-        System.out.println("[S] Restaurant Name: " + order.getRestaurant().getName() + " (" + order.getRestaurant().getId() + ")");
+        System.out.println("[S] Restaurant Name: " + order.getRestaurantName() + " (" + order.getRestaurantId() + ")");
         System.out.println();
         System.out.println("[S] Products:");
-        order.getCart().getProducts().forEach((product, quantity) -> {
+        order.getProducts().forEach((product, quantity) -> {
             System.out.println("[S] - " + product.getName() + " x" + quantity);
         });
         System.out.println("[S] Total Price: " + order.getTotalPrice());
@@ -38,11 +38,9 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public Order createOrder(User user) {
-        Order order = new Order(user);
+    public Order createOrder(User user, Restaurant restaurant) {
+        Order order = new Order(user, user.getCart(), restaurant.getName(), restaurant.getId());
         order.confirmOrder();
-
-        Restaurant restaurant = order.getRestaurant();
 
         // TODO: Make waiting time
         // Send email to restaurant
@@ -61,17 +59,17 @@ public class OrderService implements IOrderService {
 
     @Override
     public Order findById(String id) {
-        return orders.stream().filter(o -> o.getId().equals(id)).findFirst().orElse(null);
+        return orderRepo.findById(id);
     }
 
     @Override
     public Collection<Order> findByUserId(String userId) {
-        return orders.stream().filter(o -> o.getOwnerId().equals(userId)).collect(Collectors.toList());
+        return orderRepo.findByUserId(userId);
     }
 
     @Override
     public Collection<Order> findAll() {
-        return orders;
+        return orderRepo.findAll();
     }
 
     @Override
@@ -81,7 +79,7 @@ public class OrderService implements IOrderService {
         // Send messages to user
         System.out.println("[S] --- Order canceled ---");
         System.out.println("[S] Order ID: " + order.getId());
-        System.out.println("[S] Restaurant Name: " + order.getRestaurant().getName() + " (" + order.getRestaurant().getId() + ")");
+        System.out.println("[S] Restaurant Name: " + order.getRestaurantName() + " (" + order.getRestaurantId() + ")");
         System.out.println();
         System.out.println("[S] Total Price: " + order.getTotalPrice());
         System.out.println("[S] ----------------------");
@@ -94,7 +92,7 @@ public class OrderService implements IOrderService {
         // Send messages to user
         System.out.println("[S] --- Order delivered ---");
         System.out.println("[S] Order ID: " + order.getId());
-        System.out.println("[S] Restaurant Name: " + order.getRestaurant().getName() + " (" + order.getRestaurant().getId() + ")");
+        System.out.println("[S] Restaurant Name: " + order.getRestaurantName() + " (" + order.getRestaurantId() + ")");
         System.out.println();
         System.out.println("[S] Estimated Delivery Time: 30 minutes");
         System.out.println("[S] Total Price: " + order.getTotalPrice());

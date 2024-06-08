@@ -7,19 +7,19 @@ import me.sit.dev.entity.impl.Restaurant;
 import java.util.List;
 
 public interface IProductRepo {
-    boolean addProduct(Restaurant restaurant, String productName, double price, int quantity);
+    Product addProduct(String restaurantId, String productName, double price, int quantity);
 
-    boolean updateProduct(Restaurant restaurant, String productId, Product product);
+    Product updateProduct(String restaurantId, String productId, Product product);
 
-    boolean deleteProduct(Restaurant restaurant, String productId);
+    Product deleteProduct(String restaurantId, String productId);
 
-    Product findById(Restaurant restaurant, String productId);
+    Product findById(String restaurantId, String productId);
 
-    Product findByName(Restaurant restaurant, String productName);
+    Product findByName(String restaurantId, String productName);
 
-    List<Product> findAll(Restaurant restaurant);
+    List<Product> findAll(String restaurantId);
 
-    boolean existsById(Restaurant restaurant, String productId);
+    boolean existsById(String restaurantId, String productId);
 
-    boolean existsByName(Restaurant restaurant, String productName);
+    boolean existsByName(String restaurantId, String productName);
 }

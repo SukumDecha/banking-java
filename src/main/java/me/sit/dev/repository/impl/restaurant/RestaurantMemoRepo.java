@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class RestaurantMemoRepo implements IRestaurantRepo {
-    private final Map<String, Restaurant> restaurantMap = new HashMap<>();
+    protected final Map<String, Restaurant> restaurantMap = new HashMap<>();
 
     @Override
     public Restaurant addRestaurant(String ownerId, String restaurantName) {
