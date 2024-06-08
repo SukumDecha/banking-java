@@ -1,5 +1,6 @@
 package me.sit.dev.repository.impl.restaurant;
 
+import me.sit.dev.entity.impl.Product;
 import me.sit.dev.entity.impl.Restaurant;
 import me.sit.dev.exceptions.InvalidInputException;
 import me.sit.dev.exceptions.InvalidParamsException;
@@ -58,6 +59,7 @@ public class RestaurantMemoRepo implements IRestaurantRepo {
         if (restaurant == null) {
             throw new RestaurantNotFoundException();
         }
+
         return restaurant;
 
     }
@@ -67,7 +69,7 @@ public class RestaurantMemoRepo implements IRestaurantRepo {
         return restaurantMap.values().stream()
                 .filter(restaurant -> restaurant.getName().equals(name))
                 .findFirst()
-                .orElseThrow(() -> new RestaurantNotFoundException());
+                .orElseThrow(RestaurantNotFoundException::new);
     }
 
 
@@ -76,15 +78,21 @@ public class RestaurantMemoRepo implements IRestaurantRepo {
         return restaurantMap.values().stream()
                 .filter(restaurant -> restaurant.getOwnerId().equals(ownerId))
                 .findFirst()
-                .orElseThrow(() -> new RestaurantNotFoundException());
+                .orElseThrow(RestaurantNotFoundException::new);
     }
 
     @Override
     public Restaurant findByProduct(String productId) {
         return restaurantMap.values().stream()
-                .filter(restaurant -> restaurant.getProducts().contains(productId)) // Assuming getProducts method
+                .filter(restaurant -> {
+                    Product product = restaurant.getProducts().stream().filter(p -> {
+                        return p.getId().equals(productId);
+                    }).findFirst().orElse(null);
+
+                    return product.getId().equals(productId);
+                })
                 .findFirst()
-                .orElseThrow(() -> new RestaurantNotFoundException());
+                .orElseThrow(RestaurantNotFoundException::new);
     }
 
     @Override
@@ -95,7 +103,7 @@ public class RestaurantMemoRepo implements IRestaurantRepo {
     @Override
     public Collection<Restaurant> findByRating(int rating) {
         return restaurantMap.values().stream()
-                .filter(restaurant -> restaurant.getTotalRating() == rating) // Assuming getTotalRating method
+                .filter(restaurant -> restaurant.getTotalRating() >= rating)
                 .collect(Collectors.toList());
     }
 

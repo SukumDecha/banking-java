@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserFileRepo extends UserMemoRepo implements IUserRepo {
-    private final Map<String, User> userMap = new HashMap<>();
+    protected final Map<String, User> userMap = new HashMap<>();
     private final String path = "src/main/resources/users/";
 
     public UserFileRepo() {
@@ -34,8 +34,9 @@ public class UserFileRepo extends UserMemoRepo implements IUserRepo {
     public User save(User user) {
         super.save(user);
 
-        String finalPath = path + user.getName() + "-" + user.getId() + ".txt";
-        try (ObjectOutputStream writer = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(finalPath)))) {
+        File file = getFileFromUser(user);
+
+        try (ObjectOutputStream writer = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
             writer.writeObject(user);
             writer.flush();
         } catch (Exception e) {
@@ -49,16 +50,15 @@ public class UserFileRepo extends UserMemoRepo implements IUserRepo {
     public User update(String userId, User user) {
         super.update(userId, user);
 
-        save(user);
-        return user;
+        return save(user);
     }
 
 
     @Override
     public void delete(User user) {
         super.delete(user);
-        String finalPath = path + user.getName() + "-" + user.getId() + ".txt";
-        File file = new File(finalPath);
+
+        File file = getFileFromUser(user);
 
         if (file.exists()) {
             file.delete();
@@ -67,9 +67,19 @@ public class UserFileRepo extends UserMemoRepo implements IUserRepo {
 
     @Override
     public void deleteById(String id) {
+        super.deleteById(id);
+
         User user = findById(id);
 
-        delete(user);
+        File file = getFileFromUser(user);
+
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
+    private File getFileFromUser(User user) {
+        return new File(path + user.getName() + "-" + user.getId() + ".txt");
     }
 
 }

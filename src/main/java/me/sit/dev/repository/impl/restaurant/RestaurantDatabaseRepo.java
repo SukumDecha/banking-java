@@ -2,14 +2,12 @@ package me.sit.dev.repository.impl.restaurant;
 
 import me.sit.dev.entity.impl.Restaurant;
 import me.sit.dev.repository.IRestaurantRepo;
-import me.sit.dev.repository.impl.connect.DatabaseConnection;
+import me.sit.dev.repository.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
 
 public class RestaurantDatabaseRepo extends RestaurantMemoRepo implements IRestaurantRepo {
 
@@ -45,8 +43,9 @@ public class RestaurantDatabaseRepo extends RestaurantMemoRepo implements IResta
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
+
+        return null;
     }
 
     @Override
@@ -61,8 +60,10 @@ public class RestaurantDatabaseRepo extends RestaurantMemoRepo implements IResta
             return restaurant;
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
+
+        return null;
+
     }
 
     @Override
@@ -74,89 +75,12 @@ public class RestaurantDatabaseRepo extends RestaurantMemoRepo implements IResta
             return findById(id); // Return the deleted restaurant object if needed
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
+
+        return null;
     }
 
-    @Override
-    public Restaurant findById(String id) {
-        String sql = "SELECT * FROM Restaurant WHERE id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, Integer.parseInt(id));
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return new Restaurant(rs.getString("id"), rs.getString("ownerId"),
-                        rs.getString("name"), rs.getInt("totalRating"));
-            }
-            return null;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
-    @Override
-    public Restaurant findByName(String name) {
-        String sql = "SELECT * FROM Restaurant WHERE name = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, name);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return new Restaurant(rs.getString("id"), rs.getString("ownerId"),
-                        rs.getString("name"), rs.getInt("totalRating"));
-            }
-            return null;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
-    @Override
-    public Restaurant findByOwnerId(String ownerId) {
-        String sql = "SELECT * FROM Restaurant WHERE ownerId = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, ownerId);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return new Restaurant(rs.getString("id"), rs.getString("ownerId"),
-                        rs.getString("name"), rs.getInt("totalRating"));
-            }
-            return null;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
-    @Override
-    public Restaurant findByProduct(String productId) {
-        return findByProduct(productId);
-    }
-
-    @Override
-    public Collection<Restaurant> findAll() {
-        String sql = "SELECT * FROM Restaurant";
-        Collection<Restaurant> restaurants = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                restaurants.add(new Restaurant(rs.getString("id"), rs.getString("ownerId"),
-                        rs.getString("name"), rs.getInt("totalRating")));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return restaurants;
-    }
-
-    @Override
-    public Collection<Restaurant> findByRating(int rating) {
-        return super.findByRating(rating);
-    }
-
-    @Override
-    public boolean existsById(String id) {
-        return super.existsById(id);
-    }
 }

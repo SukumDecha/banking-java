@@ -38,9 +38,11 @@ public class Restaurant extends BaseEntity {
     }
 
     public double getRating() {
+        if (orders.isEmpty()) {
+            return 0.0;
+        }
         return (double) totalRating / orders.size();
     }
-
     public List<Product> getProducts() {
         return products;
     }

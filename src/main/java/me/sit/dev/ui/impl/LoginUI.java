@@ -10,10 +10,10 @@ public class LoginUI extends BaseUI {
     private final ClientUI clientUI;
     private final RestaurantUI restaurantUI;
     private final String login_Prompt = """
-            -------------- LOGIN MENU --------------
+            -------------- AUTH MENU --------------
                            1. Login
-                          2. register         
-                      3. out from program
+                          2. Register         
+                      3. Exit from program
             ----------------------------------------       
             """;
 
@@ -26,7 +26,7 @@ public class LoginUI extends BaseUI {
 
     @Override
     public void show() {
-        System.out.println("Login UI");
+        System.out.println("--- Login UI ---");
         System.out.println(login_Prompt);
         System.out.println("please Enter 1/2/3");
         Scanner sc = new Scanner(System.in);
