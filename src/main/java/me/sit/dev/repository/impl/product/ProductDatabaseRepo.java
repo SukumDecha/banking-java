@@ -21,8 +21,4 @@ public class ProductDatabaseRepo extends ProductMemoRepo {
         return super.deleteProduct(restaurant, productId);
     }
 
-    @Override
-    public List<Product> findAll(Restaurant restaurant) {
-        return super.findAll(restaurant);
-    }
 }

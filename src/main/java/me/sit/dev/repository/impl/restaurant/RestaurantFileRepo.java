@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class RestaurantFileRepo extends RestaurantMemoRepo implements IRestaurantRepo {
     private final Map<String, Restaurant> restaurantMap = new HashMap<>();
-    private final String path = "src/main/resources/users/";
+    private final String path = "src/main/resources/restaurants/";
 
     @Override
     public Restaurant addRestaurant(String ownerId, String restaurantName) {
