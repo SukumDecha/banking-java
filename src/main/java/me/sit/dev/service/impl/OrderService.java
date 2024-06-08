@@ -58,6 +58,11 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    public Order updateOrder(String orderId, Order order) {
+        return orderRepo.updateOrder(orderId, order);
+    }
+
+    @Override
     public Order findById(String id) {
         return orderRepo.findById(id);
     }
