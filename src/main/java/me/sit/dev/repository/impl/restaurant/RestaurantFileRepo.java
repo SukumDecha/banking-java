@@ -55,7 +55,7 @@ public class RestaurantFileRepo extends RestaurantMemoRepo implements IRestauran
     public Restaurant updateRestaurant(String id, Restaurant restaurant) {
         super.updateRestaurant(id,restaurant);
         save(restaurant);
-        return null;
+        return restaurant;
     }
 
     @Override
