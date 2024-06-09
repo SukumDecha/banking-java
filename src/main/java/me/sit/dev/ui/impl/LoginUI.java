@@ -8,6 +8,7 @@ import me.sit.dev.exceptions.user.UserNotFoundException;
 import me.sit.dev.service.ServiceFactory;
 import me.sit.dev.ui.BaseUI;
 
+import java.io.Console;
 import java.util.Scanner;
 
 public class LoginUI extends BaseUI {
@@ -54,14 +55,24 @@ public class LoginUI extends BaseUI {
                     try {
                         System.out.print("Enter your email : ");
                         String email = sc.next();
-                        System.out.print("Enter your password : ");
-                        String password = sc.next();
-                        if (userService.login(email, password)) {
-                            System.out.println("----------------------------------");
-                            System.out.println("\t\t Login successful");
-                            System.out.println("----------------------------------");
-                            sc.nextLine();
-                            break;
+                        Console console = System.console();
+                        if (console != null) {
+                            char[] password = console.readPassword("Enter your password :");
+                            if (userService.login(email, new String(password))) {
+                                System.out.println("----------------------------------");
+                                System.out.println("\t\t Login successful");
+                                System.out.println("----------------------------------");
+                                break;
+                            }
+                        } else {
+                            System.out.print("Enter your password : ");
+                            String password = sc.next();
+                            if (userService.login(email, password)) {
+                                System.out.println("----------------------------------");
+                                System.out.println("\t\t Login successful");
+                                System.out.println("----------------------------------");
+                                break;
+                            }
                         }
                     } catch (InvalidPasswordException | UserNotFoundException e) {
                         System.out.println("[!] Error: " + e.getMessage());

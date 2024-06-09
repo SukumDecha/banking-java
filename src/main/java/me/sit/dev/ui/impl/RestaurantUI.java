@@ -54,8 +54,8 @@ public class RestaurantUI extends BaseUI {
             if (count != 1) {
                 System.out.println(Program_prompt);
                 System.out.print("Choose next program : ");
-                while (!sc.hasNext("[1|2|3|4|5|6]")) {
-                    System.out.print("please try again [select 1,2,3,4,5,6] : ");
+                while (!sc.hasNext("[1|2|3|4|5|6|7]")) {
+                    System.out.print("please try again [select 1,2,3,4,5,6,7] : ");
                     sc.next();
                 }
             }
@@ -69,15 +69,18 @@ public class RestaurantUI extends BaseUI {
                     editFood();
                     break;
                 case 3:
-                    showAllFood();
+                    System.out.println("Delete Food");
                     break;
                 case 4:
-                    showHistory();
+                    showAllFood();
                     break;
                 case 5:
-                    deleteRestaurant();
+                    showHistory();
                     break;
                 case 6:
+                    deleteRestaurant();
+                    break;
+                case 7:
                     System.out.println("Going back to main menu");
                     loginUI.semiMenu();
                     break;

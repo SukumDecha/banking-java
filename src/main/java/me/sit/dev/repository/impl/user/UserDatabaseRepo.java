@@ -51,12 +51,13 @@ public class UserDatabaseRepo extends UserMemoRepo implements IUserRepo {
     public User save(User user) {
         user = super.save(user);
 
-        String sql = "INSERT INTO User (name, email, password, role) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO User (name, email, password, role, restaurantId) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, user.getName());
             stmt.setString(2, user.getEmail());
             stmt.setString(3, user.getPassword());
             stmt.setString(4, user.getRole().name());
+            stmt.setString(5, user.getRestaurantId() == null ? null : user.getRestaurantId());
             int affectedRows = stmt.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Creating user failed, no rows affected.");
@@ -74,13 +75,14 @@ public class UserDatabaseRepo extends UserMemoRepo implements IUserRepo {
     public User update(String userId, User user) {
         user = super.update(userId, user);
 
-        String sql = "UPDATE User SET name = ?, email = ?, password = ?, role = ? WHERE id = ?";
+        String sql = "UPDATE User SET name = ?, email = ?, password = ?, role = ?, restaurantId = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, user.getName());
             stmt.setString(2, user.getEmail());
             stmt.setString(3, user.getPassword());
             stmt.setString(4, user.getRole().name());
-            stmt.setInt(5, Integer.parseInt(userId));
+            stmt.setString(5, user.getRestaurantId() == null ? null : user.getRestaurantId());
+            stmt.setInt(6, Integer.parseInt(userId));
             stmt.executeUpdate();
             return user;
         } catch (SQLException e) {
