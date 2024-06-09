@@ -23,7 +23,8 @@ public class ClientUI extends BaseUI {
             -------------- MAIN MENU --------------
                         1. Create Restaurant          
                         2. Order Food
-                        3. Go back
+                        3. View Order History
+                        4. Go back
             ---------------------------------------       
             """;
     private final String orderUIPrompt = """
@@ -156,8 +157,8 @@ public class ClientUI extends BaseUI {
         try {
             System.out.println(programPrompt);
             System.out.print("Choose your program : ");
-            while (!sc.hasNext("[1|2|3]")) {
-                System.out.print("please try again [select 1,2,3] : ");
+            while (!sc.hasNext("[1|2|3|4]")) {
+                System.out.print("please try again [select 1,2,3,4] : ");
                 sc.next();
             }
             boolean program_status = true;
@@ -167,8 +168,8 @@ public class ClientUI extends BaseUI {
                 if (count != 1) {
                     System.out.println(programPrompt);
                     System.out.print("Choose next program : ");
-                    while (!sc.hasNext("[1|2|3]")) {
-                        System.out.print("please try again [select 1,2,3] : ");
+                    while (!sc.hasNext("[1|2|3|4]")) {
+                        System.out.print("please try again [select 1,2,3,4] : ");
                         sc.next();
                     }
                 }
@@ -186,6 +187,9 @@ public class ClientUI extends BaseUI {
                         orderUI();
                         continue;
                     case 3:
+                        viewOrderHistory();
+                        continue;
+                    case 4:
                         loginUI.semiMenu();
                         break;
                 }
@@ -293,6 +297,31 @@ public class ClientUI extends BaseUI {
             }
         } catch (Exception e) {
             System.out.println("[!] An error occurred while ordering food: " + e.getMessage());
+        }
+    }
+    private void viewOrderHistory() {
+        try {
+            User currentUser = Session.getCurrentSession().getUser();
+            Collection<Order> orders = orderService.findByUserId(currentUser.getId());
+
+            if (orders.isEmpty()) {
+                System.out.println("You have no order history.");
+                return;
+            }
+
+            System.out.println("------ Order History ------");
+            for (Order order : orders) {
+                System.out.println("Order ID: " + order.getId());
+                System.out.println("Restaurant: " + order.getRestaurantId());
+                System.out.println("Products:");
+                order.getProducts().forEach((product, quantity) -> {
+                    System.out.println("\t" + product.getName() + " - Quantity: " + quantity);
+                });
+                System.out.println("Total: " + order.getTotalPrice());
+                System.out.println("---------------------------");
+            }
+        } catch (Exception e) {
+            System.out.println("An error occurred while fetching the order history: " + e.getMessage());
         }
     }
 
