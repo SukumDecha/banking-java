@@ -14,7 +14,7 @@ public class User extends BaseEntity {
     private final String name, email, password;
     private final UserRole role;
     private Cart cart;
-    private Restaurant restaurant;
+    private String restaurantId;
     private final List<Order> orders = new ArrayList<>();
 
     public User(String id, String name, String email, String password, UserRole role) {
@@ -46,9 +46,6 @@ public class User extends BaseEntity {
         return cart;
     }
 
-    public Restaurant getRestaurant() {
-        return restaurant;
-    }
     public List<Order> getOrders() {
         return orders;
     }
@@ -58,7 +55,11 @@ public class User extends BaseEntity {
                 || order.getStatus() == OrderStatus.CANCELLED).toList();
     }
 
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
+    public String getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
     }
 }

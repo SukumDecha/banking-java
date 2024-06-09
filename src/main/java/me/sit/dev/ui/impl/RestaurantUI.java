@@ -37,7 +37,7 @@ public class RestaurantUI extends BaseUI {
     @Override
     public void show() {
         User currentUser = Session.getCurrentSession().getUser();
-        Session.getCurrentSession().setRestaurantId(currentUser.getRestaurant().getId());
+        Session.getCurrentSession().setRestaurantId(currentUser.getRestaurantId());
 
         System.out.println("Restaurant UI");
         System.out.println(Program_prompt);
@@ -86,8 +86,7 @@ public class RestaurantUI extends BaseUI {
 
     private void addFood() {
         User currentUser = Session.getCurrentSession().getUser();
-        Restaurant restaurant = currentUser.getRestaurant();
-        String restaurantId = restaurant.getId();
+        String restaurantId = currentUser.getRestaurantId();
 
         try {
             System.out.println("Enter new product name : ");
@@ -124,10 +123,10 @@ public class RestaurantUI extends BaseUI {
             }
 
             Product product = productService.addProduct(restaurantId, name, price, quantity);
+            Restaurant restaurant = restaurantService.findById(restaurantId);
             restaurant.addProduct(product);
 
             restaurantService.updateRestaurant(restaurantId, restaurant);
-            userService.update(currentUser.getId(), currentUser);
             System.out.println("Food added successfully!");
         } catch (Exception e) {
             System.err.println("Error adding food: " + e.getMessage());
@@ -136,8 +135,7 @@ public class RestaurantUI extends BaseUI {
 
     private void editFood() {
         User currentUser = Session.getCurrentSession().getUser();
-        Restaurant restaurant = currentUser.getRestaurant();
-        String restaurantId = restaurant.getId();
+        String restaurantId = currentUser.getRestaurantId();
 
         try {
             showAllFood();
@@ -210,10 +208,10 @@ public class RestaurantUI extends BaseUI {
 
                 productService.updateProduct(restaurantId, productId, product);
 
+                Restaurant restaurant = restaurantService.findById(restaurantId);
                 restaurant.updateProduct(product);
 
                 restaurantService.updateRestaurant(restaurantId, restaurant);
-                userService.update(currentUser.getId(), currentUser);
                 System.out.println("Food updated successfully!");
             } else {
                 System.out.println("Product not found!");
@@ -225,7 +223,7 @@ public class RestaurantUI extends BaseUI {
 
     private void showAllFood() {
         User currentUser = Session.getCurrentSession().getUser();
-        String restaurantId = currentUser.getRestaurant().getId();
+        String restaurantId = currentUser.getRestaurantId();
 
         try {
             restaurantService.showAllProducts(restaurantId);
@@ -237,14 +235,12 @@ public class RestaurantUI extends BaseUI {
     private void showHistory() {
         System.out.println("Show all product and amount that is ordered");
         User currentUser = Session.getCurrentSession().getUser();
-        Restaurant restaurant = currentUser.getRestaurant();
-        String restaurantId = restaurant.getId();
+        String restaurantId = currentUser.getRestaurantId();
+
+        int orderCount = restaurantService.showOrderPagination(restaurantId, 1, 5);
 
 
-        restaurantService.showOrderPagination(restaurantId, 1, 5);
-
-        int productCount = productService.findAll(restaurantId).size();
-        int maxPage = (int) Math.ceil(productCount / 5.0);
+        int maxPage = (int) Math.ceil((double) orderCount / 5);
 
         while (true) {
             System.out.println("Current page: " + 1 + " / " + maxPage);
@@ -262,13 +258,13 @@ public class RestaurantUI extends BaseUI {
 
     private void deleteRestaurant() {
         User currentUser = Session.getCurrentSession().getUser();
-        String restaurantId = currentUser.getRestaurant().getId();
+        String restaurantId = currentUser.getRestaurantId();
 
         System.out.println("Are you sure to remove restaurant? (Yes/No)");
         String confirmation = sc.next();
         if (confirmation.equalsIgnoreCase("Yes") || confirmation.equalsIgnoreCase("Y")) {
             try {
-                currentUser.setRestaurant(null);
+                currentUser.setRestaurantId(null);
 
                 for (Product product : productService.findAll(restaurantId)) {
                     productService.deleteProduct(restaurantId, product.getId());

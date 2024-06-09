@@ -1,5 +1,6 @@
 package me.sit.dev.ui.impl;
 
+import me.sit.dev.entity.impl.Restaurant;
 import me.sit.dev.entity.impl.Session;
 import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.exceptions.InvalidPasswordException;
@@ -39,10 +40,10 @@ public class LoginUI extends BaseUI {
     public void show() {
         System.out.println("\n\t\t\t--- Login UI ---\n");
         System.out.println(login_Prompt);
-        System.out.print("please Enter 1|2|3 : ");
+        System.out.print("[!] Please enter 1|2|3 : ");
         Scanner sc = new Scanner(System.in);
         while (!sc.hasNext("[1|2|3]")) {
-            System.out.print("please try again(Enter 1|2|3) : ");
+            System.out.print("[!] Please try again. (Enter 1|2|3) : ");
             sc.next();
         }
         int loginSelected = sc.nextInt();
@@ -63,8 +64,8 @@ public class LoginUI extends BaseUI {
                             break;
                         }
                     } catch (InvalidPasswordException | UserNotFoundException e) {
-                        System.out.println("Error: " + e.getMessage());
-                        System.out.println("\nYou can enter 0 to end this process.\nOtherwise, press any key to try again.");
+                        System.out.println("[!] Error: " + e.getMessage());
+                        System.out.println("\n[!] You can enter 0 to end this process.\n[!] Otherwise, press any key to try again.");
                         if (sc.next().equals("0")) {
                             System.out.println("Exiting from program");
                             show();
@@ -85,8 +86,8 @@ public class LoginUI extends BaseUI {
                             break;
                         }
                         if (userService.existsByEmail(saveEmail)) {
-                            System.out.println("\nError: This email already exists");
-                            System.out.println("You can enter 0 to cancel this program");
+                            System.out.println("\n[!] Error: This email already exists");
+                            System.out.println("[!] You can enter 0 to cancel this program");
                             continue;
                         }
                         System.out.print("Enter your password : ");
@@ -133,7 +134,7 @@ public class LoginUI extends BaseUI {
             clientUI.show();
         } else if (answer.equalsIgnoreCase("2") || answer.contains("R")) {
             User currentUser = Session.getCurrentSession().getUser();
-            if(currentUser.getRestaurant() == null) {
+            if(currentUser.getRestaurantId() == null) {
                 System.out.println("[!] You are not a restaurant owner, create a restaurant to view this menu.");
                 System.out.println("Going back to main menu...");
                 semiMenu();

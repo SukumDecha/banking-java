@@ -85,9 +85,17 @@ public class ClientUI extends BaseUI {
 
     private boolean showAllRestaurants() {
         try {
-            Collection<Restaurant> restaurants = restaurantService.findAll();
+            User currentUser = Session.getCurrentSession().getUser();
+            Collection<Restaurant> restaurants = restaurantService.findAll().stream()
+                    .filter(restaurant -> {
+                        if (currentUser.getRestaurantId() != null) {
+                            return !restaurant.getId().equals(currentUser.getRestaurantId());
+                        }
+                        return true;
+                    }).toList();
+
             if (restaurants.isEmpty()) {
-                System.out.println("No restaurants available.");
+                System.out.println("[!] No restaurants available...");
                 return false;
             }
             System.out.println("------ Available restaurants ------");
@@ -104,22 +112,34 @@ public class ClientUI extends BaseUI {
         }
     }
 
-    private void selectRestaurant() {
+    private boolean selectRestaurant() {
         try {
             List<Restaurant> restaurants = restaurantService.findAll().stream().toList();
 
             System.out.print("Please select a restaurant by number : ");
             while (true) {
                 while (!sc.hasNextInt()) {
-                    System.out.print("Invalid selection. Please try again: ");
+                    System.out.println("[!] You can enter 0 to end this process");
+                    System.out.print("[!] Invalid selection. Please try again: ");
                     sc.next();
+                }
+
+                if (sc.hasNext("0")) {
+                    break;
                 }
 
                 int restaurantIndex = sc.nextInt() - 1;
 
                 if (restaurantIndex >= 0 && restaurantIndex < restaurants.size()) {
-                    String currentRestaurantId = restaurants.get(restaurantIndex).getId();
-                    Session.getCurrentSession().setRestaurantId(currentRestaurantId);
+                    String restaurantId = restaurants.get(restaurantIndex).getId();
+                    Restaurant currentRestaurant = restaurantService.findById(restaurantId);
+
+                    if (currentRestaurant.getProducts().isEmpty()) {
+                        System.out.println("[!] This restaurant has no products available...");
+                        return false;
+                    }
+
+                    Session.getCurrentSession().setRestaurantId(restaurantId);
                     break;
                 }
                 System.out.println("Invalid selection. Please try again.");
@@ -127,6 +147,8 @@ public class ClientUI extends BaseUI {
         } catch (Exception e) {
             System.out.println("An error occurred while selecting a restaurant: " + e.getMessage());
         }
+
+        return true;
     }
 
     private void showMainMenu() {
@@ -154,7 +176,7 @@ public class ClientUI extends BaseUI {
                 count++;
                 switch (programSelected) {
                     case 1:
-                        if (currentUser.getRestaurant() != null) {
+                        if (currentUser.getRestaurantId() != null) {
                             System.out.println("You already have a restaurant.");
                             break;
                         }
@@ -182,7 +204,7 @@ public class ClientUI extends BaseUI {
             String restaurantName = sc.next();
             Restaurant restaurant = restaurantService.addRestaurant(ownerId, restaurantName);
 
-            currentUser.setRestaurant(restaurant);
+            currentUser.setRestaurantId(restaurant.getId());
             userService.update(currentUser.getId(), currentUser);
             System.out.println("Restaurant created successfully.");
 
@@ -196,11 +218,15 @@ public class ClientUI extends BaseUI {
             if (!showAllRestaurants()) {
                 return;
             }
-            selectRestaurant();
+
+            if (!selectRestaurant()) {
+                return;
+            }
+
             System.out.println(orderUIPrompt);
             System.out.print("Select your order : ");
             while (!sc.hasNext("[1|2|3|4]")) {
-                System.out.print("please try again [select 1,2,3,4] : ");
+                System.out.print("[!] Please try again. [select 1,2,3,4] : ");
                 sc.next();
             }
             boolean orderstatus = true;
@@ -211,7 +237,7 @@ public class ClientUI extends BaseUI {
                     System.out.println(orderUIPrompt);
                     System.out.print("Select your next order : ");
                     while (!sc.hasNext("[1|2|3|4]")) {
-                        System.out.print("please try again [select 1|2|3|4] : ");
+                        System.out.print("[!] Please try again [select 1|2|3|4] : ");
                         sc.next();
                     }
                 }
@@ -219,7 +245,6 @@ public class ClientUI extends BaseUI {
                 orderSelected = sc.nextInt();
                 switch (orderSelected) {
                     case 1:
-                        System.out.println("------- order food method -------");
                         orderFood();
                         continue;
                     case 2:
@@ -229,13 +254,13 @@ public class ClientUI extends BaseUI {
                         inMyCart();
                         continue;
                     case 4:
-                        System.out.println("Back to main menu");
+                        System.out.println("Back to main menu...");
                         orderstatus = false;
                         break;
                 }
             }
         } catch (Exception e) {
-            System.out.println("An error occurred in the order UI: " + e.getMessage());
+            System.out.println("[!] An error occurred in the order UI: " + e.getMessage());
         }
     }
 
@@ -247,8 +272,9 @@ public class ClientUI extends BaseUI {
                 Scanner scFood = new Scanner(System.in);
                 System.out.print("Select menu : ");
                 while (!scFood.hasNextInt()) {
-                    System.out.println("you can enter 0 to end this process");
-                    System.out.print("please try again (input number): ");
+                    System.out.println("[!] You can enter 0 to end this process");
+                    System.out.print("[!] Please try again (input number): ");
+
                     scFood.next();
                 }
                 if (scFood.hasNext("0")) {
@@ -262,11 +288,11 @@ public class ClientUI extends BaseUI {
                     addToCart();
                     break;
                 } else {
-                    System.out.println("Invalid selection.");
+                    System.out.println("[!] Invalid selection.");
                 }
             }
         } catch (Exception e) {
-            System.out.println("An error occurred while ordering food: " + e.getMessage());
+            System.out.println("[!] An error occurred while ordering food: " + e.getMessage());
         }
     }
 
@@ -284,14 +310,14 @@ public class ClientUI extends BaseUI {
             int count = 1;
             System.out.println("---------- Search results ----------");
             System.out.println("ID | Name | Price | Quantity");
-            System.out.println("-----------------------------");
+            System.out.println("------------------------------------");
             for (Product product : products) {
-                System.out.printf("%-11s | %-7s | %-12d| %-6f %n", product.getId(), product.getName(), product.getQuantity(), product.getPrice());
+                System.out.printf("%-11s | %-7s | %-12d| %-6f %n", count, product.getName(), product.getQuantity(), product.getPrice());
                 count++;
             }
-            System.out.println("-----------------------------");
+            System.out.println("------------------------------------");
         } catch (Exception e) {
-            System.out.println("An error occurred while searching for food: " + e.getMessage());
+            System.out.println("[!] An error occurred while searching for food: " + e.getMessage());
         }
     }
 
@@ -304,7 +330,7 @@ public class ClientUI extends BaseUI {
                 System.out.println(cartMenuPrompt);
                 System.out.print("Select menu : ");
                 while (!scIncart.hasNext("[1|2|3|4|5]")) {
-                    System.out.println("please try again [select 1|2|3|4|5] : ");
+                    System.out.println("[!] Please try again [select 1|2|3|4|5] : ");
                     scIncart.next();
                 }
                 int cartSelected = scIncart.nextInt();
@@ -321,7 +347,7 @@ public class ClientUI extends BaseUI {
                         System.out.println("Your cart has been cleared.");
                         break;
                     case 4:
-                        if(currentUser.getCart().getProducts().isEmpty()){
+                        if (currentUser.getCart().getProducts().isEmpty()) {
                             System.out.println("Your cart is empty. Please add some products first.");
                             break;
                         }
@@ -339,7 +365,7 @@ public class ClientUI extends BaseUI {
                 }
             }
         } catch (Exception e) {
-            System.out.println("An error occurred while managing the cart: " + e.getMessage());
+            System.out.println("[!] An error occurred while managing the cart: " + e.getMessage());
         }
     }
 
@@ -350,7 +376,7 @@ public class ClientUI extends BaseUI {
 
             System.out.print("Enter the quantity: ");
             while (!sc.hasNextInt()) {
-                System.out.print("Invalid input. Please enter a number: ");
+                System.out.print("[!] Invalid input. Please enter a number: ");
                 sc.next();
             }
 
@@ -371,13 +397,13 @@ public class ClientUI extends BaseUI {
                 System.out.println();
                 orderService.showOrderDetails(new Order(currentUser, currentUser.getCart(),
                         currentRestaurant.getId(), currentProduct.getName()), false);
-                System.out.println("Added to cart.");
+                System.out.println("[S] Added to cart.");
             } else {
-                System.out.println("Invalid quantity. Try again.");
+                System.out.println("[!] Invalid quantity. Try again.");
                 addToCart();
             }
         } catch (Exception e) {
-            System.out.println("An error occurred while adding to the cart: " + e.getMessage());
+            System.out.println("[!] An error occurred while adding to the cart: " + e.getMessage());
         }
     }
 
@@ -389,7 +415,7 @@ public class ClientUI extends BaseUI {
                 System.out.println(editCartMenuPrompt);
                 System.out.print("Select edit menu : ");
                 while (!scEditCart.hasNext("[1|2|3]")) {
-                    System.out.print("please try again [select 1,2,3] : ");
+                    System.out.print("[!] Please try again. [select 1,2,3] : ");
                     scEditCart.next();
                 }
                 int editSelected = scEditCart.nextInt();
@@ -406,7 +432,7 @@ public class ClientUI extends BaseUI {
                 }
             }
         } catch (Exception e) {
-            System.out.println("An error occurred while editing the cart: " + e.getMessage());
+            System.out.println("[!] An error occurred while editing the cart: " + e.getMessage());
         }
     }
 
@@ -424,7 +450,7 @@ public class ClientUI extends BaseUI {
             Scanner scEditAmount = new Scanner(System.in);
             System.out.print("\nSelect the product to edit amount: ");
             while (!scEditAmount.hasNextInt()) {
-                System.out.print("Invalid selection. Please try again: ");
+                System.out.print("[!] Invalid selection. Please try again: ");
                 scEditAmount.next();
             }
             int productIndex = scEditAmount.nextInt() - 1;
@@ -432,29 +458,29 @@ public class ClientUI extends BaseUI {
                 Product selectedProduct = cartProducts.get(productIndex);
                 System.out.print("Enter the new amount: ");
                 while (!scEditAmount.hasNextInt()) {
-                    System.out.print("Invalid input. Please enter a number: ");
+                    System.out.print("[!] Invalid input. Please enter a number: ");
                     scEditAmount.next();
                 }
                 int newAmount = scEditAmount.nextInt();
                 if (newAmount > 0) {
-                    int productQuantity = productService.getQuantity(currentUser.getRestaurant().getId(), selectedProduct.getId());
+                    int productQuantity = productService.getQuantity(currentUser.getRestaurantId(), selectedProduct.getId());
                     if (newAmount > productQuantity) {
-                        System.out.println("Not enough stock. Try again.");
+                        System.out.println("[!] Not enough stock. Try again.");
                         editCartAmount();
                         return;
                     }
                     cartService.updateCart(currentUser, selectedProduct, newAmount);
-                    System.out.println("Amount updated.");
+                    System.out.println("[S] Amount updated.");
                 } else {
-                    System.out.println("Invalid amount. Try again.");
+                    System.out.println("[!] Invalid amount. Try again.");
                     editCartAmount();
                 }
             } else {
-                System.out.println("Invalid selection. Try again.");
+                System.out.println("[!] Invalid selection. Try again.");
                 editCartAmount();
             }
         } catch (Exception e) {
-            System.out.println("An error occurred while editing the cart amount: " + e.getMessage());
+            System.out.println("[!] An error occurred while editing the cart amount: " + e.getMessage());
         }
     }
 
@@ -471,7 +497,7 @@ public class ClientUI extends BaseUI {
             Scanner scRemoveProduct = new Scanner(System.in);
             System.out.print("\nSelect the product to remove from your card:");
             while (!scRemoveProduct.hasNextInt()) {
-                System.out.print("Invalid selection. Please try again: ");
+                System.out.print("[!] Invalid selection. Please try again: ");
                 scRemoveProduct.next();
             }
             int productIndex = scRemoveProduct.nextInt() - 1;
@@ -480,11 +506,11 @@ public class ClientUI extends BaseUI {
                 cartService.removeFromCart(currentUser, selectedProduct);
                 System.out.println("Product removed from cart.");
             } else {
-                System.out.println("Invalid selection. Try again.");
+                System.out.println("[!] Invalid selection. Try again.");
                 removeFromCart();
             }
         } catch (Exception e) {
-            System.out.println("An error occurred while removing the product from the cart: " + e.getMessage());
+            System.out.println("[!] An error occurred while removing the product from the cart: " + e.getMessage());
         }
     }
 
@@ -535,7 +561,7 @@ public class ClientUI extends BaseUI {
 
             }
         } catch (Exception e) {
-            System.out.println("An error occurred while showing all products in the cart: " + e.getMessage());
+            System.out.println("[!] An error occurred while showing all products in the cart: " + e.getMessage());
         }
     }
 }

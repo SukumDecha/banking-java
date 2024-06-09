@@ -28,6 +28,10 @@ public class OrderService implements IOrderService {
         System.out.println("[S] Order ID: " + order.getId());
         System.out.println("[S] Restaurant Name: " + restaurant.getName() + " (" + restaurant.getId() + ")");
         System.out.println();
+        System.out.println("[S] Products:");
+        order.getProducts().forEach((product, quantity) -> {
+            System.out.println("[S] - " + product.getName() + " (" + product.getPrice() + ") " + " x" + quantity);
+        });
         System.out.println("[S] Total Price: " + order.getTotalPrice());
         System.out.println("[S] ----------------------");
 
@@ -98,7 +102,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public void showOrderDetails(Order order, boolean showStatus) {
-        System.out.println("[S] ------ Order Details ------");
+        System.out.println("[S] ------- " + (showStatus ? "Order" : "Product") +  " Details ------");
         System.out.println("[S] Order ID: " + order.getId());
         System.out.println("[S] Restaurant Name: " + order.getRestaurantName() + " (" + order.getRestaurantId() + ")");
         System.out.println();

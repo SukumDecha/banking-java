@@ -13,21 +13,11 @@ import java.util.stream.Collectors;
 public class DatabaseConnection {
 
     static {
-        String propertiesPath = "db.properties"; // Adjust the path as needed
-        try (InputStream input = new FileInputStream(propertiesPath);
-             BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
-
-            Map<String, String> propertiesMap = reader.lines()
-                    .filter(line -> !line.startsWith("#") && line.contains("="))
-                    .map(line -> line.split("=", 2))
-                    .collect(Collectors.toMap(arr -> arr[0].trim(), arr -> arr[1].trim()));
-
-
-
+        try {
             // Load the JDBC driver
             Class.forName(Application.Config.JDBC_DRIVER);
             System.out.println("JDBC Driver loaded!");
-        } catch (IOException | ClassNotFoundException ex) {
+        } catch (ClassNotFoundException ex) {
             throw new RuntimeException("Failed to load properties or JDBC driver!", ex);
         }
     }

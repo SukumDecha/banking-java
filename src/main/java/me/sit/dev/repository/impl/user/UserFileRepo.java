@@ -38,8 +38,6 @@ public class UserFileRepo extends UserMemoRepo implements IUserRepo {
         try (ObjectOutputStream writer = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
             writer.writeObject(user);
             writer.flush();
-            writer.close();
-            System.out.println("User saved to file: " + file.getPath());
         } catch (Exception e) {
             System.err.println("Error writing to file: " + e.getMessage());
         }

@@ -8,7 +8,6 @@ import me.sit.dev.repository.IRestaurantRepo;
 import me.sit.dev.service.IRestaurantService;
 
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -191,12 +190,12 @@ public class RestaurantService implements IRestaurantService {
 
         if(orders.isEmpty()) {
             System.out.println("No orders available for restaurant: " + restaurant.getName());
-            return -1;
+            return 0;
         }
 
         int count = 1;
         for (Order order : orders) {
-            System.out.printf("--------------------- Order#%d  ---------------------%n", count);
+            System.out.printf("--------------------- Order #%d  ---------------------%n", count);
             System.out.println("Order ID: " + order.getId());
             System.out.println("Order Status: " + order.getStatus());
             System.out.println("Order Date: " + new Date(order.getOrderAt()));
@@ -209,6 +208,6 @@ public class RestaurantService implements IRestaurantService {
             count++;
         }
 
-        return orders.size() / size;
+        return orders.size();
     }
 }
