@@ -1,6 +1,7 @@
 package me.sit.dev.repository.impl.restaurant;
 
 import me.sit.dev.entity.impl.Restaurant;
+import me.sit.dev.entity.impl.order.Order;
 import me.sit.dev.repository.IRestaurantRepo;
 import me.sit.dev.repository.DatabaseConnection;
 
@@ -8,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RestaurantDatabaseRepo extends RestaurantMemoRepo implements IRestaurantRepo {
 
@@ -41,6 +44,7 @@ public class RestaurantDatabaseRepo extends RestaurantMemoRepo implements IResta
             e.printStackTrace();
         }
     }
+
 
     @Override
     public Restaurant addRestaurant(String ownerId, String restaurantName) {

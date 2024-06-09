@@ -54,7 +54,7 @@ public class DatabaseConnection {
                         "email VARCHAR(100) UNIQUE," +
                         "password VARCHAR(100)," +
                         "role VARCHAR(10)," +
-                        "restaurantId VARCHAR(20)" +
+                        "restaurantId VARCHAR(10)" +
                         ")",
 
                 "CREATE TABLE IF NOT EXISTS Restaurant (" +
@@ -75,7 +75,7 @@ public class DatabaseConnection {
                         ")",
 
                 "CREATE TABLE IF NOT EXISTS CustomerOrder (" +
-                        "id VARCHAR(100) PRIMARY KEY," +
+                        "id VARCHAR(10) PRIMARY KEY," +
                         "userId VARCHAR(10)," +
                         "restaurantId VARCHAR(10)," +
                         "status VARCHAR(50)," +

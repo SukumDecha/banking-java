@@ -52,7 +52,7 @@ public class ProductDatabaseRepo extends ProductMemoRepo implements IProductRepo
     public Product addProduct(String restaurantId, String productName, double price, int quantity) {
         Product product = super.addProduct(restaurantId, productName, price, quantity);
 
-        String sql = "INSERT INTO Product (restaurantId, name, price, quantity, id) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Product (restaurantId, name, price, quantity, id) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, restaurantId);
             stmt.setString(2, productName);

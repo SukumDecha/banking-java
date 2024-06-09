@@ -43,8 +43,8 @@ public class RestaurantUI extends BaseUI {
         System.out.println("Restaurant UI");
         System.out.println(Program_prompt);
         System.out.print("Choose your program : ");
-        while (!sc.hasNext("[1|2|3|4|5|6]")) {
-            System.out.print("please try again [select 1,2,3,4,5] : ");
+        while (!sc.hasNext("[1|2|3|4|5|6|7]")) {
+            System.out.print("please try again [select 1,2,3,4,5,6,7] : ");
             sc.next();
         }
         boolean program_status = true;
