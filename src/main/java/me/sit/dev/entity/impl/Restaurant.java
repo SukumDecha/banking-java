@@ -68,6 +68,14 @@ public class Restaurant extends BaseEntity {
         }
     }
 
-
-
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                "name='" + name + '\'' +
+                ", ownerId='" + ownerId + '\'' +
+                ", totalRating=" + totalRating +
+                ", products=" + products +
+                ", orders=" + orders +
+                '}';
+    }
 }

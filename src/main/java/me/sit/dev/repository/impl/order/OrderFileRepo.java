@@ -38,8 +38,7 @@ public class OrderFileRepo extends OrderMemoRepo {
 
         File file = getFileFromOrder(order);
 
-        try {
-            ObjectOutputStream write = new ObjectOutputStream(new FileOutputStream(file));
+        try (ObjectOutputStream write = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)));){
             write.writeObject(order);
             write.flush();
         } catch (Exception e) {
@@ -53,9 +52,9 @@ public class OrderFileRepo extends OrderMemoRepo {
         newOrder = super.updateOrder(orderId, newOrder);
         File file = getFileFromOrder(newOrder);
 
-        try {
-            ObjectOutputStream write = new ObjectOutputStream(new FileOutputStream(file));
+        try (ObjectOutputStream write = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)));){
             write.writeObject(newOrder);
+            write.flush();
         } catch (Exception e) {
             System.out.println("Error writing to file: " + e.getMessage());
         }

@@ -8,9 +8,11 @@ import java.util.List;
 
 public class ProductFileRepo extends ProductMemoRepo {
 
+    private final String path = "src/main/resources/products/";
+
     public ProductFileRepo() {
         super();
-        File file = new File("src/main/resources/products/");
+        File file = new File(path);
 
         if (!file.exists()) {
             file.mkdirs();
@@ -33,7 +35,7 @@ public class ProductFileRepo extends ProductMemoRepo {
         Product product =  super.addProduct(restaurantId, productName, price, quantity);
 
         File file = getFileFromProduct(product);
-        try(ObjectOutputStream write = new ObjectOutputStream(new FileOutputStream(file));) {
+        try(ObjectOutputStream write = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
             write.writeObject(product);
             write.flush();
         } catch (Exception e) {
@@ -48,11 +50,12 @@ public class ProductFileRepo extends ProductMemoRepo {
         updatedProduct =  super.updateProduct(restaurantId, productId, updatedProduct);
 
         File file = getFileFromProduct(updatedProduct);
-        try (ObjectOutputStream write = new ObjectOutputStream(new FileOutputStream(file));){
+        try(ObjectOutputStream write = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
             write.writeObject(updatedProduct);
         } catch (Exception e) {
             System.out.println("Error writing to file: " + e.getMessage());
         }
+
         return updatedProduct;
     }
 
@@ -68,7 +71,7 @@ public class ProductFileRepo extends ProductMemoRepo {
     }
 
     private File getFileFromProduct(Product product) {
-        return new File(product.getId() + ".ser");
+        return new File(path + product.getId() + ".ser");
     }
 
 }

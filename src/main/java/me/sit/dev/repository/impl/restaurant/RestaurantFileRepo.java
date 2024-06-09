@@ -21,6 +21,7 @@ public class RestaurantFileRepo extends RestaurantMemoRepo implements IRestauran
                 try (ObjectInputStream reader = new ObjectInputStream(new BufferedInputStream(new FileInputStream(f)))) {
                     Restaurant restaurant = (Restaurant) reader.readObject();
                     restaurantMap.put(restaurant.getId(), restaurant);
+                    System.out.println("Restaurant loaded: " + restaurant.getName());
                 } catch (Exception e) {
                     System.err.println("Error reading from file: " + e.getMessage());
                 }
@@ -71,6 +72,6 @@ public class RestaurantFileRepo extends RestaurantMemoRepo implements IRestauran
     }
 
     private File getFileFromRestaurant(Restaurant restaurant) {
-        return new File(path + restaurant.getId() + ".ser");
+        return new File(path + restaurant.getId() + ".txt");
     }
 }

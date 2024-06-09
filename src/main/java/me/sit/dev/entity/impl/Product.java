@@ -8,16 +8,9 @@ public class Product extends BaseEntity {
     private double price;
     private int quantity;
 
-    public Product(int id, String restaurantId, String name, double price, int quantity) {
-        super("P-" + id);
-        this.restaurantId = restaurantId;
-        this.name = name;
-        this.price = price;
-        this.quantity = quantity;
-    }
 
     public Product(String id, String restaurantId, String name, double price, int quantity) {
-        super(id);
+        super("P-" + id);
         this.restaurantId = restaurantId;
         this.name = name;
         this.price = price;
@@ -51,5 +44,16 @@ public class Product extends BaseEntity {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id='" + getId() + '\'' +
+                ", restaurantId='" + restaurantId + '\'' +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", quantity=" + quantity +
+                '}';
     }
 }
