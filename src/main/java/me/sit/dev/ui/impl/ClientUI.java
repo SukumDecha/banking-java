@@ -484,6 +484,7 @@ public class ClientUI extends BaseUI {
                 str.append(count).append(". ").append(product.getName())
                         .append(" - Price: ").append(product.getPrice())
                         .append(" - Quantity: ").append(productService.getQuantity(currentRestaurantId, product.getId()));
+                System.out.println(str);
                 count++;
             }
         } catch (Exception e) {
@@ -502,7 +503,11 @@ public class ClientUI extends BaseUI {
             System.out.println("Products in your cart:");
             int count = 1;
             for (Product product : cartProducts) {
-                System.out.println(count + ". " + product.getName() + " - Quantity: " + cartService.getProductQuantity(currentUser, product));
+                StringBuilder str = new StringBuilder();
+                str.append(count).append(". ").append(product.getName())
+                        .append(" - Price: ").append(product.getPrice())
+                        .append(" - Quantity: ").append(currentUser.getCart().getProducts().get(product));
+                System.out.println(str);
                 count++;
             }
         } catch (Exception e) {
