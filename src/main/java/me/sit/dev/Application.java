@@ -3,6 +3,7 @@ package me.sit.dev;
 import me.sit.dev.repository.DatabaseConnection;
 import me.sit.dev.repository.type.RepositoryType;
 import me.sit.dev.service.ServiceFactory;
+import me.sit.dev.ui.impl.AdminUI;
 import me.sit.dev.ui.impl.ClientUI;
 import me.sit.dev.ui.impl.LoginUI;
 import me.sit.dev.ui.impl.RestaurantUI;
@@ -16,14 +17,15 @@ public class Application {
 
     public static void main(String[] args) {
         Config.load();
-        DatabaseConnection.createTables();
+//        DatabaseConnection.createTables();
 
         ServiceFactory serviceFactory = new ServiceFactory(Config.repositoryType);
 
         ClientUI clientUI = new ClientUI(serviceFactory);
+        AdminUI adminUI = new AdminUI(serviceFactory);
         RestaurantUI restaurantUI = new RestaurantUI(serviceFactory);
 
-        LoginUI loginUI = new LoginUI(clientUI, restaurantUI, serviceFactory);
+        LoginUI loginUI = new LoginUI(clientUI, restaurantUI, serviceFactory,adminUI);
 
         clientUI.setLoginUI(loginUI);
         restaurantUI.setLoginUI(loginUI);
