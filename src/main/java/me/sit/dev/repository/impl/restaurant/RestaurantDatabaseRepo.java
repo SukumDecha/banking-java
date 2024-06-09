@@ -15,13 +15,12 @@ public class RestaurantDatabaseRepo extends RestaurantMemoRepo implements IResta
 
     public RestaurantDatabaseRepo() {
         super();
-        Connection c = null;
         try {
-            c = DatabaseConnection.getConnection();
+            connection = DatabaseConnection.getConnection();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to connect to the database", e);
         }
-        this.connection = c;
+
         loadRestaurantsFromDatabase();
     }
 

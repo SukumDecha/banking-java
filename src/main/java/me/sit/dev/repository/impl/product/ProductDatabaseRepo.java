@@ -19,13 +19,13 @@ public class ProductDatabaseRepo extends ProductMemoRepo implements IProductRepo
     private final Connection connection;
 
     public ProductDatabaseRepo() {
-        Connection c = null;
+        super();
         try {
-            c = DatabaseConnection.getConnection();
+            connection = DatabaseConnection.getConnection();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to connect to the database", e);
         }
-        this.connection = c;
+
         loadProductsFromDatabase();
     }
 

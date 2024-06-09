@@ -1,6 +1,7 @@
 package me.sit.dev.repository.impl.user;
 
 import me.sit.dev.entity.impl.user.User;
+import me.sit.dev.entity.impl.user.UserRole;
 import me.sit.dev.repository.IUserRepo;
 import me.sit.dev.repository.DatabaseConnection;
 
@@ -14,13 +15,36 @@ public class UserDatabaseRepo extends UserMemoRepo implements IUserRepo {
     private final Connection connection;
 
     public UserDatabaseRepo() {
-        Connection c = null;
+        super();
         try {
-            c = DatabaseConnection.getConnection();
+            connection = DatabaseConnection.getConnection();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to connect to the database", e);
         }
-        this.connection = c;
+
+        loadUsers();
+    }
+
+    private void loadUsers() {
+        String sql = "SELECT * FROM User";
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                User user = loadUser(rs);
+                super.save(user);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to load users from the database", e);
+        }
+    }
+
+    private User loadUser(ResultSet rs) throws SQLException {
+        String id = String.valueOf(rs.getInt("id"));
+        String name = rs.getString("name");
+        String email = rs.getString("email");
+        String password = rs.getString("password");
+        String role = rs.getString("role");
+        return new User(id, name, email, password, UserRole.valueOf(role));
     }
 
     @Override

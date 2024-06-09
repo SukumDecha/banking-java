@@ -20,13 +20,13 @@ public class OrderDatabaseRepo extends OrderMemoRepo {
     private final IProductRepo productRepo;
 
     public OrderDatabaseRepo(IProductRepo productRepo) {
-        Connection c = null;
+        super();
         try {
-            c = DatabaseConnection.getConnection();
+            connection = DatabaseConnection.getConnection();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to connect to the database", e);
         }
-        this.connection = c;
+
         this.productRepo = productRepo;
         loadOrdersFromDatabase();
     }
