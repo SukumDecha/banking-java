@@ -25,7 +25,7 @@ public class ProductFileRepo extends ProductMemoRepo {
                     Product product = (Product) reader.readObject();
                     productMap.put(product.getId(), product);
                 } catch (Exception e) {
-                    System.err.println("Error reading from file: " + e.getMessage());
+                    System.err.println("Error reading from file (Product): " + e.getMessage());
                 }
             }
         }

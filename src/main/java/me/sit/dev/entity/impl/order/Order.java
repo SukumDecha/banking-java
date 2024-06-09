@@ -9,7 +9,7 @@ import me.sit.dev.entity.impl.user.User;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Order extends BaseEntity {
+public class Order extends BaseEntity implements Comparable<Order> {
     private final String ownerId, restaurantId, restaurantName;
 
     private Map<Product, Integer> products;
@@ -21,7 +21,11 @@ public class Order extends BaseEntity {
         this.ownerId = user.getId();
         this.restaurantId = restaurantId;
         this.restaurantName = restaurantName;
-        this.products = cart.getProducts();
+
+        Map<Product, Integer> productMap = new HashMap<>();
+        cart.getProducts().forEach(productMap::put);
+
+        this.products = productMap;
     }
 
     public Order(String id, String ownerId, String restaurantId, String restaurantName, Map<Product, Integer> productMap, String status) {
@@ -74,5 +78,10 @@ public class Order extends BaseEntity {
         return products.entrySet().stream()
                 .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue())
                 .sum();
+    }
+
+    @Override
+    public int compareTo(Order o) {
+        return o.getOrderAt() - orderAt > 0 ? 1 : -1;
     }
 }

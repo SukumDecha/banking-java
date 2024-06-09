@@ -2,6 +2,7 @@ package me.sit.dev.service;
 
 import me.sit.dev.exceptions.InvalidRepositoryException;
 import me.sit.dev.repository.IProductRepo;
+import me.sit.dev.repository.IRestaurantRepo;
 import me.sit.dev.repository.impl.order.OrderDatabaseRepo;
 import me.sit.dev.repository.impl.order.OrderFileRepo;
 import me.sit.dev.repository.impl.order.OrderMemoRepo;
@@ -78,13 +79,15 @@ public class ServiceFactory {
     }
 
     public IProductService createProductService() {
+        IRestaurantRepo restaurantRepo = restaurantService.getRestaurantRepository();
+
         switch (repositoryType) {
             case MEMO:
-                return new ProductService(new ProductMemoRepo());
+                return new ProductService(new ProductMemoRepo(), restaurantRepo);
             case FILE:
-                return new ProductService(new ProductFileRepo());
+                return new ProductService(new ProductFileRepo(), restaurantRepo);
             case DATABASE:
-                return new ProductService(new ProductDatabaseRepo());
+                return new ProductService(new ProductDatabaseRepo(), restaurantRepo);
             default:
                 throw new InvalidRepositoryException();
         }

@@ -26,7 +26,7 @@ public class OrderFileRepo extends OrderMemoRepo {
                     Order order = (Order) reader.readObject();
                     orderMap.put(order.getId(), order);
                 } catch (Exception e) {
-                    System.err.println("Error reading from file: " + e.getMessage());
+                    System.err.println("Error reading from file (Order): " + e.getMessage());
                 }
             }
         }

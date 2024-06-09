@@ -223,7 +223,6 @@ public class ClientUI extends BaseUI {
                         orderFood();
                         continue;
                     case 2:
-                        System.out.println("search food");
                         searchFood();
                         continue;
                     case 3:
@@ -273,7 +272,24 @@ public class ClientUI extends BaseUI {
 
     public void searchFood() {
         try {
-            System.out.println("search food method");
+            Scanner scSearch = new Scanner(System.in);
+            System.out.print("Enter the food name to search : ");
+            String searchName = scSearch.nextLine();
+            Collection<Product> products = productService.searchByName(searchName);
+
+            if (products.isEmpty()) {
+                System.out.println("No products found.");
+                return;
+            }
+            int count = 1;
+            System.out.println("---------- Search results ----------");
+            System.out.println("ID | Name | Price | Quantity");
+            System.out.println("-----------------------------");
+            for (Product product : products) {
+                System.out.printf("%-11s | %-7s | %-12d| %-6f %n", product.getId(), product.getName(), product.getQuantity(), product.getPrice());
+                count++;
+            }
+            System.out.println("-----------------------------");
         } catch (Exception e) {
             System.out.println("An error occurred while searching for food: " + e.getMessage());
         }
@@ -305,8 +321,16 @@ public class ClientUI extends BaseUI {
                         System.out.println("Your cart has been cleared.");
                         break;
                     case 4:
+                        if(currentUser.getCart().getProducts().isEmpty()){
+                            System.out.println("Your cart is empty. Please add some products first.");
+                            break;
+                        }
+
                         Restaurant currentRestaurant = restaurantService.findById(Session.getCurrentSession().getRestaurantId());
                         orderService.createOrder(currentUser, currentRestaurant);
+
+                        restaurantService.updateRestaurant(currentRestaurant.getId(), currentRestaurant);
+                        userService.update(currentUser.getId(), currentUser);
                         statusCart = false;
                         break;
                     case 5:
@@ -506,7 +530,9 @@ public class ClientUI extends BaseUI {
                 str.append(count).append(". ").append(product.getName())
                         .append(" | Price : ").append(product.getPrice())
                         .append(" | Quantity : ").append(currentUser.getCart().getProducts().get(product));
+                System.out.println(str);
                 count++;
+
             }
         } catch (Exception e) {
             System.out.println("An error occurred while showing all products in the cart: " + e.getMessage());

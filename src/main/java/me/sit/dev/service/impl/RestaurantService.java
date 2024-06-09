@@ -21,6 +21,10 @@ public class RestaurantService implements IRestaurantService {
         this.restaurantRepository = restaurantRepository;
     }
 
+    public IRestaurantRepo getRestaurantRepository() {
+        return restaurantRepository;
+    }
+
     /**
      * Adds a new restaurant with the given owner ID and restaurant name.
      *
@@ -163,7 +167,7 @@ public class RestaurantService implements IRestaurantService {
             System.out.println("Product ID  | Name    |  Quantity   | Price");
             System.out.println("------------------------------------------------");
             products.forEach(product -> {
-                System.out.println(String.format("%-11s | %-7s | %-12d| %-6f ", product.getId(), product.getName(), product.getQuantity(), product.getPrice()));
+                System.out.printf("%-11s | %-7s | %-12d| %-6f %n", product.getId(), product.getName(), product.getQuantity(), product.getPrice());
             });
         }
     }
@@ -179,23 +183,32 @@ public class RestaurantService implements IRestaurantService {
             throw new RestaurantNotFoundException();
         }
 
+
         Collection<Order> orders = restaurant.getOrders().stream().sorted()
                 .skip((page - 1) * size)
                 .limit(size)
                 .collect(Collectors.toList());
 
-        orders.forEach(order -> {
-            System.out.println("-------------------------");
-            System.out.println("Order ID: " + order.getId());
-            System.out.println("Owner ID: " + order.getOwnerId());
-            System.out.println("Restaurant ID: " + order.getRestaurantId());
-            System.out.println("Restaurant Name: " + order.getRestaurantName());
-            System.out.println("Order Status: " + order.getStatus());
-            System.out.println("Order Total Price: " + order.getTotalPrice());
-            System.out.println("Order Time: " + new Date(order.getOrderAt()));
-            System.out.println("-------------------------");
-        });
+        if(orders.isEmpty()) {
+            System.out.println("No orders available for restaurant: " + restaurant.getName());
+            return -1;
+        }
 
-        return orders.size() / size + 1;
+        int count = 1;
+        for (Order order : orders) {
+            System.out.printf("--------------------- Order#%d  ---------------------%n", count);
+            System.out.println("Order ID: " + order.getId());
+            System.out.println("Order Status: " + order.getStatus());
+            System.out.println("Order Date: " + new Date(order.getOrderAt()));
+            System.out.println("Products:");
+            for (Product product : order.getProducts().keySet()) {
+                System.out.println("- " + product.getName() + " x" + order.getProducts().get(product));
+            }
+            System.out.println("Total Price: " + order.getTotalPrice());
+            System.out.println("------------------------------------------------");
+            count++;
+        }
+
+        return orders.size() / size;
     }
 }

@@ -13,4 +13,6 @@ public interface IRestaurantService extends IRestaurantRepo {
 
     int showOrderPagination(String restaurantId, int page, int size);
 
+    IRestaurantRepo getRestaurantRepository();
+
 }

@@ -23,7 +23,7 @@ public class UserFileRepo extends UserMemoRepo implements IUserRepo {
                     User user = (User) reader.readObject();
                     userMap.put(user.getId(), user);
                 } catch (Exception e) {
-                    System.err.println("Error reading from file: " + e.getMessage());
+                    System.err.println("Error reading from file (User): " + e.getMessage());
                 }
             }
         }

@@ -11,4 +11,6 @@ public interface IProductService extends IProductRepo  {
 
     int getQuantity(String restaurantId, String productId);
 
+    List<Product> searchByName(String productName);
+
 }

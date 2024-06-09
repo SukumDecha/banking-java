@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User extends BaseEntity {
+
     private final String name, email, password;
     private final UserRole role;
     private Cart cart;

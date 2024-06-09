@@ -240,14 +240,15 @@ public class RestaurantUI extends BaseUI {
         Restaurant restaurant = currentUser.getRestaurant();
         String restaurantId = restaurant.getId();
 
-        int maxPage = productService.findAll(restaurantId).isEmpty() ? 1 :
-                productService.findAll(restaurantId).size() / 5;
 
         restaurantService.showOrderPagination(restaurantId, 1, 5);
-        ;
+
+        int productCount = productService.findAll(restaurantId).size();
+        int maxPage = (int) Math.ceil(productCount / 5.0);
 
         while (true) {
-            System.out.println("Enter page number (1 - " + maxPage + ") or 0 to go back: ");
+            System.out.println("Current page: " + 1 + " / " + maxPage);
+            System.out.println("Enter page number or 0 to go back: ");
             int page = sc.nextInt();
             if (page == 0) {
                 break;
@@ -257,7 +258,6 @@ public class RestaurantUI extends BaseUI {
                 restaurantService.showOrderPagination(restaurantId, page, 5);
             }
         }
-
     }
 
     private void deleteRestaurant() {

@@ -23,7 +23,7 @@ public class RestaurantFileRepo extends RestaurantMemoRepo implements IRestauran
                     restaurantMap.put(restaurant.getId(), restaurant);
                     System.out.println("Restaurant loaded: " + restaurant.getName());
                 } catch (Exception e) {
-                    System.err.println("Error reading from file: " + e.getMessage());
+                    System.err.println("Error reading from file (Restaurant): " + e.getMessage());
                 }
             }
         }
