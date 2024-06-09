@@ -31,7 +31,7 @@ public class UserDatabaseRepo extends UserMemoRepo implements IUserRepo {
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 User user = loadUser(rs);
-                super.save(user);
+                userMap.put(user.getId(), user);
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to load users from the database", e);
@@ -44,7 +44,14 @@ public class UserDatabaseRepo extends UserMemoRepo implements IUserRepo {
         String email = rs.getString("email");
         String password = rs.getString("password");
         String role = rs.getString("role");
-        return new User(id, name, email, password, UserRole.valueOf(role));
+        User user = new User(id, name, email, password, UserRole.valueOf(role));
+
+        String restaurantId = rs.getString("restaurantId");
+        if (restaurantId != null) {
+            user.setRestaurantId(restaurantId);
+        }
+
+        return user;
     }
 
     @Override

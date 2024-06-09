@@ -31,11 +31,7 @@ public class RestaurantMemoRepo implements IRestaurantRepo {
         }
 
         restaurant = new Restaurant(ownerId, restaurantName, 0);
-        System.out.println("Add restaurant in memory: " + restaurant.getId());
         restaurantMap.put(restaurant.getId(), restaurant);
-        findAll().stream().forEach(r -> {
-            System.out.println("restaurant id: " + r.getId());
-        });
         return restaurant;
     }
 
