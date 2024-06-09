@@ -131,7 +131,6 @@ public class OrderDatabaseRepo extends OrderMemoRepo {
             String[] productEntry = entry[1].split("=");
 
             Product product = productRepo.findById(productEntry[0]);
-            System.out.println(productEntry[0] + " " + productEntry[1] + " ");
             if(product == null) {
                 System.out.println("Product not found: " + productEntry[0]);
                 continue;

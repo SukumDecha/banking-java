@@ -137,6 +137,7 @@ public class ClientUI extends BaseUI {
                     Restaurant currentRestaurant = restaurantService.findById(restaurantId);
 
                     if (currentRestaurant.getProducts().isEmpty()) {
+                        System.out.println("[!] " + restaurantId + " has no products available...");
                         System.out.println("[!] This restaurant has no products available...");
                         return false;
                     }
@@ -478,6 +479,7 @@ public class ClientUI extends BaseUI {
     private void editCartAmount() {
         try {
             User currentUser = Session.getCurrentSession().getUser();
+            String currentRestaurantId = Session.getCurrentSession().getRestaurantId();
             List<Product> cartProducts = currentUser.getCart().getProducts().keySet().stream().toList();
 
             if (cartProducts.isEmpty()) {
@@ -502,7 +504,7 @@ public class ClientUI extends BaseUI {
                 }
                 int newAmount = scEditAmount.nextInt();
                 if (newAmount > 0) {
-                    int productQuantity = productService.getQuantity(currentUser.getRestaurantId(), selectedProduct.getId());
+                    int productQuantity = productService.getQuantity(currentRestaurantId, selectedProduct.getId());
                     if (newAmount > productQuantity) {
                         System.out.println("[!] Not enough stock. Try again.");
                         editCartAmount();
@@ -543,7 +545,7 @@ public class ClientUI extends BaseUI {
             if (productIndex >= 0 && productIndex < cartProducts.size()) {
                 Product selectedProduct = cartProducts.get(productIndex);
                 cartService.removeFromCart(currentUser, selectedProduct);
-                System.out.println("Product removed from cart.");
+                System.out.println("[S] Product has been removed from your cart.");
             } else {
                 System.out.println("[!] Invalid selection. Try again.");
                 removeFromCart();
@@ -573,7 +575,7 @@ public class ClientUI extends BaseUI {
             }
             System.out.println("---------------------------------");
         } catch (Exception e) {
-            System.out.println("An error occurred while showing all products: " + e.getMessage());
+        System.out.println("[!] An error occurred while showing all products: " + e.getMessage());
         }
     }
 

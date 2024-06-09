@@ -73,7 +73,7 @@ public class RestaurantUI extends BaseUI {
                     editFood();
                     break;
                 case 3:
-                    System.out.println("Delete Food");
+                    deleteFoodFromRestaurant();
                     break;
                 case 4:
                     showAllFood();
@@ -274,6 +274,12 @@ public class RestaurantUI extends BaseUI {
         System.out.println("------------ Order History ------------ ");
         User currentUser = Session.getCurrentSession().getUser();
         String restaurantId = currentUser.getRestaurantId();
+        Restaurant restaurant = restaurantService.findById(restaurantId);
+
+        if(restaurant.getOrders().isEmpty()) {
+            System.out.println("No orders found.");
+            return;
+        }
 
         int maxPage = restaurantService.showOrderPagination(restaurantId, 1, 5);
 

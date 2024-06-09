@@ -28,6 +28,11 @@ public class CartService implements ICartService {
         }
 
         int quantityInStock = product.getQuantity();
+        if (quantity > quantityInStock) {
+            System.out.println("Product quantity exceeds available stock.");
+            return false;
+        }
+
         Cart cart = user.getCart();
         cart.setRestaurant(restaurant);
         cart.addProduct(product, quantity);
@@ -63,8 +68,16 @@ public class CartService implements ICartService {
      */
     @Override
     public boolean updateCart(User user, Product product, int quantity) {
-        if (user == null || product == null || quantity <= 0) {
-            throw new InvalidInputException();
+        if(user == null) {
+            throw new InvalidInputException("User does not exist.");
+        }
+
+        if(product == null) {
+            throw new InvalidInputException("Product does not exist.");
+        }
+
+        if(quantity <= 0) {
+            throw new InvalidInputException("Invalid quantity.");
         }
 
         Cart cart = user.getCart();
@@ -122,6 +135,10 @@ public class CartService implements ICartService {
         }
 
         Cart userCart = user.getCart();
+        if(userCart.getProducts().isEmpty()) {
+            System.out.println("[S] Your cart is empty...");
+            return;
+        }
         System.out.println("--------------------------------");
         System.out.println("Cart details for user: " + user.getName());
         System.out.println("--------------------------------");

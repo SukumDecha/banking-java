@@ -31,9 +31,7 @@ public class Cart extends BaseEntity {
     }
 
     public void updateProductQuantity(Product product, int quantity) {
-        if(products.containsKey(product)) {
-            products.replace(product, quantity);
-        }
+        products.put(product, quantity);
     }
 
     public void clearCart() {

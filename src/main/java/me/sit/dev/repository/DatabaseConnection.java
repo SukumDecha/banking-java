@@ -91,7 +91,6 @@ public class DatabaseConnection {
              Statement statement = connection.createStatement()) {
             for (String sql : sqlStatements) {
                 statement.executeUpdate(sql);
-                System.out.println("Executed: " + sql);
             }
             System.out.println("Database schema created successfully.");
         } catch (SQLException e) {
