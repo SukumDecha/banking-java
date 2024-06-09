@@ -233,17 +233,14 @@ public class RestaurantUI extends BaseUI {
     }
 
     private void showHistory() {
-        System.out.println("Show all product and amount that is ordered");
+        System.out.println("------------ Order History ------------ ");
         User currentUser = Session.getCurrentSession().getUser();
         String restaurantId = currentUser.getRestaurantId();
 
-        int orderCount = restaurantService.showOrderPagination(restaurantId, 1, 5);
-
-
-        int maxPage = (int) Math.ceil((double) orderCount / 5);
+        int maxPage = restaurantService.showOrderPagination(restaurantId, 1, 5);
 
         while (true) {
-            System.out.println("Current page: " + 1 + " / " + maxPage);
+
             System.out.println("Enter page number or 0 to go back: ");
             int page = sc.nextInt();
             if (page == 0) {

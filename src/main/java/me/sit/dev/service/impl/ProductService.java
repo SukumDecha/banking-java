@@ -76,7 +76,8 @@ public class ProductService implements IProductService {
 
         for (Restaurant restaurant : restaurants) {
             for(Product product : restaurant.getProducts()) {
-                if (product.getName().toLowerCase().startsWith(productName.toLowerCase())) {
+                boolean match = product.getName().toLowerCase().contains(productName.toLowerCase());
+                if (match) {
                     products.add(product);
                 }
             }

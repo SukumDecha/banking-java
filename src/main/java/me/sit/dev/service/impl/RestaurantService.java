@@ -182,6 +182,7 @@ public class RestaurantService implements IRestaurantService {
             throw new RestaurantNotFoundException();
         }
 
+        int maxPage = (int) Math.ceil((double) restaurant.getOrders().size() / size);
 
         Collection<Order> orders = restaurant.getOrders().stream().sorted()
                 .skip((page - 1) * size)
@@ -193,9 +194,9 @@ public class RestaurantService implements IRestaurantService {
             return 0;
         }
 
-        int count = 1;
+        int count = page == 1 ? 1 : (page - 1) * size + 1;
         for (Order order : orders) {
-            System.out.printf("--------------------- Order #%d  ---------------------%n", count);
+            System.out.printf("--------- Order #%d  ---------%n", count);
             System.out.println("Order ID: " + order.getId());
             System.out.println("Order Status: " + order.getStatus());
             System.out.println("Order Date: " + new Date(order.getOrderAt()));
@@ -204,10 +205,12 @@ public class RestaurantService implements IRestaurantService {
                 System.out.println("- " + product.getName() + " x" + order.getProducts().get(product));
             }
             System.out.println("Total Price: " + order.getTotalPrice());
-            System.out.println("------------------------------------------------");
+            System.out.println("---------------------------");
             count++;
         }
 
-        return orders.size();
+        System.out.println("Current page: " + page + " / " + maxPage);
+
+        return maxPage;
     }
 }

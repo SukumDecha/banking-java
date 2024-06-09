@@ -1,5 +1,6 @@
 package me.sit.dev;
 
+import me.sit.dev.repository.DatabaseConnection;
 import me.sit.dev.repository.type.RepositoryType;
 import me.sit.dev.service.ServiceFactory;
 import me.sit.dev.ui.impl.ClientUI;
@@ -15,6 +16,7 @@ public class Application {
 
     public static void main(String[] args) {
         Config.load();
+        DatabaseConnection.createTables();
 
         ServiceFactory serviceFactory = new ServiceFactory(Config.repositoryType);
 
@@ -53,10 +55,7 @@ public class Application {
                 JDBC_DRIVER = propertiesMap.get("jdbc.driver");
                 repositoryType = RepositoryType.valueOf(propertiesMap.get("repository.type"));
 
-                // Load the JDBC driver
-                Class.forName(JDBC_DRIVER);
-                System.out.println("JDBC Driver loaded!");
-            } catch (IOException | ClassNotFoundException ex) {
+            } catch (IOException ex) {
                 throw new RuntimeException("Failed to load properties or JDBC driver!", ex);
             }
         }
