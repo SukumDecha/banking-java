@@ -36,7 +36,7 @@ public class RestaurantUI extends BaseUI {
     @Override
     public void show() {
         User currentUser = Session.getCurrentSession().getUser();
-        Restaurant restaurant = currentUser.getRestaurant();
+        Session.getCurrentSession().setRestaurantId(currentUser.getRestaurant().getId());
 
         System.out.println("Restaurant UI");
         System.out.println(Program_prompt);
@@ -93,22 +93,41 @@ public class RestaurantUI extends BaseUI {
             System.out.println("Enter new product name : ");
             String name = sc.next();
             System.out.println("Enter price (only number) : ");
-            while (!sc.hasNextDouble()){
-                System.out.print("Please tyr again (input number) : ");
-                sc.next();
+            double price = 0;
+            while (true) {
+                while (!sc.hasNextDouble()) {
+                    System.out.print("Please try again (input number) : ");
+                    sc.next();
+                }
+
+                price = sc.nextDouble();
+                if (price <= 0) {
+                    System.out.println("Price must be greater than 0. Please enter a valid price.");
+                } else {
+                    break;
+                }
             }
-            double price = sc.nextDouble();
             System.out.println("Enter quantity : ");
-            while (!sc.hasNextInt()){
-                System.out.print("Please try again (input number) : ");
-                sc.next();
+            int quantity = 0;
+            while (true) {
+                while (!sc.hasNextDouble()) {
+                    System.out.print("Please try again (input number) : ");
+                    sc.next();
+                }
+
+                quantity = sc.nextInt();
+                if (quantity < 0) {
+                    System.out.println("Quantity must be equals or greater than 0. Please enter a valid amount.");
+                } else {
+                    break;
+                }
             }
-            int quantity = sc.nextInt();
+
             Product product = productService.addProduct(restaurantId, name, price, quantity);
             restaurant.addProduct(product);
 
             restaurantService.updateRestaurant(restaurantId, restaurant);
-            userService.update(restaurantId, currentUser);
+            userService.update(currentUser.getId(), currentUser);
             System.out.println("Food added successfully!");
         } catch (Exception e) {
             System.err.println("Error adding food: " + e.getMessage());
@@ -121,6 +140,7 @@ public class RestaurantUI extends BaseUI {
         String restaurantId = restaurant.getId();
 
         try {
+            showAllFood();
             System.out.println("Enter the product ID you want to edit: ");
             String productId = sc.next();
             Product product = productService.findById(restaurantId, productId);
@@ -128,7 +148,7 @@ public class RestaurantUI extends BaseUI {
             if (product != null) {
                 System.out.println("Current name: " + product.getName());
                 System.out.println("Enter new name (or press enter to keep current): ");
-                String newName = sc.next();
+                String newName = sc.nextLine();
                 if (!newName.isEmpty()) {
                     product.setName(newName);
                 }
@@ -139,7 +159,7 @@ public class RestaurantUI extends BaseUI {
                 double newPrice = product.getPrice(); // Default to current price
                 while (true) {
                     newPriceInput = sc.nextLine();
-                    if (newPriceInput.isBlank()) {
+                    if (newPriceInput.isEmpty()) {
                         break; // Keep current price
                     }
                     try {
@@ -161,7 +181,7 @@ public class RestaurantUI extends BaseUI {
                 int newQuantity = product.getQuantity(); // Default to current quantity
                 while (true) {
                     newQuantityInput = sc.nextLine();
-                    if (newQuantityInput.isBlank()) {
+                    if (newQuantityInput.isEmpty()) {
                         break; // Keep current quantity
                     }
                     try {

@@ -14,6 +14,7 @@ public class RestaurantDatabaseRepo extends RestaurantMemoRepo implements IResta
     private final Connection connection;
 
     public RestaurantDatabaseRepo() {
+        super();
         Connection c = null;
         try {
             c = DatabaseConnection.getConnection();

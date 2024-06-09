@@ -58,8 +58,8 @@ public class UserMemoRepo implements IUserRepo {
             throw new InvalidInputException("Id cannot be null or blank");
         }
 
-        if(findById(user.getId()) == null) {
-            throw new UserNotFoundException();
+        if(findById(userId) == null) {
+            return null;
         }
 
         userMap.put(user.getId(), user);

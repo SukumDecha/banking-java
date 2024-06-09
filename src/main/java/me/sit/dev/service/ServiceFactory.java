@@ -17,16 +17,25 @@ import me.sit.dev.repository.impl.user.UserFileRepo;
 import me.sit.dev.repository.impl.user.UserMemoRepo;
 import me.sit.dev.service.IRestaurantService;
 import me.sit.dev.service.IUserService;
-import me.sit.dev.service.impl.OrderService;
-import me.sit.dev.service.impl.ProductService;
-import me.sit.dev.service.impl.RestaurantService;
-import me.sit.dev.service.impl.UserService;
+import me.sit.dev.service.impl.*;
 
 public class ServiceFactory {
     private final RepositoryType repositoryType;
 
+    private final IUserService userService;
+    private final IRestaurantService restaurantService;
+    private final IOrderService orderService;
+    private final IProductService productService;
+    private final ICartService cartService;
+
     public ServiceFactory(RepositoryType repositoryType) {
         this.repositoryType = repositoryType;
+
+        userService = createUserService();
+        restaurantService = createRestaurantService();
+        productService = createProductService();
+        orderService = createOrderService(productService);
+        cartService = new CartService();
     }
 
     public IUserService createUserService() {
@@ -79,5 +88,25 @@ public class ServiceFactory {
             default:
                 throw new InvalidRepositoryException();
         }
+    }
+
+    public IUserService getUserService() {
+        return userService;
+    }
+
+    public IRestaurantService getRestaurantService() {
+        return restaurantService;
+    }
+
+    public IOrderService getOrderService() {
+        return orderService;
+    }
+
+    public IProductService getProductService() {
+        return productService;
+    }
+
+    public ICartService getCartService() {
+        return cartService;
     }
 }

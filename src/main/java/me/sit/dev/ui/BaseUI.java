@@ -22,11 +22,11 @@ public abstract class BaseUI {
         this.uiName = uiName;
         this.description = description;
 
-        this.userService = serviceFactory.createUserService();
-        this.restaurantService = serviceFactory.createRestaurantService();
-        this.productService = serviceFactory.createProductService();
-        this.orderService = serviceFactory.createOrderService(productService);
-        this.cartService = new CartService();
+        this.userService = serviceFactory.getUserService();
+        this.restaurantService = serviceFactory.getRestaurantService();
+        this.productService = serviceFactory.getProductService();
+        this.orderService = serviceFactory.getOrderService();
+        this.cartService = serviceFactory.getCartService();
 
         System.out.println("Services registered for UI: " + uiName);
     }

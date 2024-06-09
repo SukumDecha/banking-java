@@ -13,7 +13,11 @@ import java.util.stream.Collectors;
 
 public class OrderMemoRepo implements IOrderRepo {
 
-    protected final Map<String, Order> orderMap = new HashMap<>();
+    protected final Map<String, Order> orderMap;
+
+    public OrderMemoRepo() {
+        orderMap = new HashMap<>();
+    }
 
     @Override
     public Order createOrder(User user, Restaurant restaurant) {

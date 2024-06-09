@@ -19,8 +19,8 @@ public class Session extends BaseEntity {
         this.loginTime = System.currentTimeMillis();
     }
 
-    public static Session createSession(User user) {
-        return currentSession = new Session(user);
+    public static void createSession(User user) {
+        currentSession = new Session(user);
     }
 
     public static void destroySession() {

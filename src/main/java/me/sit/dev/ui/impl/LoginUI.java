@@ -65,7 +65,8 @@ public class LoginUI extends BaseUI {
                         System.out.println("You can enter 0 to end this process. Otherwise, press any key to try again.");
                         if (sc.next().equals("0")) {
                             System.out.println("Exiting from program");
-                            System.exit(0);
+                            show();
+                            break;
                         }
                     }
                 }
@@ -94,7 +95,9 @@ public class LoginUI extends BaseUI {
                         if (input.equalsIgnoreCase("yes")) {
                             isAdmin = true;
                         }
+
                         userService.register(name, saveEmail, savePassword, isAdmin);
+                        userService.login(saveEmail, savePassword);
                         break;
                     } catch (Exception e) {
                         System.out.println("Error: " + e.getMessage());

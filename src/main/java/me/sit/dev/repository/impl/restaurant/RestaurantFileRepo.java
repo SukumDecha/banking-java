@@ -9,6 +9,7 @@ public class RestaurantFileRepo extends RestaurantMemoRepo implements IRestauran
     private final String path = "src/main/resources/restaurants/";
 
     public RestaurantFileRepo() {
+        super();
         File file = new File(path);
         if (!file.exists()) {
             file.mkdirs();
@@ -62,8 +63,8 @@ public class RestaurantFileRepo extends RestaurantMemoRepo implements IRestauran
         Restaurant restaurant = super.deleteRestaurant(id);
 
         File file = getFileFromRestaurant(restaurant);
-        if (file.exists()) {
-            file.delete();
+        if(!file.delete()) {
+            System.err.println("Error deleting file: " + file.getName());
         }
 
         return restaurant;

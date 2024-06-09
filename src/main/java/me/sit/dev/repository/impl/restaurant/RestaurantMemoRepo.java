@@ -14,19 +14,28 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class RestaurantMemoRepo implements IRestaurantRepo {
-    protected final Map<String, Restaurant> restaurantMap = new HashMap<>();
+    protected final Map<String, Restaurant> restaurantMap;
+
+    public RestaurantMemoRepo() {
+        restaurantMap = new HashMap<>();
+    }
     @Override
     public Restaurant addRestaurant(String ownerId, String restaurantName) {
         Restaurant restaurant = findByName(restaurantName);
         if (restaurant != null){
             throw new RestaurantAlreadyExistException();
         }
+
         if (ownerId == null || ownerId.isBlank()){
             throw new NullPointerException();
         }
 
         restaurant = new Restaurant(ownerId, restaurantName, 0);
+        System.out.println("Add restaurant in memory: " + restaurant.getId());
         restaurantMap.put(restaurant.getId(), restaurant);
+        findAll().stream().forEach(r -> {
+            System.out.println("restaurant id: " + r.getId());
+        });
         return restaurant;
     }
 
@@ -38,7 +47,7 @@ public class RestaurantMemoRepo implements IRestaurantRepo {
         if (!restaurantMap.containsKey(id)) {
             throw new RestaurantNotFoundException();
         }
-        restaurantMap.put(id, restaurant);
+        restaurantMap.replace(id, restaurant);
         return restaurant;
     }
 
@@ -55,6 +64,10 @@ public class RestaurantMemoRepo implements IRestaurantRepo {
 
     @Override
     public Restaurant findById(String id) {
+        if(id == null || id.isBlank()) {
+            throw new InvalidInputException();
+        }
+
         Restaurant restaurant = restaurantMap.get(id);
         if (restaurant == null) {
             throw new RestaurantNotFoundException();
@@ -102,7 +115,7 @@ public class RestaurantMemoRepo implements IRestaurantRepo {
 
     @Override
     public Collection<Restaurant> findByRating(int rating) {
-        return restaurantMap.values().stream()
+        return findAll().stream()
                 .filter(restaurant -> restaurant.getTotalRating() >= rating)
                 .collect(Collectors.toList());
     }

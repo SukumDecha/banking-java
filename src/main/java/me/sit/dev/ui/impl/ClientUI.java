@@ -54,7 +54,7 @@ public class ClientUI extends BaseUI {
             --------------------------------------- ------
             """;
 
-    private final String editCartMenuPrompt ="""
+    private final String editCartMenuPrompt = """
                     
             -------------- Edit Cart Menu --------------
                             1. Edit amount
@@ -152,7 +152,7 @@ public class ClientUI extends BaseUI {
                 count++;
                 switch (programSelected) {
                     case 1:
-                        if(currentUser.getRestaurant() != null){
+                        if (currentUser.getRestaurant() != null) {
                             System.out.println("You already have a restaurant.");
                             break;
                         }
@@ -243,8 +243,7 @@ public class ClientUI extends BaseUI {
             String currentRestaurantId = Session.getCurrentSession().getRestaurantId();
             User currentUser = Session.getCurrentSession().getUser();
 
-            boolean statusSelectFood = true;
-            while (statusSelectFood) {
+            while (true) {
                 showAllProducts();
                 Scanner scFood = new Scanner(System.in);
                 System.out.print("Select menu : ");
@@ -253,8 +252,7 @@ public class ClientUI extends BaseUI {
                     System.out.print("please try again (input number): ");
                     scFood.next();
                     if (scFood.hasNext("0")) {
-                        statusSelectFood = false;
-                        return;
+                        break;
                     }
                 }
 
@@ -267,6 +265,7 @@ public class ClientUI extends BaseUI {
                     orderService.showOrderDetails(new Order(currentUser, currentUser.getCart(),
                             currentRestaurantId, selectedProduct.getName()), false);
                     addToCart();
+                    break;
                 } else {
                     System.out.println("Invalid selection.");
                 }
@@ -342,6 +341,13 @@ public class ClientUI extends BaseUI {
             if (quantity > 0) {
                 Restaurant currentRestaurant = restaurantService.findById(Session.getCurrentSession().getRestaurantId());
 
+                int productQuantity = productService.getQuantity(currentRestaurant.getId(), currentProduct.getId());
+                if (quantity > productQuantity) {
+                    System.out.println("Not enough stock. Try again.");
+                    addToCart();
+                    return;
+                }
+
                 cartService.addToCart(currentUser, currentRestaurant, currentProduct, quantity);
                 System.out.println("Added to cart.");
             } else {
@@ -355,7 +361,6 @@ public class ClientUI extends BaseUI {
 
     private void editCart() {
         try {
-            User currentUser = Session.getCurrentSession().getUser();
             Scanner scEditCart = new Scanner(System.in);
             boolean statusEditCart = true;
             while (statusEditCart) {
@@ -413,6 +418,12 @@ public class ClientUI extends BaseUI {
                 }
                 int newAmount = scEditAmount.nextInt();
                 if (newAmount > 0) {
+                    int productQuantity = productService.getQuantity(currentUser.getRestaurant().getId(), selectedProduct.getId());
+                    if (newAmount > productQuantity) {
+                        System.out.println("Not enough stock. Try again.");
+                        editCartAmount();
+                        return;
+                    }
                     cartService.updateCart(currentUser, selectedProduct, newAmount);
                     System.out.println("Amount updated.");
                 } else {
@@ -469,7 +480,10 @@ public class ClientUI extends BaseUI {
             System.out.println("Available products:");
             int count = 1;
             for (Product product : products) {
-                System.out.println(count + ". " + product.getName() + " - Price: " + product.getPrice());
+                StringBuilder str = new StringBuilder();
+                str.append(count).append(". ").append(product.getName())
+                        .append(" - Price: ").append(product.getPrice())
+                        .append(" - Quantity: ").append(productService.getQuantity(currentRestaurantId, product.getId()));
                 count++;
             }
         } catch (Exception e) {

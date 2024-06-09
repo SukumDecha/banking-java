@@ -1,5 +1,6 @@
 package me.sit.dev.service.impl;
 
+import me.sit.dev.entity.impl.Product;
 import me.sit.dev.entity.impl.Restaurant;
 import me.sit.dev.entity.impl.order.Order;
 import me.sit.dev.entity.impl.user.User;
@@ -34,6 +35,12 @@ public class OrderService implements IOrderService {
         System.out.println("[S] ----------------------");
 
         // Add order to user and restaurant
+        order.getProducts().entrySet().forEach(entry -> {
+            Product product = entry.getKey();
+            product.setQuantity(product.getQuantity() - entry.getValue());
+            restaurant.updateProduct(product);
+        });
+
         restaurant.getOrders().add(order);
         user.getOrders().add(order);
         return order;
@@ -60,9 +67,13 @@ public class OrderService implements IOrderService {
         return orderRepo.findAll();
     }
 
+
+    // Remove later
     @Override
     public void cancelOrder(User user, Order order) {
         order.cancelOrder();
+
+        // Add products back to restaurant
 
         // Send messages to user
         System.out.println("[S] --- Order canceled ---");

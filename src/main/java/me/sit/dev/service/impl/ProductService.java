@@ -55,4 +55,12 @@ public class ProductService implements IProductService {
         return productRepo.existsByName(restaurantId, productName);
     }
 
+    @Override
+    public int getQuantity(String restaurantId, String productId) {
+        return findAll(restaurantId).stream()
+                .filter(product -> product.getId().equals(productId))
+                .findFirst()
+                .map(Product::getQuantity)
+                .orElse(0);
+    }
 }

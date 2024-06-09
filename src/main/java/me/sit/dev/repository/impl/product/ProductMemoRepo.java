@@ -13,7 +13,11 @@ import java.util.stream.Collectors;
 
 public class ProductMemoRepo implements IProductRepo {
 
-    protected final Map<String, Product> productMap = new HashMap<>();
+    protected final Map<String, Product> productMap;
+
+    public ProductMemoRepo() {
+        productMap = new HashMap<>();
+    }
 
     @Override
     public Product addProduct(String restaurantId, String productName, double price, int quantity) {

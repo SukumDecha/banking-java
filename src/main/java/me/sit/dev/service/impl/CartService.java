@@ -27,6 +27,7 @@ public class CartService implements ICartService {
             throw new InvalidInputException();
         }
 
+        int quantityInStock = product.getQuantity();
         Cart cart = user.getCart();
         cart.setRestaurant(restaurant);
         cart.addProduct(product, quantity);

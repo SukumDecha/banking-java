@@ -151,8 +151,7 @@ public class UserService implements IUserService {
 
         User user = new User("U" + findAll().size(), name, email, password, isAdmin ? UserRole.SYSTEM_ADMIN : UserRole.USER);
         userRepository.save(user);
-
-        login(email, password);
+        System.out.println("User registered successfully");
         return true;
     }
 
