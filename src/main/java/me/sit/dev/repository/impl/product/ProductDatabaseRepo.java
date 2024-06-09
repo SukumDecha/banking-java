@@ -5,6 +5,7 @@ import me.sit.dev.entity.impl.Restaurant;
 import me.sit.dev.exceptions.SQLStatementException;
 import me.sit.dev.repository.DatabaseConnection;
 import me.sit.dev.repository.IProductRepo;
+import me.sit.dev.repository.impl.restaurant.RestaurantDatabaseRepo;
 import me.sit.dev.repository.impl.restaurant.RestaurantMemoRepo;
 
 import java.sql.Connection;
@@ -22,6 +23,7 @@ public class ProductDatabaseRepo extends ProductMemoRepo implements IProductRepo
         super();
         try {
             connection = DatabaseConnection.getConnection();
+
         } catch (SQLException e) {
             throw new RuntimeException("Failed to connect to the database", e);
         }

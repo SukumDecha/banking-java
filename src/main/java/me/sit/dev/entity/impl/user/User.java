@@ -62,4 +62,8 @@ public class User extends BaseEntity {
     public void setRestaurantId(String restaurantId) {
         this.restaurantId = restaurantId;
     }
+
+    public void addOrder(Order order) {
+        orders.add(order);
+    }
 }

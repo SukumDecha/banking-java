@@ -3,6 +3,7 @@ package me.sit.dev;
 import me.sit.dev.repository.DatabaseConnection;
 import me.sit.dev.repository.type.RepositoryType;
 import me.sit.dev.service.ServiceFactory;
+import me.sit.dev.ui.impl.AdminUI;
 import me.sit.dev.ui.impl.ClientUI;
 import me.sit.dev.ui.impl.LoginUI;
 import me.sit.dev.ui.impl.RestaurantUI;
@@ -25,8 +26,9 @@ public class Application {
 
         ClientUI clientUI = new ClientUI(serviceFactory);
         RestaurantUI restaurantUI = new RestaurantUI(serviceFactory);
+        AdminUI adminUI = new AdminUI(serviceFactory);
 
-        LoginUI loginUI = new LoginUI(clientUI, restaurantUI, serviceFactory);
+        LoginUI loginUI = new LoginUI(clientUI, restaurantUI, serviceFactory, adminUI);
 
         clientUI.setLoginUI(loginUI);
         restaurantUI.setLoginUI(loginUI);

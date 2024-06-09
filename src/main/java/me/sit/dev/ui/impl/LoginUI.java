@@ -3,18 +3,21 @@ package me.sit.dev.ui.impl;
 import me.sit.dev.entity.impl.Restaurant;
 import me.sit.dev.entity.impl.Session;
 import me.sit.dev.entity.impl.user.User;
+import me.sit.dev.entity.impl.user.UserRole;
 import me.sit.dev.exceptions.InvalidPasswordException;
 import me.sit.dev.exceptions.user.UserNotFoundException;
 import me.sit.dev.service.ServiceFactory;
+import me.sit.dev.service.impl.UserService;
 import me.sit.dev.ui.BaseUI;
 
-import java.io.Console;
 import java.util.Scanner;
 
 public class LoginUI extends BaseUI {
 
     private final ClientUI clientUI;
     private final RestaurantUI restaurantUI;
+    private final AdminUI adminUI;
+
     private final String login_Prompt = """
             -------------- AUTH MENU --------------
                            1. Login
@@ -30,11 +33,12 @@ public class LoginUI extends BaseUI {
             ----------------------------------      
             """;
 
-    public LoginUI(ClientUI clientUI, RestaurantUI restaurantUI, ServiceFactory serviceFactory) {
+    public LoginUI(ClientUI clientUI, RestaurantUI restaurantUI, ServiceFactory serviceFactory, AdminUI adminUI) {
         super("Login UI", "This UI only shows the login view.", serviceFactory);
 
         this.clientUI = clientUI;
         this.restaurantUI = restaurantUI;
+        this.adminUI = adminUI;
     }
 
     @Override
@@ -48,6 +52,7 @@ public class LoginUI extends BaseUI {
             sc.next();
         }
         int loginSelected = sc.nextInt();
+        int checkIsAdmin = 0;
         switch (loginSelected) {
             case 1: // login
                 System.out.println("Login method");
@@ -55,25 +60,19 @@ public class LoginUI extends BaseUI {
                     try {
                         System.out.print("Enter your email : ");
                         String email = sc.next();
-                        Console console = System.console();
-                        if (console != null) {
-                            char[] password = console.readPassword("Enter your password :");
-                            if (userService.login(email, new String(password))) {
-                                System.out.println("----------------------------------");
-                                System.out.println("\t\t Login successful");
-                                System.out.println("----------------------------------");
-                                break;
-                            }
-                        } else {
-                            System.out.print("Enter your password : ");
-                            String password = sc.next();
-                            if (userService.login(email, password)) {
-                                System.out.println("----------------------------------");
-                                System.out.println("\t\t Login successful");
-                                System.out.println("----------------------------------");
-                                break;
-                            }
+                        System.out.print("Enter your password : ");
+                        String password = sc.next();
+                        if (userService.login(email, password)) {
+                            System.out.println("----------------------------------");
+                            System.out.println("\t\t Login successful");
+                            System.out.println("----------------------------------");
+                            sc.nextLine();
                         }
+                        if (userService.findByEmail(email).getRole() == UserRole.SYSTEM_ADMIN) {
+                            checkIsAdmin++;
+                            adminUI.show();
+                        }
+                        break;
                     } catch (InvalidPasswordException | UserNotFoundException e) {
                         System.out.println("[!] Error: " + e.getMessage());
                         System.out.println("\n[!] You can enter 0 to end this process.\n[!] Otherwise, press any key to try again.");
@@ -112,6 +111,11 @@ public class LoginUI extends BaseUI {
                         boolean isAdmin = false;
                         if (input.equalsIgnoreCase("yes")) {
                             isAdmin = true;
+                            userService.register(name, saveEmail, savePassword, isAdmin);
+                            userService.login(saveEmail, savePassword);
+                            checkIsAdmin++;
+                            adminUI.show();
+                            break;
                         }
 
                         userService.register(name, saveEmail, savePassword, isAdmin);
@@ -126,8 +130,10 @@ public class LoginUI extends BaseUI {
                 System.exit(0);
                 break;
         }
+        if (checkIsAdmin==0) {
+            semiMenu();
+        }
 
-        semiMenu();
     }
 
     public void semiMenu() {

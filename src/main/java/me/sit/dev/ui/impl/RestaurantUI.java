@@ -7,6 +7,7 @@ import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.service.ServiceFactory;
 import me.sit.dev.ui.BaseUI;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class RestaurantUI extends BaseUI {
@@ -224,6 +225,36 @@ public class RestaurantUI extends BaseUI {
             System.err.println("Error editing food: " + e.getMessage());
         }
     }
+
+    private void deleteFoodFromRestaurant() {
+        String currentRestaurantId = Session.getCurrentSession().getRestaurantId();
+        Restaurant currentRestaurant = restaurantService.findById(currentRestaurantId);
+        List<Product> products = productService.findAll(currentRestaurantId);
+
+        if (products.isEmpty()) {
+            System.out.println("[!] This restaurant has no products available to delete.");
+            return;
+        }
+
+        showAllFood();
+        System.out.print("Enter the product ID to delete: ");
+        String productId = sc.next();
+
+        Product productToDelete = products.stream()
+                .filter(product -> product.getId().equals(productId))
+                .findFirst()
+                .orElse(null);
+
+        if (productToDelete != null) {
+            currentRestaurant.getProducts().removeIf(product -> product.getId().equals(productId));
+            productService.deleteProduct(currentRestaurantId, productId);
+            restaurantService.updateRestaurant(currentRestaurantId, currentRestaurant);
+            System.out.println("Product deleted successfully.");
+        } else {
+            System.out.println("Invalid selection. Please try again.");
+        }
+    }
+
 
     private void showAllFood() {
         User currentUser = Session.getCurrentSession().getUser();
