@@ -11,7 +11,6 @@ public class ProductFileRepo extends ProductMemoRepo {
     private final String path = "products/";
 
     public ProductFileRepo() {
-        super();
         File file = new File(path);
 
         if (!file.exists()) {

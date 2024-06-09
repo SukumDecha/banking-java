@@ -13,11 +13,7 @@ import java.util.stream.Collectors;
 
 public class ProductMemoRepo implements IProductRepo {
 
-    protected final Map<String, Product> productMap;
-
-    public ProductMemoRepo() {
-        productMap = new HashMap<>();
-    }
+    protected final Map<String, Product> productMap = new HashMap<>();
 
     @Override
     public Product addProduct(String restaurantId, String productName, double price, int quantity) {
@@ -30,7 +26,7 @@ public class ProductMemoRepo implements IProductRepo {
             throw new ProductAlreadyExistException();
         }
 
-        String productId = restaurantId + "-" + (findAll(restaurantId).size() + 1);
+        String productId = "P-" + restaurantId + "-" + (findAll(restaurantId).size() + 1);
         product = new Product(productId, restaurantId, productName, price, quantity);
 
         productMap.put(product.getId(), product);
@@ -47,8 +43,6 @@ public class ProductMemoRepo implements IProductRepo {
         }
 
         if (!existsById(productId)) {
-            Product product = findById(productId);
-            System.out.println(product);
             throw new InvalidInputException("Product not found");
         }
 
@@ -97,6 +91,7 @@ public class ProductMemoRepo implements IProductRepo {
         if(productId == null || productId.isBlank()) {
             throw new InvalidInputException("Product id is null or empty");
         }
+
         return productMap.containsKey(productId);
     }
 

@@ -10,7 +10,7 @@ public class Product extends BaseEntity {
 
 
     public Product(String id, String restaurantId, String name, double price, int quantity) {
-        super("P-" + id);
+        super(id);
         this.restaurantId = restaurantId;
         this.name = name;
         this.price = price;
