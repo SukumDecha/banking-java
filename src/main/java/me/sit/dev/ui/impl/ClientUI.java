@@ -210,16 +210,18 @@ public class ClientUI extends BaseUI {
                 return;
             }
 
-            System.out.println("------ Order History ------");
-            for (Order order : orders) {
-                System.out.println("Order ID: " + order.getId());
-                System.out.println("Restaurant: " + order.getRestaurantId());
-                System.out.println("Products:");
-                order.getProducts().forEach((product, quantity) -> {
-                    System.out.println("\t" + product.getName() + "(" + product.getPrice() + "$) x" + quantity);
-                });
-                System.out.println("Total: " + order.getTotalPrice());
-                System.out.println("---------------------------");
+            int maxPage = orderService.showOrderPagination(orders, 1, 5);
+
+            while (true) {
+                System.out.println("Enter page number or 0 to go back: ");
+                int page = sc.nextInt();
+                if (page == 0) {
+                    break;
+                } else if (page < 1 || page > maxPage) {
+                    System.out.println("Invalid page number. Please enter a valid page number.");
+                } else {
+                    orderService.showOrderPagination(orders, page, 5);
+                }
             }
         } catch (Exception e) {
             System.out.println("An error occurred while fetching the order history: " + e.getMessage());
@@ -383,36 +385,17 @@ public class ClientUI extends BaseUI {
                         }
 
                         Restaurant currentRestaurant = restaurantService.findById(Session.getCurrentSession().getRestaurantId());
-                        Order order = orderService.createOrder(currentUser, currentRestaurant);
+                        orderService.createOrder(currentUser, currentRestaurant);
 
-                        for (Product product : currentRestaurant.getProducts()) {
-                            System.out.println("Restaurant product: " + product.getName());
-                            for (Product cartProduct : order.getProducts().keySet()) {
-                                System.out.println("Cart product: " + cartProduct.getName());
-                                if (product.getId().equals(cartProduct.getId())) {
-                                    product.setQuantity(product.getQuantity() - order.getProducts().get(cartProduct));
+                        for(Product product : currentRestaurant.getProducts()) {
+                            int quantityCount = cartService.getProductQuantity(currentUser, product);
 
-                                    System.out.println("Current product: " + product.getId() + " " + product.getName() + " " + product.getQuantity());
-                                    System.out.println("Cart product: " + cartProduct.getId() + " " + cartProduct.getName() + " " + order.getProducts().get(cartProduct));
-                                    productService.findAll(currentRestaurant.getId()).forEach(System.out::println);
-                                    if (!productService.existsById(product.getId())) {
-                                        System.out.println("Product does not exist");
-                                    }
-
-                                    if (productService.updateProduct(product.getId(), product) == null) {
-                                        System.out.println("Failed to update product");
-                                    }
-
-                                    System.out.println("Passed productService.updateProduct");
-                                }
-                            }
+                            product.setQuantity(product.getQuantity() - quantityCount);
+                            productService.updateProduct(product.getId(), product);
                         }
 
-                        System.out.println("Passed productService.updateProduct");
                         restaurantService.updateRestaurant(currentRestaurant.getId(), currentRestaurant);
-                        System.out.println("Passed restaurantService.updateRestaurant");
                         userService.update(currentUser.getId(), currentUser);
-                        System.out.println("Passed userService.update");
                         statusCart = false;
                         break;
                     case 5:

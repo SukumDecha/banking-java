@@ -113,7 +113,6 @@ public class OrderDatabaseRepo extends OrderMemoRepo {
             stringBuilder.append(restaurantId).append("&&").append(product.getId()).append("=").append(amount).append(", ");
         }
 
-        // Remove the trailing comma and space, if any
         if (stringBuilder.length() > 1) {
             stringBuilder.setLength(stringBuilder.length() - 2);
         }
@@ -125,7 +124,6 @@ public class OrderDatabaseRepo extends OrderMemoRepo {
     private Map<Product, Integer> deserializeProduct(String hashMapAsString) {
         Map<Product, Integer> parsedHashMap = new HashMap<>();
 
-        // Remove curly braces and split the string by commas to get key-value pairs
         String[] keyValuePairs = hashMapAsString.substring(1, hashMapAsString.length() - 1).split(", ");
 
         for (String pair : keyValuePairs) {
@@ -133,6 +131,11 @@ public class OrderDatabaseRepo extends OrderMemoRepo {
             String[] productEntry = entry[1].split("=");
 
             Product product = productRepo.findById(productEntry[0]);
+            System.out.println(productEntry[0] + " " + productEntry[1] + " ");
+            if(product == null) {
+                System.out.println("Product not found: " + productEntry[0]);
+                continue;
+            }
             int amount = Integer.parseInt(productEntry[1]);
 
             parsedHashMap.put(product, amount);

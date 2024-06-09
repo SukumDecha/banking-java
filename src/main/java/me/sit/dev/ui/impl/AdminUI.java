@@ -40,6 +40,10 @@ public class AdminUI extends BaseUI {
         super("Client UI", "This UI only shows the client's view.", serviceFactory);
     }
 
+    public void setLoginUI(LoginUI login) {
+        this.login = login;
+    }
+
     @Override
     public void show() {
         try {

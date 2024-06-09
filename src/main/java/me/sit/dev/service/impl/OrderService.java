@@ -4,10 +4,13 @@ import me.sit.dev.entity.impl.Product;
 import me.sit.dev.entity.impl.Restaurant;
 import me.sit.dev.entity.impl.order.Order;
 import me.sit.dev.entity.impl.user.User;
+import me.sit.dev.exceptions.restaurant.RestaurantNotFoundException;
 import me.sit.dev.repository.IOrderRepo;
 import me.sit.dev.service.IOrderService;
 
 import java.util.Collection;
+import java.util.Date;
+import java.util.stream.Collectors;
 
 public class OrderService implements IOrderService {
 
@@ -19,6 +22,50 @@ public class OrderService implements IOrderService {
 
     public IOrderRepo getOrderRepo() {
         return orderRepo;
+    }
+
+    @Override
+    public int showOrderPagination(Collection<Order> orders, int page, int size) {
+        if(page < 1) {
+            System.out.println("Invalid page number");
+            return 0;
+        }
+
+        int totalOrders = orders.size();
+        int totalPages = (int) Math.ceil((double) totalOrders / size);
+        if(totalOrders == 0) {
+            System.out.println("No orders found");
+            return 0;
+        }
+
+        orders = orders.stream().sorted()
+                .skip((page - 1) * size)
+                .limit(size)
+                .collect(Collectors.toList());
+
+        int count = page == 1 ? 1 : (page - 1) * size + 1;
+        for (Order order : orders) {
+            System.out.printf("--------- Order #%d  ---------%n", count);
+            System.out.println("Order ID: " + order.getId());
+            System.out.println("Order Status: " + order.getStatus());
+            System.out.println("Order Date: " + new Date(order.getOrderAt()));
+            if(order.getProducts().isEmpty()) {
+                System.out.println("No products in this order");
+                System.out.println("---------------------------");
+                count++;
+                continue;
+            }
+            System.out.println("Products:");
+            for (Product product : order.getProducts().keySet()) {
+                System.out.println("- " + product.getName() + " x" + order.getProducts().get(product));
+            }
+            System.out.println("Total Price: " + order.getTotalPrice());
+            System.out.println("---------------------------");
+            count++;
+        }
+
+        System.out.println("Current page: " + page + " / " + totalPages);
+        return totalPages;
     }
 
     @Override

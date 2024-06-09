@@ -53,7 +53,7 @@ public class DatabaseConnection {
                         "name VARCHAR(100)," +
                         "email VARCHAR(100) UNIQUE," +
                         "password VARCHAR(100)," +
-                        "role VARCHAR(10)," +
+                        "role VARCHAR(100)," +
                         "restaurantId VARCHAR(10)" +
                         ")",
 

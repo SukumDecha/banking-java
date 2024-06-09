@@ -10,5 +10,7 @@ public interface IOrderService extends IOrderRepo {
     void showOrderDetails(Order order, boolean showStatus);
     IOrderRepo getOrderRepo();
 
+    int  showOrderPagination(Collection<Order> orders, int page, int size);
+
 
 }

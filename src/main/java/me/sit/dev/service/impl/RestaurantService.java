@@ -182,7 +182,7 @@ public class RestaurantService implements IRestaurantService {
             throw new RestaurantNotFoundException();
         }
 
-        int maxPage = (int) Math.ceil((double) restaurant.getOrders().size() / size);
+        int totalPage = (int) Math.ceil((double) restaurant.getOrders().size() / size);
 
         Collection<Order> orders = restaurant.getOrders().stream().sorted()
                 .skip((page - 1) * size)
@@ -215,8 +215,8 @@ public class RestaurantService implements IRestaurantService {
             count++;
         }
 
-        System.out.println("Current page: " + page + " / " + maxPage);
+        System.out.println("Current page: " + page + " / " + totalPage);
 
-        return maxPage;
+        return totalPage;
     }
 }

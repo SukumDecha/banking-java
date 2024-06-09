@@ -31,7 +31,7 @@ public class Application {
 
         clientUI.setLoginUI(loginUI);
         restaurantUI.setLoginUI(loginUI);
-
+        adminUI.setLoginUI(loginUI);
         loginUI.show();
     }
 
