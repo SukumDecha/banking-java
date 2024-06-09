@@ -38,7 +38,7 @@ public class AdminUI extends BaseUI {
 
             switch (entityChoice) {
                 case 1:
-                    editUser(sc);
+                    editUser();
                     break;
                 case 2:
                     editRestaurant(sc);

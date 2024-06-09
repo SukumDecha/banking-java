@@ -142,6 +142,11 @@ public class UserService implements IUserService {
         if (email == null || email.isBlank()) {
             throw new InvalidParamsException("Email cannot be blank");
         }
+
+        if(!email.endsWith("@gmail.com")) {
+            throw new InvalidParamsException("Email must be a Gmail account");
+        }
+
         if (existsByEmail(email)) {
             throw new InvalidParamsException("This email has already been registered");
         }
