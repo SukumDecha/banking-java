@@ -82,6 +82,7 @@ public class LoginUI extends BaseUI {
                                 System.out.println("----------------------------------");
                                 sc.nextLine();
                             }
+
                             if (userService.findByEmail(email).getRole() == UserRole.SYSTEM_ADMIN) {
                                 checkIsAdmin++;
                                 adminUI.show();
