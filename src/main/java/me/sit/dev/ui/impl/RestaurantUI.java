@@ -210,7 +210,7 @@ public class RestaurantUI extends BaseUI {
                 }
 
 
-                productService.updateProduct(restaurantId, productId, product);
+                productService.updateProduct(productId, product);
 
                 Restaurant restaurant = restaurantService.findById(restaurantId);
                 restaurant.updateProduct(product);

@@ -9,11 +9,11 @@ import java.util.List;
 public interface IProductRepo {
     Product addProduct(String restaurantId, String productName, double price, int quantity);
 
-    Product updateProduct(String restaurantId, String productId, Product updatedProduct);
+    Product updateProduct(String productId, Product updatedProduct);
 
     Product deleteProduct(String restaurantId, String productId);
 
-    Product findById(String restaurantId, String productId);
+    Product findById(String productId);
 
     Product findByName(String restaurantId, String productName);
 

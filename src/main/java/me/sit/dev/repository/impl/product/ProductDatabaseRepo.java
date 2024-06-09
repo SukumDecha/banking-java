@@ -42,6 +42,7 @@ public class ProductDatabaseRepo extends ProductMemoRepo implements IProductRepo
 
                 Product product = new Product(id, restaurantId, name, price, quantity);
                 productMap.put(id, product);
+                System.out.println("Product loaded: " + product);
             }
         } catch (SQLException e) {
             System.out.println("Error loading products from database: " + e.getMessage());
@@ -70,8 +71,8 @@ public class ProductDatabaseRepo extends ProductMemoRepo implements IProductRepo
     }
 
     @Override
-    public Product updateProduct(String restaurantId, String productId, Product product) {
-        product = super.updateProduct(restaurantId, productId, product);
+    public Product updateProduct(String productId, Product product) {
+        product = super.updateProduct(productId, product);
 
         String sql = "UPDATE Product SET name = ?, price = ?, quantity = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {

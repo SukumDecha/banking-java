@@ -32,9 +32,10 @@ public class ServiceFactory {
     public ServiceFactory(RepositoryType repositoryType) {
         this.repositoryType = repositoryType;
 
-        userService = createUserService();
         productService = createProductService();
         orderService = createOrderService(productService);
+
+        userService = createUserService();
         restaurantService = createRestaurantService();
 
         cartService = new CartService();
@@ -47,7 +48,7 @@ public class ServiceFactory {
             case FILE:
                 return new UserService(new UserFileRepo());
             case DATABASE:
-                return new UserService(new UserDatabaseRepo());
+                return new UserService(new UserDatabaseRepo(orderService.getOrderRepo()));
             default:
                 throw new InvalidRepositoryException();
         }

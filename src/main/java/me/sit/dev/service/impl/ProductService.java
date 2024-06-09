@@ -29,8 +29,8 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Product updateProduct(String restaurantId, String productId, Product product) {
-        return productRepo.updateProduct(restaurantId, productId, product);
+    public Product updateProduct(String productId, Product product) {
+        return productRepo.updateProduct( productId, product);
     }
 
     @Override
@@ -39,8 +39,8 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Product findById(String restaurantId, String productId) {
-        return productRepo.findById(restaurantId, productId);
+    public Product findById(String productId) {
+        return productRepo.findById(productId);
     }
 
     @Override

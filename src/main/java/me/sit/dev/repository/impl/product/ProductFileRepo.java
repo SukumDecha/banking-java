@@ -46,8 +46,8 @@ public class ProductFileRepo extends ProductMemoRepo {
     }
 
     @Override
-    public Product updateProduct(String restaurantId, String productId, Product updatedProduct) {
-        updatedProduct =  super.updateProduct(restaurantId, productId, updatedProduct);
+    public Product updateProduct(String productId, Product updatedProduct) {
+        updatedProduct =  super.updateProduct(productId, updatedProduct);
 
         File file = getFileFromProduct(updatedProduct);
         try(ObjectOutputStream write = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {

@@ -38,11 +38,19 @@ public class ProductMemoRepo implements IProductRepo {
     }
 
     @Override
-    public Product updateProduct(String restaurantId, String productId, Product updatedProduct) {
-        if (!productMap.containsKey(productId)) {
+    public Product updateProduct(String productId, Product updatedProduct) {
+        if(updatedProduct == null) {
+            throw new InvalidInputException("Updated product is null");
+        }
+        if(productId == null || productId.isBlank()) {
+            throw new InvalidInputException("Product id is null or empty");
+        }
+
+        if (!existsById(productId)) {
             throw new InvalidInputException("Product not found");
         }
-        productMap.put(productId, updatedProduct);
+
+        productMap.replace(productId, updatedProduct);
         return updatedProduct;
     }
 
@@ -52,12 +60,20 @@ public class ProductMemoRepo implements IProductRepo {
     }
 
     @Override
-    public Product findById(String restaurantId, String productId) {
+    public Product findById(String productId) {
+        if(productId == null || productId.isBlank()) {
+            throw new InvalidInputException("Product id is null or empty");
+        }
+
         return productMap.get(productId);
     }
 
     @Override
-    public Product findByName(String restaurantId, String productName) {
+    public Product findByName(String restaurantId, String productName)
+    {
+        if(restaurantId == null || restaurantId.isBlank() || productName == null || productName.isBlank()) {
+            throw new InvalidInputException("Invalid input");
+        }
         return productMap.values().stream()
                 .filter(product -> product.getRestaurantId().equals(restaurantId) && product.getName().equals(productName))
                 .findFirst()
@@ -66,18 +82,27 @@ public class ProductMemoRepo implements IProductRepo {
 
     @Override
     public List<Product> findAll(String restaurantId) {
+        if(restaurantId == null || restaurantId.isBlank()) {
+            throw new InvalidInputException("Invalid input");
+        }
         return productMap.values().stream()
                 .filter(product -> product.getRestaurantId().equals(restaurantId))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public boolean existsById( String productId) {
+    public boolean existsById(String productId) {
+        if(productId == null || productId.isBlank()) {
+            throw new InvalidInputException("Product id is null or empty");
+        }
         return productMap.containsKey(productId);
     }
 
     @Override
     public boolean existsByName(String restaurantId, String productName) {
+        if(restaurantId == null || restaurantId.isBlank() || productName == null || productName.isBlank()) {
+            throw new InvalidInputException("Invalid input");
+        }
         return productMap.values().stream()
                 .anyMatch(product -> product.getRestaurantId().equals(restaurantId) && product.getName().equals(productName));
     }

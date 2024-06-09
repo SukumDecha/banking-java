@@ -1,7 +1,9 @@
 package me.sit.dev.repository.impl.user;
 
+import me.sit.dev.entity.impl.order.Order;
 import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.entity.impl.user.UserRole;
+import me.sit.dev.repository.IOrderRepo;
 import me.sit.dev.repository.IUserRepo;
 import me.sit.dev.repository.DatabaseConnection;
 
@@ -9,12 +11,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDatabaseRepo extends UserMemoRepo implements IUserRepo {
 
     private final Connection connection;
+    private final IOrderRepo orderRepo;
 
-    public UserDatabaseRepo() {
+    public UserDatabaseRepo(IOrderRepo orderRepo) {
         super();
         try {
             connection = DatabaseConnection.getConnection();
@@ -22,6 +27,7 @@ public class UserDatabaseRepo extends UserMemoRepo implements IUserRepo {
             throw new RuntimeException("Failed to connect to the database", e);
         }
 
+        this.orderRepo = orderRepo;
         loadUsers();
     }
 
@@ -49,6 +55,19 @@ public class UserDatabaseRepo extends UserMemoRepo implements IUserRepo {
         String restaurantId = rs.getString("restaurantId");
         if (restaurantId != null) {
             user.setRestaurantId(restaurantId);
+        }
+
+        try(PreparedStatement stmt = connection.prepareStatement("SELECT * FROM `CustomerOrder` WHERE userId = ?")) {
+            stmt.setString(1, id);
+            ResultSet rs2 = stmt.executeQuery();
+            List<Order> orders = new ArrayList<>();
+            while (rs2.next()) {
+                String orderId = rs2.getString("id");
+                Order order = orderRepo.findById(orderId);
+                orders.add(order);
+            }
+
+            user.getOrders().addAll(orders);
         }
 
         return user;

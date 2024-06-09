@@ -355,10 +355,24 @@ public class ClientUI extends BaseUI {
                         Restaurant currentRestaurant = restaurantService.findById(Session.getCurrentSession().getRestaurantId());
                         Order order = orderService.createOrder(currentUser, currentRestaurant);
 
-                        for(Product product : currentRestaurant.getProducts()) {
+                        for (Product product : currentRestaurant.getProducts()) {
+                            System.out.println("Restaurant product: " + product.getName());
                             for (Product cartProduct : order.getProducts().keySet()) {
+                                System.out.println("Cart product: " + cartProduct.getName());
                                 if (product.getId().equals(cartProduct.getId())) {
-                                    productService.updateProduct(currentRestaurant.getId(), product.getId(), product);
+                                    product.setQuantity(product.getQuantity() - order.getProducts().get(cartProduct));
+
+                                    System.out.println("Current product: " + product.getId() + " " + product.getName() + " " + product.getQuantity());
+                                    System.out.println("Cart product: " + cartProduct.getId() + " " + cartProduct.getName() + " " + order.getProducts().get(cartProduct));
+                                    productService.findAll(currentRestaurant.getId()).forEach(System.out::println);
+                                    if(!productService.existsById(product.getId())) {
+                                        System.out.println("Product does not exist");
+                                    }
+
+                                    if(productService.updateProduct(product.getId(), product) == null) {
+                                        System.out.println("Failed to update product");
+                                    }
+
                                     System.out.println("Passed productService.updateProduct");
                                 }
                             }
