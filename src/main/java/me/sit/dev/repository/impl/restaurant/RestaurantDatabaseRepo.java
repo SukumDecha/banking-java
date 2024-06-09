@@ -46,11 +46,12 @@ public class RestaurantDatabaseRepo extends RestaurantMemoRepo implements IResta
     public Restaurant addRestaurant(String ownerId, String restaurantName) {
         Restaurant restaurant = super.addRestaurant(ownerId, restaurantName);
 
-        String sql = "INSERT INTO Restaurant (id, ownerId, name) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO Restaurant (id, ownerId, name, totalRating) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, restaurant.getId());
             stmt.setString(2, ownerId);
             stmt.setString(3, restaurantName);
+            stmt.setInt(4, restaurant.getTotalRating());
             int affectedRows = stmt.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Creating restaurant failed, no rows affected.");

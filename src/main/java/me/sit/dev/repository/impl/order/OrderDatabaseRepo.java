@@ -80,7 +80,24 @@ public class OrderDatabaseRepo extends OrderMemoRepo {
 
     @Override
     public Order updateOrder(String orderId, Order order) {
-        return order;
+        Order newOrder = super.updateOrder(orderId, order);
+
+        String sql = "UPDATE CustomerOrder SET productMap = ?, status = ? WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, serializeProduct(order.getProducts()));
+            stmt.setString(2, order.getStatus().name());
+            stmt.setString(3, orderId);
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Updating order failed, no rows affected.");
+            }
+
+            return newOrder;
+        } catch (SQLException e) {
+            System.out.println("Error updating order in database: " + e.getMessage());
+        }
+
+        return null;
     }
 
     private String serializeProduct(Map<Product, Integer> map) {
