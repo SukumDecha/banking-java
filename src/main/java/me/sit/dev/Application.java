@@ -14,13 +14,14 @@ import java.util.stream.Collectors;
 
 public class Application {
 
+    public static ServiceFactory serviceFactory;
     public static void main(String[] args) {
         Config.load();
         if(Config.repositoryType == RepositoryType.DATABASE) {
             DatabaseConnection.createTables();
         }
 
-        ServiceFactory serviceFactory = new ServiceFactory(Config.repositoryType);
+        serviceFactory = new ServiceFactory(Config.repositoryType);
 
         ClientUI clientUI = new ClientUI(serviceFactory);
         RestaurantUI restaurantUI = new RestaurantUI(serviceFactory);
@@ -31,6 +32,10 @@ public class Application {
         restaurantUI.setLoginUI(loginUI);
 
         loginUI.show();
+    }
+
+    public static ServiceFactory getServiceFactory() {
+        return serviceFactory;
     }
 
     public class Config {

@@ -1,7 +1,10 @@
 package me.sit.dev.repository.impl.restaurant;
 
+import me.sit.dev.entity.impl.Product;
 import me.sit.dev.entity.impl.Restaurant;
 import me.sit.dev.entity.impl.order.Order;
+import me.sit.dev.repository.IOrderRepo;
+import me.sit.dev.repository.IProductRepo;
 import me.sit.dev.repository.IRestaurantRepo;
 import me.sit.dev.repository.DatabaseConnection;
 
@@ -14,9 +17,11 @@ import java.util.List;
 
 public class RestaurantDatabaseRepo extends RestaurantMemoRepo implements IRestaurantRepo {
 
+    private IOrderRepo orderRepo;
+    private IProductRepo productRepo;
     private final Connection connection;
 
-    public RestaurantDatabaseRepo() {
+    public RestaurantDatabaseRepo(IOrderRepo orderRepo, IProductRepo productRepo) {
         super();
         try {
             connection = DatabaseConnection.getConnection();
@@ -24,6 +29,8 @@ public class RestaurantDatabaseRepo extends RestaurantMemoRepo implements IResta
             throw new RuntimeException("Failed to connect to the database", e);
         }
 
+        this.productRepo = productRepo;
+        this.orderRepo = orderRepo;
         loadRestaurantsFromDatabase();
     }
 
@@ -38,10 +45,39 @@ public class RestaurantDatabaseRepo extends RestaurantMemoRepo implements IResta
                 int totalRating = rs.getInt("totalRating");
 
                 Restaurant restaurant = new Restaurant(id, ownerId, name, totalRating);
-                restaurantMap.put(id, restaurant);
+
+                try (PreparedStatement stmt2 = connection.prepareStatement("SELECT * FROM `CustomerOrder` WHERE restaurantId = ?")) {
+                    stmt2.setString(1, id);
+                    ResultSet rs2 = stmt2.executeQuery();
+                    List<Order> orders = new ArrayList<>();
+                    while (rs2.next()) {
+                        String orderId = rs2.getString("id");
+                        Order order = orderRepo.findById(orderId);
+                        orders.add(order);
+                    }
+
+                    restaurant.getOrders().addAll(orders);
+                }
+
+                try (PreparedStatement stmt3 = connection.prepareStatement("SELECT * FROM `Product` WHERE restaurantId = ?")) {
+                    stmt3.setString(1, id);
+                    ResultSet rs3 = stmt3.executeQuery();
+                    List<Product> products = new ArrayList<>();
+
+                    while (rs3.next()) {
+                        String productId = rs3.getString("id");
+                        Product product = productRepo.findById(restaurant.getId(), productId);
+                        products.add(product);
+                    }
+
+                    restaurant.getProducts().addAll(products);
+                }
+
+                restaurantMap.put(restaurant.getId(), restaurant);
+                System.out.println("Restaurant loaded: " + restaurant.getName());
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error loading restaurants from database: " + e.getMessage());
         }
     }
 

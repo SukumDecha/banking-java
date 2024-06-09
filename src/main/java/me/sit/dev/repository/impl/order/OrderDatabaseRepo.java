@@ -42,8 +42,9 @@ public class OrderDatabaseRepo extends OrderMemoRepo {
                 String restaurantId = rs.getString("restaurantId");
                 String productMap = rs.getString("productMap");
                 String status = rs.getString("status");
+                long orderAt = Long.parseLong(rs.getString("orderAt"));
 
-                Order order = new Order(id, userId, restaurantId, restaurantName, deserializeProduct(productMap), status);
+                Order order = new Order(id, userId, restaurantId, restaurantName, deserializeProduct(productMap), status, orderAt);
                 orderMap.put(id, order);
             }
         } catch (SQLException e) {
@@ -57,14 +58,15 @@ public class OrderDatabaseRepo extends OrderMemoRepo {
 
         String orderId = "order-" + user.getId() + "-" + user.getOrders().size();
 
-        String sql = "INSERT INTO CustomerOrder (id, userId, restaurantId, status) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO CustomerOrder (id, userId, restaurantName, restaurantId, productMap, status, orderAt) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, orderId);
             stmt.setString(2, user.getId());
             stmt.setString(3, restaurant.getName());
             stmt.setString(4, restaurant.getId());
-            stmt.setString(5, serializeProduct(order.getProducts()));
+            stmt.setString(5, serializeProduct(restaurant.getId(), order.getProducts()));
             stmt.setString(6, order.getStatus().name());
+            stmt.setString(7, String.valueOf(order.getOrderAt()));
             int affectedRows = stmt.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Creating order failed, no rows affected.");
@@ -84,9 +86,10 @@ public class OrderDatabaseRepo extends OrderMemoRepo {
 
         String sql = "UPDATE CustomerOrder SET productMap = ?, status = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, serializeProduct(order.getProducts()));
+            stmt.setString(1, serializeProduct(order.getRestaurantId(), order.getProducts()));
             stmt.setString(2, order.getStatus().name());
             stmt.setString(3, orderId);
+
             int affectedRows = stmt.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Updating order failed, no rows affected.");
@@ -100,14 +103,14 @@ public class OrderDatabaseRepo extends OrderMemoRepo {
         return null;
     }
 
-    private String serializeProduct(Map<Product, Integer> map) {
+    private String serializeProduct(String restaurantId, Map<Product, Integer> map) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("{");
 
         for (Map.Entry<Product, Integer> entry : map.entrySet()) {
             Product product = entry.getKey();
             Integer amount = entry.getValue();
-            stringBuilder.append(product.getId()).append("&&").append(product.getName()).append("=").append(amount).append(", ");
+            stringBuilder.append(restaurantId).append("&&").append(product.getId()).append("=").append(amount).append(", ");
         }
 
         // Remove the trailing comma and space, if any
@@ -126,11 +129,11 @@ public class OrderDatabaseRepo extends OrderMemoRepo {
         String[] keyValuePairs = hashMapAsString.substring(1, hashMapAsString.length() - 1).split(", ");
 
         for (String pair : keyValuePairs) {
-            String[] entry = pair.split("=");
-            String[] productEntry = entry[0].split("&&");
+            String[] entry = pair.split("&&");
+            String[] productEntry = entry[1].split("=");
 
-            Product product = productRepo.findById(productEntry[0], productEntry[1]);
-            int amount = Integer.parseInt(entry[1]);
+            Product product = productRepo.findById(entry[0], productEntry[0]);
+            int amount = Integer.parseInt(productEntry[1]);
 
             parsedHashMap.put(product, amount);
         }

@@ -17,12 +17,13 @@ public class OrderService implements IOrderService {
         this.orderRepo = orderRepo;
     }
 
+    public IOrderRepo getOrderRepo() {
+        return orderRepo;
+    }
+
     @Override
     public Order createOrder(User user, Restaurant restaurant) {
-        Order order = new Order(user, user.getCart(), restaurant.getName(), restaurant.getId());
-        order.confirmOrder();
-
-        // TODO: Make waiting time
+        Order order = orderRepo.createOrder(user, restaurant);
         // Send email to restaurant
         System.out.println("[S] --- Order confirmed ---");
         System.out.println("[S] Order ID: " + order.getId());
@@ -69,36 +70,6 @@ public class OrderService implements IOrderService {
         return orderRepo.findAll();
     }
 
-
-    // Remove later
-    @Override
-    public void cancelOrder(User user, Order order) {
-        order.cancelOrder();
-
-        // Add products back to restaurant
-
-        // Send messages to user
-        System.out.println("[S] --- Order canceled ---");
-        System.out.println("[S] Order ID: " + order.getId());
-        System.out.println("[S] Restaurant Name: " + order.getRestaurantName() + " (" + order.getRestaurantId() + ")");
-        System.out.println();
-        System.out.println("[S] Total Price: " + order.getTotalPrice());
-        System.out.println("[S] ----------------------");
-    }
-
-    @Override
-    public void deliverOrder(User user, Order order) {
-        order.deliverOrder();
-
-        // Send messages to user
-        System.out.println("[S] --- Order delivered ---");
-        System.out.println("[S] Order ID: " + order.getId());
-        System.out.println("[S] Restaurant Name: " + order.getRestaurantName() + " (" + order.getRestaurantId() + ")");
-        System.out.println();
-        System.out.println("[S] Estimated Delivery Time: 1 minutes");
-        System.out.println("[S] Total Price: " + order.getTotalPrice());
-        System.out.println("[S] ----------------------");
-    }
 
     @Override
     public void showOrderDetails(Order order, boolean showStatus) {

@@ -200,6 +200,12 @@ public class RestaurantService implements IRestaurantService {
             System.out.println("Order ID: " + order.getId());
             System.out.println("Order Status: " + order.getStatus());
             System.out.println("Order Date: " + new Date(order.getOrderAt()));
+            if(order.getProducts().isEmpty()) {
+                System.out.println("No products in this order");
+                System.out.println("---------------------------");
+                count++;
+                continue;
+            }
             System.out.println("Products:");
             for (Product product : order.getProducts().keySet()) {
                 System.out.println("- " + product.getName() + " x" + order.getProducts().get(product));

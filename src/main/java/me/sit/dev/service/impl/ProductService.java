@@ -1,5 +1,6 @@
 package me.sit.dev.service.impl;
 
+import me.sit.dev.Application;
 import me.sit.dev.entity.impl.Product;
 import me.sit.dev.entity.impl.Restaurant;
 import me.sit.dev.repository.IProductRepo;
@@ -12,12 +13,14 @@ import java.util.List;
 
 public class ProductService implements IProductService {
 
-    private final IRestaurantRepo restaurantRepo;
     private final IProductRepo productRepo;
 
-    public ProductService(IProductRepo productRepo, IRestaurantRepo restaurantRepo) {
+    public ProductService(IProductRepo productRepo) {
         this.productRepo = productRepo;
-        this.restaurantRepo = restaurantRepo;
+    }
+
+    public IProductRepo getProductRepo() {
+        return productRepo;
     }
 
     @Override
@@ -71,7 +74,7 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> searchByName(String productName) {
-        Collection<Restaurant> restaurants = restaurantRepo.findAll();
+        Collection<Restaurant> restaurants = Application.getServiceFactory().getRestaurantService().findAll();
         List<Product> products = new ArrayList<>();
 
         for (Restaurant restaurant : restaurants) {

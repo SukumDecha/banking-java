@@ -77,8 +77,11 @@ public class DatabaseConnection {
                 "CREATE TABLE IF NOT EXISTS CustomerOrder (" +
                         "id VARCHAR(10) PRIMARY KEY," +
                         "userId VARCHAR(10)," +
+                        "orderAt BIGINT," +
                         "restaurantId VARCHAR(10)," +
+                        "restaurantName VARCHAR(100)," +
                         "status VARCHAR(50)," +
+                        "productMap TEXT," +
                         "FOREIGN KEY (userId) REFERENCES User(id)," +
                         "FOREIGN KEY (restaurantId) REFERENCES Restaurant(id)" +
                         ")"

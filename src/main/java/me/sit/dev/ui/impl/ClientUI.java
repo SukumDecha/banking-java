@@ -270,7 +270,7 @@ public class ClientUI extends BaseUI {
             while (true) {
                 showAllProducts();
                 Scanner scFood = new Scanner(System.in);
-                System.out.print("Select menu : ");
+                System.out.print("Select menu [enter id]: ");
                 while (!scFood.hasNextInt()) {
                     System.out.println("[!] You can enter 0 to end this process");
                     System.out.print("[!] Please try again (input number): ");
@@ -353,10 +353,22 @@ public class ClientUI extends BaseUI {
                         }
 
                         Restaurant currentRestaurant = restaurantService.findById(Session.getCurrentSession().getRestaurantId());
-                        orderService.createOrder(currentUser, currentRestaurant);
+                        Order order = orderService.createOrder(currentUser, currentRestaurant);
 
+                        for(Product product : currentRestaurant.getProducts()) {
+                            for (Product cartProduct : order.getProducts().keySet()) {
+                                if (product.getId().equals(cartProduct.getId())) {
+                                    productService.updateProduct(currentRestaurant.getId(), product.getId(), product);
+                                    System.out.println("Passed productService.updateProduct");
+                                }
+                            }
+                        }
+
+                        System.out.println("Passed productService.updateProduct");
                         restaurantService.updateRestaurant(currentRestaurant.getId(), currentRestaurant);
+                        System.out.println("Passed restaurantService.updateRestaurant");
                         userService.update(currentUser.getId(), currentUser);
+                        System.out.println("Passed userService.update");
                         statusCart = false;
                         break;
                     case 5:

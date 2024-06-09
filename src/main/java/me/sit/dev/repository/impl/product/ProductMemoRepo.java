@@ -42,7 +42,6 @@ public class ProductMemoRepo implements IProductRepo {
         if (!productMap.containsKey(productId)) {
             throw new InvalidInputException("Product not found");
         }
-
         productMap.put(productId, updatedProduct);
         return updatedProduct;
     }

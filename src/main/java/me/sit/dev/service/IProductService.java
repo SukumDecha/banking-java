@@ -13,4 +13,6 @@ public interface IProductService extends IProductRepo  {
 
     List<Product> searchByName(String productName);
 
+    IProductRepo getProductRepo();
+
 }

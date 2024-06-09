@@ -33,9 +33,10 @@ public class ServiceFactory {
         this.repositoryType = repositoryType;
 
         userService = createUserService();
-        restaurantService = createRestaurantService();
         productService = createProductService();
         orderService = createOrderService(productService);
+        restaurantService = createRestaurantService();
+
         cartService = new CartService();
     }
 
@@ -59,7 +60,7 @@ public class ServiceFactory {
             case FILE:
                 return new RestaurantService(new RestaurantFileRepo());
             case DATABASE:
-                return new RestaurantService(new RestaurantDatabaseRepo());
+                return new RestaurantService(new RestaurantDatabaseRepo(orderService.getOrderRepo(), productService.getProductRepo()));
             default:
                 throw new InvalidRepositoryException();
         }
@@ -79,15 +80,13 @@ public class ServiceFactory {
     }
 
     public IProductService createProductService() {
-        IRestaurantRepo restaurantRepo = restaurantService.getRestaurantRepository();
-
         switch (repositoryType) {
             case MEMO:
-                return new ProductService(new ProductMemoRepo(), restaurantRepo);
+                return new ProductService(new ProductMemoRepo());
             case FILE:
-                return new ProductService(new ProductFileRepo(), restaurantRepo);
+                return new ProductService(new ProductFileRepo());
             case DATABASE:
-                return new ProductService(new ProductDatabaseRepo(), restaurantRepo);
+                return new ProductService(new ProductDatabaseRepo());
             default:
                 throw new InvalidRepositoryException();
         }

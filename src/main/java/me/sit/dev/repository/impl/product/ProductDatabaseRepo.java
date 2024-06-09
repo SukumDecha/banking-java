@@ -72,6 +72,7 @@ public class ProductDatabaseRepo extends ProductMemoRepo implements IProductRepo
     @Override
     public Product updateProduct(String restaurantId, String productId, Product product) {
         product = super.updateProduct(restaurantId, productId, product);
+
         String sql = "UPDATE Product SET name = ?, price = ?, quantity = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, product.getName());

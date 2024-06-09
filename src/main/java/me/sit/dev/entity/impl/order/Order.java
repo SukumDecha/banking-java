@@ -14,26 +14,29 @@ public class Order extends BaseEntity implements Comparable<Order> {
 
     private Map<Product, Integer> products;
     private OrderStatus status;
-    private final long orderAt = System.currentTimeMillis();
+    private long orderAt = System.currentTimeMillis();
 
     public Order(User user, Cart cart, String restaurantId, String restaurantName) {
         super("order-" + user.getId() + "-" + user.getOrders().size());
         this.ownerId = user.getId();
         this.restaurantId = restaurantId;
         this.restaurantName = restaurantName;
+        this.status = OrderStatus.CONFIRMED;
 
         Map<Product, Integer> productMap = new HashMap<>();
-        cart.getProducts().forEach(productMap::put);
 
+        cart.getProducts().forEach((product, quantity) -> productMap.put(product, quantity));
         this.products = productMap;
     }
 
-    public Order(String id, String ownerId, String restaurantId, String restaurantName, Map<Product, Integer> productMap, String status) {
+    public Order(String id, String ownerId, String restaurantId, String restaurantName, Map<Product, Integer> productMap, String status
+    , long orderAt) {
         super(id);
         this.ownerId = ownerId;
         this.restaurantId = restaurantId;
         this.restaurantName = restaurantName;
         this.status = OrderStatus.valueOf(status);
+        this.orderAt = orderAt;
 
         this.products = productMap;
     }
@@ -50,10 +53,6 @@ public class Order extends BaseEntity implements Comparable<Order> {
         return orderAt;
     }
 
-    public void confirmOrder() {
-        status = OrderStatus.CONFIRMED;
-    }
-
     public String getRestaurantId() {
         return restaurantId;
     }
@@ -64,14 +63,6 @@ public class Order extends BaseEntity implements Comparable<Order> {
 
     public Map<Product, Integer> getProducts() {
         return products;
-    }
-
-    public void deliverOrder() {
-        status = OrderStatus.DELIVERED;
-    }
-
-    public void cancelOrder() {
-        status = OrderStatus.CANCELLED;
     }
 
     public double getTotalPrice() {
