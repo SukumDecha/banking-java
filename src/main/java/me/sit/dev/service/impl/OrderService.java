@@ -7,10 +7,7 @@ import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.repository.IOrderRepo;
 import me.sit.dev.service.IOrderService;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class OrderService implements IOrderService {
 
@@ -93,14 +90,14 @@ public class OrderService implements IOrderService {
         System.out.println("[S] Order ID: " + order.getId());
         System.out.println("[S] Restaurant Name: " + order.getRestaurantName() + " (" + order.getRestaurantId() + ")");
         System.out.println();
-        System.out.println("[S] Estimated Delivery Time: 30 minutes");
+        System.out.println("[S] Estimated Delivery Time: 1 minutes");
         System.out.println("[S] Total Price: " + order.getTotalPrice());
         System.out.println("[S] ----------------------");
     }
 
     @Override
     public void showOrderDetails(Order order, boolean showStatus) {
-        System.out.println("[S] --- Order Details ---");
+        System.out.println("[S] ------ Order Details ------");
         System.out.println("[S] Order ID: " + order.getId());
         System.out.println("[S] Restaurant Name: " + order.getRestaurantName() + " (" + order.getRestaurantId() + ")");
         System.out.println();
@@ -112,7 +109,7 @@ public class OrderService implements IOrderService {
         if (showStatus) {
             System.out.println("[S] Status: " + order.getStatus());
         }
-        System.out.println("[S] ----------------------");
+        System.out.println("[S] ----------------------------\n");
     }
 
 }

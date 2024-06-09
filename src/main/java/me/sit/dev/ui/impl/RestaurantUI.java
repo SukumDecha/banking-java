@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class RestaurantUI extends BaseUI {
 
     private Scanner sc = new Scanner(System.in);
-    private LoginUI loginUI;
+    private me.sit.dev.ui.impl.LoginUI loginUI;
 
     private static String Program_prompt = """
                                 
@@ -74,7 +74,6 @@ public class RestaurantUI extends BaseUI {
                     break;
                 case 5:
                     deleteRestaurant();
-
                     break;
                 case 6:
                     System.out.println("Going back to main menu");
@@ -147,55 +146,55 @@ public class RestaurantUI extends BaseUI {
 
             if (product != null) {
                 System.out.println("Current name: " + product.getName());
-                System.out.println("Enter new name (or press enter to keep current): ");
-                String newName = sc.nextLine();
-                if (!newName.isEmpty()) {
+                System.out.print("Enter new name (or press enter to keep current): ");
+                Scanner editSc=new Scanner(System.in);
+                String newName=editSc.nextLine();
+                if (editSc.hasNextLine()&&!editSc.nextLine().isEmpty()) {
                     product.setName(newName);
                 }
 
-                System.out.println("Current price: " + product.getPrice());
-                System.out.println("Enter new price (or press enter to keep current): ");
-                String newPriceInput;
-                double newPrice = product.getPrice(); // Default to current price
-                while (true) {
-                    newPriceInput = sc.nextLine();
-                    if (newPriceInput.isEmpty()) {
-                        break; // Keep current price
-                    }
-                    try {
-                        newPrice = Double.parseDouble(newPriceInput);
-                        if (newPrice <= 0) {
-                            System.out.println("Price must be greater than 0. Please enter a valid price.");
-                        } else {
-                            break;
-                        }
-                    } catch (NumberFormatException e) {
-                        System.out.println("Please enter a valid number for the price.");
-                    }
-                }
-                product.setPrice(newPrice);
-
-                System.out.println("Current quantity: " + product.getQuantity());
+                System.out.println("\nCurrent quantity: " + product.getQuantity());
                 System.out.println("Enter new quantity (or press enter to keep current): ");
-                String newQuantityInput;
-                int newQuantity = product.getQuantity(); // Default to current quantity
+                int newQuantity;
                 while (true) {
-                    newQuantityInput = sc.nextLine();
-                    if (newQuantityInput.isEmpty()) {
-                        break; // Keep current quantity
-                    }
-                    try {
-                        newQuantity = Integer.parseInt(newQuantityInput);
-                        if (newQuantity < 0) {
-                            System.out.println("Quantity must be a non-negative number. Please enter a valid quantity.");
-                        } else {
-                            break;
+                    if (editSc.hasNextLine()||!editSc.nextLine().isEmpty()) {
+                        String newQuantityInput=editSc.nextLine();
+                        try {
+                            newQuantity = Integer.parseInt(newQuantityInput);
+                            if (newQuantity < 0) {
+                                System.out.println("Quantity must be a non-negative number. Please enter a valid quantity.");
+                            } else {
+                                product.setQuantity(newQuantity);
+                                break;
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please enter a valid number for the quantity.");
+                            System.out.print("Try again : ");
                         }
-                    } catch (NumberFormatException e) {
-                        System.out.println("Please enter a valid number for the quantity.");
                     }
                 }
-                product.setQuantity(newQuantity);
+
+                System.out.println("\nCurrent price: " + product.getPrice());
+                System.out.print("Enter new price (or press enter to keep current): ");
+                double newPrice ;
+                while(true){
+                    if (editSc.hasNextLine()||!editSc.nextLine().isEmpty()){
+                        String newPriceInput=editSc.nextLine();
+                        try {
+                            newPrice = Double.parseDouble(newPriceInput);
+                            if (newPrice <= 0) {
+                                System.out.println("Price must be greater than 0. Please enter a valid price.");
+                            } else {
+                                product.setPrice(newPrice);
+                                break;
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please enter a valid number for the price.");
+                            System.out.print("Try again : ");
+                        }
+                    }
+                }
+
 
                 productService.updateProduct(restaurantId, productId, product);
 
@@ -257,6 +256,7 @@ public class RestaurantUI extends BaseUI {
                 restaurantService.deleteRestaurant(restaurantId);
                 userService.update(currentUser.getId(), currentUser);
                 System.out.println("Restaurant removed successfully!");
+                loginUI.semiMenu();
             } catch (Exception e) {
                 System.err.println("Error deleting restaurant: " + e.getMessage());
             }

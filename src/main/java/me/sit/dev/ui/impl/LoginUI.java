@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class LoginUI extends BaseUI {
 
-    private final ClientUI clientUI;
+    private final me.sit.dev.ui.impl.ClientUI clientUI;
     private final RestaurantUI restaurantUI;
     private final String login_Prompt = """
             -------------- AUTH MENU --------------
@@ -25,7 +25,7 @@ public class LoginUI extends BaseUI {
                         1. Client
                         2. Restaurant       
                         3. Logout 
-            -----------------------------------      
+            ----------------------------------      
             """;
 
     public LoginUI(ClientUI clientUI, RestaurantUI restaurantUI, ServiceFactory serviceFactory) {
@@ -37,12 +37,12 @@ public class LoginUI extends BaseUI {
 
     @Override
     public void show() {
-        System.out.println("--- Login UI ---");
+        System.out.println("\n\t\t\t--- Login UI ---\n");
         System.out.println(login_Prompt);
-        System.out.println("please Enter 1/2/3");
+        System.out.print("please Enter 1|2|3 : ");
         Scanner sc = new Scanner(System.in);
         while (!sc.hasNext("[1|2|3]")) {
-            System.out.println("please try again");
+            System.out.print("please try again(Enter 1|2|3) : ");
             sc.next();
         }
         int loginSelected = sc.nextInt();
@@ -56,13 +56,15 @@ public class LoginUI extends BaseUI {
                         System.out.print("Enter your password : ");
                         String password = sc.next();
                         if (userService.login(email, password)) {
-                            System.out.println("Login successful");
+                            System.out.println("----------------------------------");
+                            System.out.println("\t\t Login successful");
+                            System.out.println("----------------------------------");
                             sc.nextLine();
                             break;
                         }
                     } catch (InvalidPasswordException | UserNotFoundException e) {
                         System.out.println("Error: " + e.getMessage());
-                        System.out.println("You can enter 0 to end this process. Otherwise, press any key to try again.");
+                        System.out.println("\nYou can enter 0 to end this process.\nOtherwise, press any key to try again.");
                         if (sc.next().equals("0")) {
                             System.out.println("Exiting from program");
                             show();
@@ -72,20 +74,24 @@ public class LoginUI extends BaseUI {
                 }
                 break;
             case 2: // register
-                System.out.println("Enter your name:");
+                System.out.print("Enter your name : ");
                 String name = sc.next();
-
                 while (true) {
                     try {
-                        System.out.println("Enter your email:");
+                        System.out.print("Enter your email : ");
                         String saveEmail = sc.next();
+                        if (saveEmail.equals("0")){
+                            show();
+                            break;
+                        }
                         if (userService.existsByEmail(saveEmail)) {
-                            System.out.println("Error: This email already exists");
+                            System.out.println("\nError: This email already exists");
+                            System.out.println("You can enter 0 to cancel this program");
                             continue;
                         }
-                        System.out.println("Enter your password:");
+                        System.out.print("Enter your password : ");
                         String savePassword = sc.next();
-                        System.out.println("Are you admin: (yes/no)");
+                        System.out.print("Are you admin (yes/no) : ");
                         while (!sc.hasNext("(?i)Yes|(?i)No")) {
                             sc.next();
                         }
@@ -137,7 +143,9 @@ public class LoginUI extends BaseUI {
             }
         } else {
             userService.logout();
-            System.out.println("Logout successful");
+            System.out.println("----------------------------------");
+            System.out.println("\t\t Logout successful");
+            System.out.println("----------------------------------");
             show();
         }
     }

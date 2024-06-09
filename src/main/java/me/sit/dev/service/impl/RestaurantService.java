@@ -164,11 +164,9 @@ public class RestaurantService implements IRestaurantService {
             System.out.println("No products available for restaurant: " + restaurant.getName());
         } else {
             System.out.println("Products available for restaurant: " + restaurant.getName());
+            System.out.println("Product ID  | Name    |  Quantity   | Price");
             products.forEach(product -> {
-                System.out.println("Product ID: " + product.getId() +
-                        ", Name: " + product.getName() +
-                        ", Price: " + product.getPrice() +
-                        ", Quantity: " + product.getQuantity());
+                System.out.println(String.format("%-11s | %-7s | %-12d| %-6f ",product.getId(),product.getName(),product.getQuantity(),product.getPrice()));
             });
         }
     }

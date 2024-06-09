@@ -44,7 +44,7 @@ public class ProductDatabaseRepo extends ProductMemoRepo implements IProductRepo
                 productMap.put(id, product);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error loading products from database: " + e.getMessage());
         }
     }
 
@@ -63,7 +63,7 @@ public class ProductDatabaseRepo extends ProductMemoRepo implements IProductRepo
                 throw new SQLException("Creating product failed, no rows affected.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error adding product to database: " + e.getMessage());
         }
         return product;
     }
@@ -82,7 +82,7 @@ public class ProductDatabaseRepo extends ProductMemoRepo implements IProductRepo
                 throw new SQLStatementException("Update Product failed, no row affected");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error updating product in database: " + e.getMessage());
         }
         return product;
     }
@@ -99,7 +99,7 @@ public class ProductDatabaseRepo extends ProductMemoRepo implements IProductRepo
                 throw new SQLStatementException("Delete Product failed, no row affected");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error deleting product from database: " + e.getMessage());
         }
         return productMap.get(productId);
     }

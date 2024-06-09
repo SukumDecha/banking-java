@@ -74,7 +74,9 @@ public class ClientUI extends BaseUI {
     @Override
     public void show() {
         try {
-            System.out.println("Client UI");
+            System.out.println("\n---------------------------------------");
+            System.out.println("\t\t\t   Client UI");
+            System.out.print("---------------------------------------");
             showMainMenu();
         } catch (Exception e) {
             System.out.println("An error occurred while showing the UI: " + e.getMessage());
@@ -88,13 +90,13 @@ public class ClientUI extends BaseUI {
                 System.out.println("No restaurants available.");
                 return false;
             }
-            System.out.println("Available restaurants:");
+            System.out.println("------ Available restaurants ------");
             int count = 1;
             for (Restaurant restaurant : restaurants) {
-                System.out.println(count + ". " + restaurant.getName());
+                System.out.println("\t\t"+count + ". " + restaurant.getName());
                 count++;
             }
-
+            System.out.println("-----------------------------------");
             return true;
         } catch (Exception e) {
             System.out.println("An error occurred while fetching restaurants: " + e.getMessage());
@@ -106,7 +108,7 @@ public class ClientUI extends BaseUI {
         try {
             List<Restaurant> restaurants = restaurantService.findAll().stream().toList();
 
-            System.out.print("Please select a restaurant by number: ");
+            System.out.print("Please select a restaurant by number : ");
             while (true) {
                 while (!sc.hasNextInt()) {
                     System.out.print("Invalid selection. Please try again: ");
@@ -183,6 +185,7 @@ public class ClientUI extends BaseUI {
             currentUser.setRestaurant(restaurant);
             userService.update(currentUser.getId(), currentUser);
             System.out.println("Restaurant created successfully.");
+
         } catch (Exception e) {
             System.out.println("An error occurred while creating a restaurant: " + e.getMessage());
         }
@@ -216,7 +219,7 @@ public class ClientUI extends BaseUI {
                 orderSelected = sc.nextInt();
                 switch (orderSelected) {
                     case 1:
-                        System.out.println("order food method");
+                        System.out.println("------- order food method -------");
                         orderfood();
                         continue;
                     case 2:
@@ -242,7 +245,6 @@ public class ClientUI extends BaseUI {
         try {
             String currentRestaurantId = Session.getCurrentSession().getRestaurantId();
             User currentUser = Session.getCurrentSession().getUser();
-
             while (true) {
                 showAllProducts();
                 Scanner scFood = new Scanner(System.in);
@@ -251,17 +253,17 @@ public class ClientUI extends BaseUI {
                     System.out.println("you can enter 0 to end this process");
                     System.out.print("please try again (input number): ");
                     scFood.next();
-                    if (scFood.hasNext("0")) {
-                        break;
-                    }
                 }
-
+                if (scFood.hasNext("0")){
+                    break;
+                }
                 int productIndex = scFood.nextInt() - 1;
                 List<Product> products = productService.findAll(currentRestaurantId);
                 if (productIndex >= 0 && productIndex < products.size()) {
                     Product selectedProduct = products.get(productIndex);
                     Session.getCurrentSession().setSelectingProduct(selectedProduct);
-                    System.out.println("Show all details of that food");
+
+                    System.out.println(" ");
                     orderService.showOrderDetails(new Order(currentUser, currentUser.getCart(),
                             currentRestaurantId, selectedProduct.getName()), false);
                     addToCart();
@@ -331,7 +333,7 @@ public class ClientUI extends BaseUI {
             User currentUser = Session.getCurrentSession().getUser();
             Product currentProduct = Session.getCurrentSession().getSelectingProduct();
 
-            System.out.println("Enter the quantity: ");
+            System.out.print("Enter the quantity: ");
             while (!sc.hasNextInt()) {
                 System.out.print("Invalid input. Please enter a number: ");
                 sc.next();
@@ -403,7 +405,7 @@ public class ClientUI extends BaseUI {
 
             showAllProductsInCart();
             Scanner scEditAmount = new Scanner(System.in);
-            System.out.print("Select the product to edit amount: ");
+            System.out.print("\nSelect the product to edit amount: ");
             while (!scEditAmount.hasNextInt()) {
                 System.out.print("Invalid selection. Please try again: ");
                 scEditAmount.next();
@@ -450,7 +452,7 @@ public class ClientUI extends BaseUI {
 
             showAllProductsInCart();
             Scanner scRemoveProduct = new Scanner(System.in);
-            System.out.print("Select the product to remove: ");
+            System.out.print("\nSelect the product to remove: ");
             while (!scRemoveProduct.hasNextInt()) {
                 System.out.print("Invalid selection. Please try again: ");
                 scRemoveProduct.next();
@@ -474,7 +476,7 @@ public class ClientUI extends BaseUI {
             String currentRestaurantId = Session.getCurrentSession().getRestaurantId();
             Collection<Product> products = productService.findAll(currentRestaurantId);
             if (products.isEmpty()) {
-                System.out.println("No products available.");
+                System.out.println("\nNo products available.\n");
                 return;
             }
             System.out.println("Available products:");

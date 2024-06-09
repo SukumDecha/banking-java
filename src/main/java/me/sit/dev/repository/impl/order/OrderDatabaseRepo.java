@@ -47,7 +47,7 @@ public class OrderDatabaseRepo extends OrderMemoRepo {
                 orderMap.put(id, order);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error loading orders from database: " + e.getMessage());
         }
     }
 
@@ -72,7 +72,7 @@ public class OrderDatabaseRepo extends OrderMemoRepo {
 
             return order;
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error creating order in database: " + e.getMessage());
         }
 
         return null;
