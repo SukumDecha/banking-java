@@ -36,7 +36,7 @@ public class RestaurantService implements IRestaurantService {
      */
     @Override
     public Restaurant updateRestaurant(String id, Restaurant restaurant) {
-        return restaurantRepository.updateRestaurant(id,restaurant);
+        return null;
     }
 
     /**
@@ -47,7 +47,7 @@ public class RestaurantService implements IRestaurantService {
      */
     @Override
     public Restaurant deleteRestaurant(String id) {
-        return restaurantRepository.deleteRestaurant(id);
+        return null;
     }
 
     /**
@@ -58,7 +58,7 @@ public class RestaurantService implements IRestaurantService {
      */
     @Override
     public Restaurant findById(String id) {
-        return restaurantRepository.findById(id);
+        return null;
     }
 
     /**
@@ -69,7 +69,7 @@ public class RestaurantService implements IRestaurantService {
      */
     @Override
     public Restaurant findByName(String name) {
-        return restaurantRepository.findByName(name);
+        return null;
     }
 
     /**
@@ -80,7 +80,7 @@ public class RestaurantService implements IRestaurantService {
      */
     @Override
     public Restaurant findByOwnerId(String ownerId) {
-        return restaurantRepository.findByOwnerId(ownerId);
+        return null;
     }
 
     /**
@@ -91,7 +91,7 @@ public class RestaurantService implements IRestaurantService {
      */
     @Override
     public Restaurant findByProduct(String productId) {
-        return restaurantRepository.findByProduct(productId);
+        return null;
     }
 
     /**
@@ -101,7 +101,7 @@ public class RestaurantService implements IRestaurantService {
      */
     @Override
     public Collection<Restaurant> findAll() {
-        return restaurantRepository.findAll();
+        return null;
     }
 
     /**
@@ -112,7 +112,7 @@ public class RestaurantService implements IRestaurantService {
      */
     @Override
     public Collection<Restaurant> findByRating(int rating) {
-        return restaurantRepository.findByRating(rating);
+        return null;
     }
 
     /**
@@ -123,7 +123,7 @@ public class RestaurantService implements IRestaurantService {
      */
     @Override
     public boolean existsById(String id) {
-        return restaurantRepository.existsById(id);
+        return false;
     }
 
     /**
