@@ -1,8 +1,14 @@
 package me.sit.dev.ui.impl;
 
+import me.sit.dev.entity.impl.Product;
+import me.sit.dev.entity.impl.Restaurant;
+import me.sit.dev.entity.impl.Session;
+import me.sit.dev.entity.impl.user.User;
 import me.sit.dev.service.ServiceFactory;
 import me.sit.dev.ui.BaseUI;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Scanner;
 
 public class AdminUI extends BaseUI {
@@ -21,19 +27,18 @@ public class AdminUI extends BaseUI {
                                 
             ----- Editing User ----
                1. List all user
-               2. Edit user
-               3. Delete user
-               4. Go back
+               2. Delete user
+               3. Go back
             -----------------------
             """;
     private final String editingRestaurantUIPrompt = """
                                 
             ------- Editing Restaurant ----------
-                      1. Edit name
-                      2. Edit product
-                      3. Remove product
-                      4. delete restaurant
-                      5. Go back
+                1. Edit name
+                2. Edit product
+                3. Remove product
+                4. delete restaurant
+                5. Go back
             -------------------------------------
             """;
     public AdminUI(ServiceFactory serviceFactory) {
@@ -111,14 +116,13 @@ public class AdminUI extends BaseUI {
                 switch (editUserSelected){
                     case 1:
                         System.out.println("------ List all user ------");
+                        listAllUser();
                         continue;
                     case 2:
-                        System.out.println("------ Edit user ------");
+                        System.out.println("------ Delete user ------");
+                        deleteUser();
                         continue;
                     case 3:
-                        System.out.println("------ Delete user ------");
-                        continue;
-                    case 4:
                         System.out.println("------ go back ------");
                         editUserStatus=false;
                         showAdminMenu();
@@ -176,13 +180,36 @@ public class AdminUI extends BaseUI {
         }
     }
 
-    public void addRestaurant() {
-        System.out.println("Add a new restaurant method");
+    public void listAllUser() {
+        System.out.println("------------------------------------------------------------------------------------------");
+        System.out.println("User ID     | Name    |  Role        | Email           | Password        | RestaurantID");
+        System.out.println("------------------------------------------------------------------------------------------");
+        userService.findAll().forEach(x -> System.out.printf("%-11s | %-7s | %-12s | %-15s | %-15s | %-12s%n",
+                x.getId(), x.getName(), x.getRole(), x.getEmail(), x.getPassword(), x.getRestaurantId()));
     }
 
-    public void updateRestaurant() {
-        System.out.println("Update a restaurant method");
-    }
+    public void deleteUser() {
+            listAllUser();
+            System.out.println("Enter the User ID you want to delete: ");
+            String userId = sc.next();
+            User currentUsers = userService.findById(userId);
+            if (currentUsers != null) {
+                System.out.println("Current name: " + currentUsers.getName());
+                System.out.print("Enter name to delete(or press enter to keep User): ");
+                Scanner editSc = new Scanner(System.in);
+
+                if (editSc.hasNextLine()) {
+                    String newName = editSc.nextLine();
+                    if (!newName.isEmpty()) {
+                        userService.delete(currentUsers);
+                        System.out.println("----------------------------------");
+                        System.out.println("\t\t Delete successful");
+                        System.out.println("----------------------------------");
+
+                    }
+                }
+            }
+        }
 
     public void deleteRestaurant() {
         System.out.println("Delete a restaurant method");
