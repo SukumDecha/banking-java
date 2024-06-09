@@ -41,7 +41,10 @@ public class RestaurantUI extends BaseUI {
         User currentUser = Session.getCurrentSession().getUser();
         Session.getCurrentSession().setRestaurantId(currentUser.getRestaurantId());
 
-        System.out.println("Restaurant UI");
+        System.out.println("\n---------------------------------------");
+        System.out.println("\t  Restaurant UI");
+        System.out.print("---------------------------------------");
+        System.out.println();
         System.out.println(Program_prompt);
         System.out.print("Choose your program : ");
         while (!sc.hasNext("[1|2|3|4|5|6|7]")) {
@@ -275,7 +278,6 @@ public class RestaurantUI extends BaseUI {
         int maxPage = restaurantService.showOrderPagination(restaurantId, 1, 5);
 
         while (true) {
-
             System.out.println("Enter page number or 0 to go back: ");
             int page = sc.nextInt();
             if (page == 0) {

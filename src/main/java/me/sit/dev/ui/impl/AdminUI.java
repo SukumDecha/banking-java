@@ -44,7 +44,7 @@ public class AdminUI extends BaseUI {
     public void show() {
         try {
             System.out.println("\n---------------------------------------");
-            System.out.println("\t\t\t   Admin UI");
+            System.out.println("\t\t   Admin UI");
             System.out.print("---------------------------------------");
             showAdminMenu();
         } catch (Exception e) {
@@ -72,7 +72,7 @@ public class AdminUI extends BaseUI {
                     case "3" :
                         userService.logout();
                         System.out.println("----------------------------------");
-                        System.out.println("\t\t Logout successful");
+                        System.out.println("\t Logout successful");
                         System.out.println("----------------------------------");
                         entityChoice="0";
                         loginUI.show();

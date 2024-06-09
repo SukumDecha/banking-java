@@ -9,7 +9,6 @@ import me.sit.dev.ui.impl.LoginUI;
 import me.sit.dev.ui.impl.RestaurantUI;
 
 import java.io.*;
-import java.sql.Connection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -49,7 +48,7 @@ public class Application {
         public static RepositoryType repositoryType;
 
         public static void load() {
-            try (InputStream input = Application.class.getResourceAsStream("/config.properties");
+            try (InputStream input = new BufferedInputStream(new FileInputStream("config/config.properties"));
                  BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
 
                 Map<String, String> propertiesMap = reader.lines()
@@ -63,7 +62,7 @@ public class Application {
                 PASS = propertiesMap.get("jdbc.password");
                 JDBC_DRIVER = propertiesMap.get("jdbc.driver");
                 repositoryType = RepositoryType.valueOf(propertiesMap.get("repository.type"));
-
+                System.out.println("Repository type: " + repositoryType);
             } catch (IOException ex) {
                 throw new RuntimeException("Failed to load properties or JDBC driver!", ex);
             }

@@ -14,6 +14,9 @@ public class UserFileRepo extends UserMemoRepo implements IUserRepo {
         File file = new File(path);
         if (!file.exists()) {
             file.mkdirs();
+            System.out.println("Directory created: " + file.getAbsolutePath());
+        } else {
+            System.out.println("Directory already exists: " + file.getAbsolutePath());
         }
 
         File[] files = file.listFiles();
@@ -34,10 +37,15 @@ public class UserFileRepo extends UserMemoRepo implements IUserRepo {
         super.save(user);
 
         File file = getFileFromUser(user);
+        if(!file.exists()) {
+            file.getParentFile().mkdirs();
+            System.out.println("Creating new file: " + file.getAbsolutePath());
+        }
 
         try (ObjectOutputStream writer = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
             writer.writeObject(user);
             writer.flush();
+            System.out.println("User saved to file: " + file.getAbsolutePath());
         } catch (Exception e) {
             System.err.println("Error writing to file: " + e.getMessage());
         }
