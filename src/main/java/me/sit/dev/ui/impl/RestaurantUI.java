@@ -19,10 +19,11 @@ public class RestaurantUI extends BaseUI {
             -------------- MAIN MENU --------------
                           1. Add Food         
                           2. Edit Food
-                        3. Show All Food
-                        4. Show history
-                     5. Delete Restaurant
-                        6. Go back
+                          3. Delete Food
+                        4. Show All Food
+                        5. Show history
+                     6. Delete Restaurant
+                        7. Go back
             ---------------------------------------       
             """;
 
