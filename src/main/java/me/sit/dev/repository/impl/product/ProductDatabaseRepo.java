@@ -70,7 +70,7 @@ public class ProductDatabaseRepo extends ProductMemoRepo implements IProductRepo
 
     @Override
     public Product updateProduct(String restaurantId, String productId, Product product) {
-        super.updateProduct(restaurantId, productId, product);
+        product = super.updateProduct(restaurantId, productId, product);
         String sql = "UPDATE Product SET name = ?, price = ?, quantity = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, product.getName());
@@ -89,7 +89,7 @@ public class ProductDatabaseRepo extends ProductMemoRepo implements IProductRepo
 
     @Override
     public Product deleteProduct(String restaurantId, String productId) {
-        super.deleteProduct(restaurantId, productId);
+        Product product = super.deleteProduct(restaurantId, productId);
 
         String sql = "DELETE FROM Product WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -101,6 +101,7 @@ public class ProductDatabaseRepo extends ProductMemoRepo implements IProductRepo
         } catch (SQLException e) {
             System.out.println("Error deleting product from database: " + e.getMessage());
         }
-        return productMap.get(productId);
+
+        return product;
     }
 }

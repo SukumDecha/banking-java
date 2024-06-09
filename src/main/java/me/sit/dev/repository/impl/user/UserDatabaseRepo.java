@@ -49,7 +49,7 @@ public class UserDatabaseRepo extends UserMemoRepo implements IUserRepo {
 
     @Override
     public User save(User user) {
-        super.save(user);
+        user = super.save(user);
 
         String sql = "INSERT INTO User (name, email, password, role) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -61,14 +61,8 @@ public class UserDatabaseRepo extends UserMemoRepo implements IUserRepo {
             if (affectedRows == 0) {
                 throw new SQLException("Creating user failed, no rows affected.");
             }
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    String generatedId = String.valueOf(generatedKeys.getInt(1));
-                    return new User(generatedId, user.getName(), user.getEmail(), user.getPassword(), user.getRole());
-                } else {
-                    throw new SQLException("Creating user failed, no ID obtained.");
-                }
-            }
+
+            return user;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -78,7 +72,7 @@ public class UserDatabaseRepo extends UserMemoRepo implements IUserRepo {
 
     @Override
     public User update(String userId, User user) {
-        super.update(userId, user);
+        user = super.update(userId, user);
 
         String sql = "UPDATE User SET name = ?, email = ?, password = ?, role = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -98,7 +92,7 @@ public class UserDatabaseRepo extends UserMemoRepo implements IUserRepo {
 
     @Override
     public void delete(User user) {
-        deleteById(user.getId());
+        super.delete(user);
 
         String sql = "DELETE FROM User WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
