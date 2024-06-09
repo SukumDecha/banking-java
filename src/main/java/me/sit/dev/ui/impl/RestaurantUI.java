@@ -145,7 +145,7 @@ public class RestaurantUI extends BaseUI {
             showAllFood();
             System.out.println("Enter the product ID you want to edit: ");
             String productId = sc.next();
-            Product product = productService.findById(restaurantId, productId);
+            Product product = productService.findById(productId);
 
             if (product != null) {
                 System.out.println("Current name: " + product.getName());

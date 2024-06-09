@@ -47,6 +47,8 @@ public class ProductMemoRepo implements IProductRepo {
         }
 
         if (!existsById(productId)) {
+            Product product = findById(productId);
+            System.out.println(product);
             throw new InvalidInputException("Product not found");
         }
 

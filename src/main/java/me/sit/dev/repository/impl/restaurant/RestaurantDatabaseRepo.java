@@ -66,7 +66,7 @@ public class RestaurantDatabaseRepo extends RestaurantMemoRepo implements IResta
 
                     while (rs3.next()) {
                         String productId = rs3.getString("id");
-                        Product product = productRepo.findById(restaurant.getId(), productId);
+                        Product product = productRepo.findById(productId);
                         products.add(product);
                     }
 

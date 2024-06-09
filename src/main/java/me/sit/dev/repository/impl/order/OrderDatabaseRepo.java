@@ -132,7 +132,7 @@ public class OrderDatabaseRepo extends OrderMemoRepo {
             String[] entry = pair.split("&&");
             String[] productEntry = entry[1].split("=");
 
-            Product product = productRepo.findById(entry[0], productEntry[0]);
+            Product product = productRepo.findById(productEntry[0]);
             int amount = Integer.parseInt(productEntry[1]);
 
             parsedHashMap.put(product, amount);
