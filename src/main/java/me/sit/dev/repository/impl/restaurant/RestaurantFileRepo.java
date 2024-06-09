@@ -6,7 +6,7 @@ import me.sit.dev.repository.IRestaurantRepo;
 import java.io.*;
 
 public class RestaurantFileRepo extends RestaurantMemoRepo implements IRestaurantRepo {
-    private final String path = "src/main/resources/restaurants/";
+    private final String path = "restaurants/";
 
     public RestaurantFileRepo() {
         super();

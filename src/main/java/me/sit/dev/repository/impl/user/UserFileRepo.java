@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserFileRepo extends UserMemoRepo implements IUserRepo {
-    private final String path = "src/main/resources/users/";
+    private final String path = "users/";
 
     public UserFileRepo() {
         File file = new File(path);
@@ -38,6 +38,8 @@ public class UserFileRepo extends UserMemoRepo implements IUserRepo {
         try (ObjectOutputStream writer = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
             writer.writeObject(user);
             writer.flush();
+            writer.close();
+            System.out.println("User saved to file: " + file.getPath());
         } catch (Exception e) {
             System.err.println("Error writing to file: " + e.getMessage());
         }
@@ -47,9 +49,9 @@ public class UserFileRepo extends UserMemoRepo implements IUserRepo {
 
     @Override
     public User update(String userId, User user) {
-        super.update(userId, user);
+        User updatedUser = super.update(userId, user);
 
-        return save(user);
+        return save(updatedUser);
     }
 
 
@@ -78,7 +80,7 @@ public class UserFileRepo extends UserMemoRepo implements IUserRepo {
     }
 
     private File getFileFromUser(User user) {
-        return new File(path + user.getName() + "-" + user.getId() + ".txt");
+        return new File(path + user.getName() + "-" + user.getId() + ".ser");
     }
 
 }

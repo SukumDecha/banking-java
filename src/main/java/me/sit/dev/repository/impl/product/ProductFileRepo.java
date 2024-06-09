@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ProductFileRepo extends ProductMemoRepo {
 
-    private final String path = "src/main/resources/products/";
+    private final String path = "products/";
 
     public ProductFileRepo() {
         super();

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class OrderFileRepo extends OrderMemoRepo {
-    private final String path = "src/main/resources/orders/";
+    private final String path = "orders/";
 
     public OrderFileRepo() {
         super();

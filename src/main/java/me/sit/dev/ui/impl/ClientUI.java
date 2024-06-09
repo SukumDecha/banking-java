@@ -38,28 +38,28 @@ public class ClientUI extends BaseUI {
     private final String selectMenuPrompt = """
                     
             -------------- Select Food Menu --------------
-                            1. Select food      
-                            2. Back to OrderUI
+                         1. Select food      
+                         2. Back to OrderUI
             ----------------------------------------------       
             """;
 
     private final String cartMenuPrompt = """
                     
-            -------------- Cart Menu -------------------
-                            1. Show cart info
-                            2. Edit cart
-                            3. Clear cart
-                            4. Check-out (Pay-bill)
-                            5. Back to Select Food Menu
-            --------------------------------------- ------
+            --------------- Cart Menu ------------------
+                       1. Show cart info
+                       2. Edit cart
+                       3. Clear cart
+                       4. Check-out (Pay-bill)
+                       5. Back to Select Food Menu
+            ---------------------------------------------
             """;
 
     private final String editCartMenuPrompt = """
                     
             -------------- Edit Cart Menu --------------
-                            1. Edit amount
-                            2. Delete food
-                            3. Back to Cart Menu
+                         1. Edit amount
+                         2. Remove from cart
+                         3. Back to Cart Menu
             ---------------------------------------------
             """;
 
@@ -93,7 +93,7 @@ public class ClientUI extends BaseUI {
             System.out.println("------ Available restaurants ------");
             int count = 1;
             for (Restaurant restaurant : restaurants) {
-                System.out.println("\t\t"+count + ". " + restaurant.getName());
+                System.out.println("\t\t" + count + ". " + restaurant.getName());
                 count++;
             }
             System.out.println("-----------------------------------");
@@ -220,14 +220,13 @@ public class ClientUI extends BaseUI {
                 switch (orderSelected) {
                     case 1:
                         System.out.println("------- order food method -------");
-                        orderfood();
+                        orderFood();
                         continue;
                     case 2:
                         System.out.println("search food");
-                        search_food();
+                        searchFood();
                         continue;
                     case 3:
-                        System.out.println("in my cart");
                         inMyCart();
                         continue;
                     case 4:
@@ -241,10 +240,9 @@ public class ClientUI extends BaseUI {
         }
     }
 
-    public void orderfood() {
+    public void orderFood() {
         try {
             String currentRestaurantId = Session.getCurrentSession().getRestaurantId();
-            User currentUser = Session.getCurrentSession().getUser();
             while (true) {
                 showAllProducts();
                 Scanner scFood = new Scanner(System.in);
@@ -254,7 +252,7 @@ public class ClientUI extends BaseUI {
                     System.out.print("please try again (input number): ");
                     scFood.next();
                 }
-                if (scFood.hasNext("0")){
+                if (scFood.hasNext("0")) {
                     break;
                 }
                 int productIndex = scFood.nextInt() - 1;
@@ -262,10 +260,6 @@ public class ClientUI extends BaseUI {
                 if (productIndex >= 0 && productIndex < products.size()) {
                     Product selectedProduct = products.get(productIndex);
                     Session.getCurrentSession().setSelectingProduct(selectedProduct);
-
-                    System.out.println(" ");
-                    orderService.showOrderDetails(new Order(currentUser, currentUser.getCart(),
-                            currentRestaurantId, selectedProduct.getName()), false);
                     addToCart();
                     break;
                 } else {
@@ -277,7 +271,7 @@ public class ClientUI extends BaseUI {
         }
     }
 
-    public void search_food() {
+    public void searchFood() {
         try {
             System.out.println("search food method");
         } catch (Exception e) {
@@ -300,25 +294,22 @@ public class ClientUI extends BaseUI {
                 int cartSelected = scIncart.nextInt();
                 switch (cartSelected) {
                     case 1:
-                        System.out.println("show cart info");
+                        System.out.println("\n  ---- Show cart info ----");
                         cartService.showCartDetails(currentUser);
                         break;
                     case 2:
-                        System.out.println("edit cart");
                         editCart();
                         break;
                     case 3:
-                        System.out.println("clear cart");
                         cartService.clearCart(currentUser);
+                        System.out.println("Your cart has been cleared.");
                         break;
                     case 4:
-                        System.out.println("check bill");
                         Restaurant currentRestaurant = restaurantService.findById(Session.getCurrentSession().getRestaurantId());
                         orderService.createOrder(currentUser, currentRestaurant);
                         statusCart = false;
                         break;
                     case 5:
-                        System.out.println("Back to OrderUI");
                         statusCart = false;
                         break;
                 }
@@ -345,12 +336,17 @@ public class ClientUI extends BaseUI {
 
                 int productQuantity = productService.getQuantity(currentRestaurant.getId(), currentProduct.getId());
                 if (quantity > productQuantity) {
-                    System.out.println("Not enough stock. Try again.");
-                    addToCart();
+                    System.out.println("---------------------------------------");
+                    System.out.println("\tNot enough stock. Try again.");
+                    System.out.println("---------------------------------------");
+                    showAllProducts();
                     return;
                 }
 
                 cartService.addToCart(currentUser, currentRestaurant, currentProduct, quantity);
+                System.out.println();
+                orderService.showOrderDetails(new Order(currentUser, currentUser.getCart(),
+                        currentRestaurant.getId(), currentProduct.getName()), false);
                 System.out.println("Added to cart.");
             } else {
                 System.out.println("Invalid quantity. Try again.");
@@ -375,15 +371,12 @@ public class ClientUI extends BaseUI {
                 int editSelected = scEditCart.nextInt();
                 switch (editSelected) {
                     case 1:
-                        System.out.println("edit amount");
                         editCartAmount();
                         break;
                     case 2:
-                        System.out.println("delete food");
                         removeFromCart();
                         break;
                     case 3:
-                        System.out.println("Back to Cart Menu");
                         statusEditCart = false;
                         break;
                 }
@@ -399,7 +392,7 @@ public class ClientUI extends BaseUI {
             List<Product> cartProducts = currentUser.getCart().getProducts().keySet().stream().toList();
 
             if (cartProducts.isEmpty()) {
-                System.out.println("Your cart is empty.");
+                System.out.println("!!!!  Your cart is empty.  !!!!");
                 return;
             }
 
@@ -452,7 +445,7 @@ public class ClientUI extends BaseUI {
 
             showAllProductsInCart();
             Scanner scRemoveProduct = new Scanner(System.in);
-            System.out.print("\nSelect the product to remove: ");
+            System.out.print("\nSelect the product to remove from your card:");
             while (!scRemoveProduct.hasNextInt()) {
                 System.out.print("Invalid selection. Please try again: ");
                 scRemoveProduct.next();
@@ -479,16 +472,17 @@ public class ClientUI extends BaseUI {
                 System.out.println("\nNo products available.\n");
                 return;
             }
-            System.out.println("Available products:");
+            System.out.println("\n------ Available products ------");
             int count = 1;
             for (Product product : products) {
                 StringBuilder str = new StringBuilder();
                 str.append(count).append(". ").append(product.getName())
-                        .append(" - Price: ").append(product.getPrice())
-                        .append(" - Quantity: ").append(productService.getQuantity(currentRestaurantId, product.getId()));
+                        .append(" | Price : ").append(product.getPrice())
+                        .append(" | Quantity : ").append(productService.getQuantity(currentRestaurantId, product.getId()));
                 System.out.println(str);
                 count++;
             }
+            System.out.println("---------------------------------");
         } catch (Exception e) {
             System.out.println("An error occurred while showing all products: " + e.getMessage());
         }
@@ -503,13 +497,15 @@ public class ClientUI extends BaseUI {
                 return;
             }
             System.out.println("Products in your cart:");
+            System.out.println("------------------------------------------------");
+            System.out.println("Id | Name    |  Quantity   | Price");
+            System.out.println("------------------------------------------------");
             int count = 1;
             for (Product product : cartProducts) {
                 StringBuilder str = new StringBuilder();
                 str.append(count).append(". ").append(product.getName())
-                        .append(" - Price: ").append(product.getPrice())
-                        .append(" - Quantity: ").append(currentUser.getCart().getProducts().get(product));
-                System.out.println(str);
+                        .append(" | Price : ").append(product.getPrice())
+                        .append(" | Quantity : ").append(currentUser.getCart().getProducts().get(product));
                 count++;
             }
         } catch (Exception e) {

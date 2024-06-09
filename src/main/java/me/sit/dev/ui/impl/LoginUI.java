@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class LoginUI extends BaseUI {
 
-    private final me.sit.dev.ui.impl.ClientUI clientUI;
+    private final ClientUI clientUI;
     private final RestaurantUI restaurantUI;
     private final String login_Prompt = """
             -------------- AUTH MENU --------------
@@ -134,9 +134,8 @@ public class LoginUI extends BaseUI {
         } else if (answer.equalsIgnoreCase("2") || answer.contains("R")) {
             User currentUser = Session.getCurrentSession().getUser();
             if(currentUser.getRestaurant() == null) {
-                System.out.println("You are not a restaurant owner");
-                System.out.println("Going back to main menu");
-                System.out.println("Otherwise, create one to view this menu.");
+                System.out.println("[!] You are not a restaurant owner, create a restaurant to view this menu.");
+                System.out.println("Going back to main menu...");
                 semiMenu();
             } else {
                 restaurantUI.show();

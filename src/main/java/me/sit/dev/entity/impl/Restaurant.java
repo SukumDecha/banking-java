@@ -4,9 +4,10 @@ import me.sit.dev.entity.BaseEntity;
 import me.sit.dev.entity.impl.order.Order;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
-public class Restaurant extends BaseEntity {
+public class Restaurant extends BaseEntity implements Comparable<Restaurant> {
     private final String name;
     private final String ownerId;
     private int totalRating;
@@ -77,5 +78,10 @@ public class Restaurant extends BaseEntity {
                 ", products=" + products +
                 ", orders=" + orders +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Restaurant o) {
+        return o.getRating() - this.getRating() > 0 ? 1 : -1;
     }
 }

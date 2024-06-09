@@ -122,9 +122,14 @@ public class CartService implements ICartService {
         }
 
         Cart userCart = user.getCart();
+        System.out.println("--------------------------------");
         System.out.println("Cart details for user: " + user.getName());
+        System.out.println("--------------------------------");
+        System.out.println("Product Name  |  Quantity  ");
+        System.out.println("--------------------------------");
         userCart.getProducts().forEach((product, quantity) -> {
-            System.out.println("Product: " + product.getName() + ", Quantity: " + quantity);
+            System.out.println(String.format("%-13s | %-7d",product.getName(),quantity));
         });
+        System.out.println("--------------------------------");
     }
 }

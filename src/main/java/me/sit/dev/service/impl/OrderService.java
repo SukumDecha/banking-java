@@ -40,6 +40,7 @@ public class OrderService implements IOrderService {
 
         restaurant.getOrders().add(order);
         user.getOrders().add(order);
+        user.getCart().clearCart();
         return order;
     }
 

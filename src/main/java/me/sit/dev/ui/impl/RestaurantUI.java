@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class RestaurantUI extends BaseUI {
 
     private Scanner sc = new Scanner(System.in);
-    private me.sit.dev.ui.impl.LoginUI loginUI;
+    private LoginUI loginUI;
 
     private static String Program_prompt = """
                                 
@@ -33,6 +33,7 @@ public class RestaurantUI extends BaseUI {
     public void setLoginUI(LoginUI loginUI) {
         this.loginUI = loginUI;
     }
+
     @Override
     public void show() {
         User currentUser = Session.getCurrentSession().getUser();
@@ -147,18 +148,26 @@ public class RestaurantUI extends BaseUI {
             if (product != null) {
                 System.out.println("Current name: " + product.getName());
                 System.out.print("Enter new name (or press enter to keep current): ");
-                Scanner editSc=new Scanner(System.in);
-                String newName=editSc.nextLine();
-                if (editSc.hasNextLine()&&!editSc.nextLine().isEmpty()) {
-                    product.setName(newName);
+                Scanner editSc = new Scanner(System.in);
+
+                if (editSc.hasNextLine()) {
+                    String newName = editSc.nextLine();
+                    if (!newName.isEmpty()) {
+                        product.setName(newName);
+                    }
                 }
 
                 System.out.println("\nCurrent quantity: " + product.getQuantity());
                 System.out.println("Enter new quantity (or press enter to keep current): ");
                 int newQuantity;
                 while (true) {
-                    if (editSc.hasNextLine()||!editSc.nextLine().isEmpty()) {
-                        String newQuantityInput=editSc.nextLine();
+                    if (editSc.hasNextLine()) {
+                        String newQuantityInput = editSc.nextLine();
+
+                        if (newQuantityInput.isEmpty()) {
+                            break;
+                        }
+
                         try {
                             newQuantity = Integer.parseInt(newQuantityInput);
                             if (newQuantity < 0) {
@@ -176,10 +185,13 @@ public class RestaurantUI extends BaseUI {
 
                 System.out.println("\nCurrent price: " + product.getPrice());
                 System.out.print("Enter new price (or press enter to keep current): ");
-                double newPrice ;
-                while(true){
-                    if (editSc.hasNextLine()||!editSc.nextLine().isEmpty()){
-                        String newPriceInput=editSc.nextLine();
+                double newPrice;
+                while (true) {
+                    if (editSc.hasNextLine()) {
+                        String newPriceInput = editSc.nextLine();
+                        if(newPriceInput.isEmpty()){
+                            break;
+                        }
                         try {
                             newPrice = Double.parseDouble(newPriceInput);
                             if (newPrice <= 0) {
@@ -222,21 +234,30 @@ public class RestaurantUI extends BaseUI {
         }
     }
 
-    private void showHistory(){
+    private void showHistory() {
         System.out.println("Show all product and amount that is ordered");
         User currentUser = Session.getCurrentSession().getUser();
         Restaurant restaurant = currentUser.getRestaurant();
         String restaurantId = restaurant.getId();
 
-        int maxPage = productService.findAll(restaurantId).size() / 5;
-        System.out.println("Enter page number to view (max page = " + maxPage + "): ");
-        while (!sc.hasNextInt()) {
-            System.out.println("Please enter a valid page number");
-            sc.next();
-        }
-        int page = sc.nextInt();
+        int maxPage = productService.findAll(restaurantId).isEmpty() ? 1 :
+                productService.findAll(restaurantId).size() / 5;
 
-        restaurantService.showOrderPagination(restaurantId, page, 5);;
+        restaurantService.showOrderPagination(restaurantId, 1, 5);
+        ;
+
+        while (true) {
+            System.out.println("Enter page number (1 - " + maxPage + ") or 0 to go back: ");
+            int page = sc.nextInt();
+            if (page == 0) {
+                break;
+            } else if (page < 1 || page > maxPage) {
+                System.out.println("Invalid page number. Please enter a valid page number.");
+            } else {
+                restaurantService.showOrderPagination(restaurantId, page, 5);
+            }
+        }
+
     }
 
     private void deleteRestaurant() {
@@ -249,7 +270,7 @@ public class RestaurantUI extends BaseUI {
             try {
                 currentUser.setRestaurant(null);
 
-                for(Product product : productService.findAll(restaurantId)){
+                for (Product product : productService.findAll(restaurantId)) {
                     productService.deleteProduct(restaurantId, product.getId());
                 }
 

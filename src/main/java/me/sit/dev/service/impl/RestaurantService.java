@@ -140,12 +140,7 @@ public class RestaurantService implements IRestaurantService {
      */
     @Override
     public Collection<Restaurant> findTopRestaurants(int limit) {
-        return findAll().stream().sorted(new Comparator<Restaurant>() {
-            @Override
-            public int compare(Restaurant o1, Restaurant o2) {
-                return (int) (o2.getRating() - o1.getRating());
-            }
-        }).limit(limit).collect(Collectors.toList());
+        return findAll().stream().sorted().limit(limit).collect(Collectors.toList());
     }
 
     @Override
@@ -164,9 +159,11 @@ public class RestaurantService implements IRestaurantService {
             System.out.println("No products available for restaurant: " + restaurant.getName());
         } else {
             System.out.println("Products available for restaurant: " + restaurant.getName());
+            System.out.println("------------------------------------------------");
             System.out.println("Product ID  | Name    |  Quantity   | Price");
+            System.out.println("------------------------------------------------");
             products.forEach(product -> {
-                System.out.println(String.format("%-11s | %-7s | %-12d| %-6f ",product.getId(),product.getName(),product.getQuantity(),product.getPrice()));
+                System.out.println(String.format("%-11s | %-7s | %-12d| %-6f ", product.getId(), product.getName(), product.getQuantity(), product.getPrice()));
             });
         }
     }
