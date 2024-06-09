@@ -16,7 +16,9 @@ public class Application {
 
     public static void main(String[] args) {
         Config.load();
-        DatabaseConnection.createTables();
+        if(Config.repositoryType == RepositoryType.DATABASE) {
+            DatabaseConnection.createTables();
+        }
 
         ServiceFactory serviceFactory = new ServiceFactory(Config.repositoryType);
 

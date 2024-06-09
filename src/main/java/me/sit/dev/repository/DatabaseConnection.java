@@ -2,14 +2,10 @@ package me.sit.dev.repository;
 
 import me.sit.dev.Application;
 
-import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Map;
-import java.util.Properties;
-import java.util.stream.Collectors;
 
 public class DatabaseConnection {
 
@@ -53,20 +49,22 @@ public class DatabaseConnection {
     public static void createTables() {
         String[] sqlStatements = {
                 "CREATE TABLE IF NOT EXISTS User (" +
-                        "id INT AUTO_INCREMENT PRIMARY KEY," +
+                        "id VARCHAR(10) PRIMARY KEY," +
                         "name VARCHAR(100)," +
                         "email VARCHAR(100) UNIQUE," +
                         "password VARCHAR(100)," +
                         "role VARCHAR(10)," +
                         "restaurantId VARCHAR(20)" +
                         ")",
+
                 "CREATE TABLE IF NOT EXISTS Restaurant (" +
                         "id VARCHAR(10) PRIMARY KEY," +
-                        "ownerId INT," +
+                        "ownerId VARCHAR(10)," +
                         "name VARCHAR(100)," +
                         "totalRating INT," +
                         "FOREIGN KEY (ownerId) REFERENCES User(id)" +
                         ")",
+
                 "CREATE TABLE IF NOT EXISTS Product (" +
                         "id VARCHAR(10) PRIMARY KEY," +
                         "restaurantId VARCHAR(10)," +
@@ -75,9 +73,10 @@ public class DatabaseConnection {
                         "quantity INT," +
                         "FOREIGN KEY (restaurantId) REFERENCES Restaurant(id)" +
                         ")",
+
                 "CREATE TABLE IF NOT EXISTS CustomerOrder (" +
                         "id VARCHAR(100) PRIMARY KEY," +
-                        "userId INT," +
+                        "userId VARCHAR(10)," +
                         "restaurantId VARCHAR(10)," +
                         "status VARCHAR(50)," +
                         "FOREIGN KEY (userId) REFERENCES User(id)," +
