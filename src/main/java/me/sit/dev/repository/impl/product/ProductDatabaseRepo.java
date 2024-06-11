@@ -22,7 +22,6 @@ public class ProductDatabaseRepo extends ProductMemoRepo implements IProductRepo
     public ProductDatabaseRepo() {
         try {
             connection = DatabaseConnection.getConnection();
-
         } catch (SQLException e) {
             throw new RuntimeException("Failed to connect to the database", e);
         }

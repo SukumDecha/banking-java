@@ -35,6 +35,8 @@ public class OrderDatabaseRepo extends OrderMemoRepo {
         String sql = "SELECT * FROM CustomerOrder";
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
+            // execute =  ดำเนินการ
+            // query =  ค้นหา
             while (rs.next()) {
                 String id = rs.getString("id");
                 String userId = rs.getString("userId");

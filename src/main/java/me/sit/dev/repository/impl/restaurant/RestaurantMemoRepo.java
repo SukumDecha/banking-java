@@ -22,6 +22,7 @@ public class RestaurantMemoRepo implements IRestaurantRepo {
     @Override
     public Restaurant addRestaurant(String ownerId, String restaurantName) {
         Restaurant restaurant = findByName(restaurantName);
+
         if (restaurant != null){
             throw new RestaurantAlreadyExistException();
         }

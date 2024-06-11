@@ -6,7 +6,7 @@ import java.util.Collection;
 
 public interface IRestaurantRepo {
 
-    Restaurant  addRestaurant(String ownerId, String restaurantName);
+    Restaurant addRestaurant(String ownerId, String restaurantName);
 
     Restaurant updateRestaurant(String id, Restaurant restaurant);
 

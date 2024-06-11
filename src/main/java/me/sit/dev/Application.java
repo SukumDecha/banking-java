@@ -17,6 +17,7 @@ public class Application {
     public static ServiceFactory serviceFactory;
     public static void main(String[] args) {
         Config.load();
+
         if(Config.repositoryType == RepositoryType.DATABASE) {
             DatabaseConnection.createTables();
         }
@@ -44,7 +45,6 @@ public class Application {
         public static String USER;
         public static String PASS;
         public static String JDBC_DRIVER;
-
         public static RepositoryType repositoryType;
 
         public static void load() {

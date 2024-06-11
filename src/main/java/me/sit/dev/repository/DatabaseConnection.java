@@ -11,7 +11,6 @@ public class DatabaseConnection {
 
     static {
         try {
-            // Load the JDBC driver
             Class.forName(Application.Config.JDBC_DRIVER);
             System.out.println("JDBC Driver loaded!");
         } catch (ClassNotFoundException ex) {

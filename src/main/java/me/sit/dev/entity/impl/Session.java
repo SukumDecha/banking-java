@@ -17,6 +17,7 @@ public class Session extends BaseEntity {
         super("session-" + user.getId());
         this.user = user;
         this.loginTime = System.currentTimeMillis();
+
     }
 
     public static void createSession(User user) {
